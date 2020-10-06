@@ -15,9 +15,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
-        'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+        'domain' => 'appmeubarbeiro.com.br',
+        'secret' => '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'
     ],
 
     'ses' => [

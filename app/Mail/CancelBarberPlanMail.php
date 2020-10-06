@@ -25,7 +25,7 @@ class CancelBarberPlanMail extends Mailable
 
 	public function build()
 	{
-		return $this->from('nonokapereira@gmail.com')
+		return $this->from('contato@appmeubarbeiro.com.br')
 						->subject('Meu Barbeiro - Plano cancelado!')
 						->view('mails.cancel-barber-plan')
 						->with(array(

@@ -23,7 +23,7 @@ class RecoveryPasswordMail extends Mailable
 
 	public function build()
 	{
-		return $this->from(env('MAIL_USERNAME'))
+		return $this->from('contato@appmeubarbeiro.com.br')
 						->subject('Meu Barbeiro - Alterar Senha')
 						->view('mails.recovery-password')
 						->with(array(

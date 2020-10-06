@@ -23,7 +23,7 @@ class ChangeBarberPlanMail extends Mailable
 
 	public function build()
 	{
-		return $this->from('nonokapereira@gmail.com')
+		return $this->from('contato@appmeubarbeiro.com.br')
 						->subject('Meu Barbeiro - Plano aderido!')
 						->view('mails.change-barber-plan')
 						->with(array(

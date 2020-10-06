@@ -1,5 +1,10 @@
 <?php
 use App\Models\BarbershopModel;
+use App\Helpers\MailHelper;
+
+Route::get('teste', function() {
+  MailHelper::sendHelpBarber('samuel', 'samuel.pereira95@yahoo.com.br', 'texto de teste');
+});
 
 // Rotas públicas
 Route::prefix('auth')->group(function () {

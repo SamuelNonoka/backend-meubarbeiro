@@ -34,7 +34,7 @@ class RegisterMail extends Mailable
 
 	public function build()
 	{
-		return $this->from('nonokapereira@gmail.com')
+		return $this->from('contato@appmeubarbeiro.com.br')
 						->subject('Meu Barbeiro - Seja Bem-vindo!')
 						->view('mails.register')
 						->with(array(

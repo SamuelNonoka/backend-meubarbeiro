@@ -16,7 +16,7 @@ class MailHelper
   public static function sendHelpBarber($name, $email, $text)
   {
     $helpMail = new HelpMail($name, $email, $text);
-    return self::send($to = null, $mail = $helpMail); // Dispara o e-mail
+    return self::send($to = $email, $mail = $helpMail); // Dispara o e-mail
   } // Fim do método sendHelpBarber
 
   // Envia e-mail de recuperação de senha

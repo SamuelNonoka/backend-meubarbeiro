@@ -23,7 +23,7 @@ class HelpMail extends Mailable
 
 	public function build()
 	{
-		return $this->from('nonokapereira@gmail.com')
+		return $this->from('contato@appmeubarbeiro.com.br')
 						->subject('Meu Barbeiro - Ajuda!')
 						->view('mails.help')
 						->with(array(
