@@ -48,4 +48,9 @@ class UserModel extends AbstractModel
 		}
 	} // Fim do método confirmRegister
 
+	// Altera a senha
+	public function updatePassword ($id, $password) {
+		return self::updateData($id, array('password' => $password));
+	} // Fim do método updateRange
+
 } // Fim da classe

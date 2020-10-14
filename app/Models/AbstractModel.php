@@ -53,6 +53,11 @@ class AbstractModel extends Model
 		return self::updateData($id, $data);
 	} // Fim do método updateArray
 
+	// Altera o codigo do barbeiro
+	public function updateCode ($id, $code) {
+		return self::updateData($id, array('code' => $code));
+	} // Fim do método updateRange
+
 	// Remove um registro do banco de dados
 	public function remove ($id) 
 	{

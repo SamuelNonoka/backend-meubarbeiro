@@ -259,7 +259,7 @@ class BarberController extends Controller
 		$code 			= mt_rand(1000, 9999); // Código gerado para verificar o cadastro		
 		$barber_model->updateCode ($barber_db->id, $code);
 
-		$sended = MailHelper::sendRecoveryPassword($barber_db->email, $barber_db->name, $code, $barber_db->uuid);
+		$sended = MailHelper::sendRecoveryPassword($barber_db->email, $barber_db->name, $code, $barber_db->uuid, true);
 
 		if (!$sended)
 			return JsonHelper::getResponseErro('Não foi possível enviar o e-mail!');

@@ -14,11 +14,12 @@ class RecoveryPasswordMail extends Mailable
 	private $code;
 	private $link;
 	
-	public function __construct($name, $code, $uuid)
+	public function __construct($name, $code, $uuid, $is_barber)
 	{
 		$this->name = $name;
 		$this->code	= $code;
-		$this->link	= env('APP_SITE_URL') . "/barbeiro/alterar-senha/" . $uuid;
+		$this->link	= env('APP_SITE_URL');
+		$this->link .= ($is_barber) ? "/barbeiro/alterar-senha/{$uuid}" : "/alterar-senha/{$uuid}";
 	}
 
 	public function build()

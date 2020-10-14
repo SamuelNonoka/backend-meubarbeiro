@@ -48,11 +48,6 @@ class BarberModel extends AbstractModel
 		}
 	} // Fim do método confirmRegister
 
-	// Altera o codigo do barbeiro
-	public function updateCode ($id, $code) {
-		return self::updateData($id, array('code' => $code));
-	} // Fim do método updateRange
-
 	// Altera a senha
 	public function updatePassword ($id, $password) {
 		return self::updateData($id, array('password' => $password));

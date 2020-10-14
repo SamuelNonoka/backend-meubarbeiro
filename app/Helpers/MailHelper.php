@@ -16,13 +16,13 @@ class MailHelper
   public static function sendHelpBarber($name, $email, $text)
   {
     $helpMail = new HelpMail($name, $email, $text);
-    return self::send($to = $email, $mail = $helpMail); // Dispara o e-mail
+    return self::send($to = null, $mail = $helpMail); // Dispara o e-mail
   } // Fim do método sendHelpBarber
 
   // Envia e-mail de recuperação de senha
-  public static function sendRecoveryPassword($email, $name, $code, $uuid)
+  public static function sendRecoveryPassword($email, $name, $code, $uuid, $is_barber = false)
   {
-    $recoveryPasswordMail = new RecoveryPasswordMail($name, $code, $uuid);
+    $recoveryPasswordMail = new RecoveryPasswordMail($name, $code, $uuid, $is_barber);
     return self::send($to = $email, $mail = $recoveryPasswordMail); // Dispara o e-mail
   } // Fim do método sendRecoveryPassword
 

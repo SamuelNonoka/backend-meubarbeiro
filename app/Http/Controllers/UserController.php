@@ -116,6 +116,78 @@ class UserController extends Controller
 		return JsonHelper::getResponseSucesso('Cadastro confirmado :)');
 	} // Fim do método confirm
 
+	// Envia e-mail de recuperar senha para um barbeiro
+	public function recoveryPassword (Request $request) 
+	{
+		// Valida a request
+		$rules = [ 'email' => 'required|max:50' ];
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		// Verifica se o email é válido
+    if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+			return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+
+		// Verifica se existe um barbeiro com aquele e-mail cadastrado
+		$user_model = new UserModel();
+
+		// Verifica se já existe algum barbeiro cadastro com aquele e-mail
+		$user_db = $user_model->getByEmail($request->email);
+		
+		if (count($user_db) == 0)
+			return JsonHelper::getResponseErro('Esse mail não está cadastrado na plataforma!');
+
+		$user_db	= $user_db[0];
+		$code 		= mt_rand(1000, 9999); // Código gerado para verificar o cadastro		
+		$user_model->updateCode ($user_db->id, $code);
+
+		$sended = MailHelper::sendRecoveryPassword($user_db->email, $user_db->name, $code, $user_db->uuid);
+
+		if (!$sended)
+			return JsonHelper::getResponseErro('Não foi possível enviar o e-mail!');
+
+		return JsonHelper::getResponseSucesso($user_db->uuid);
+	} // Fim do método
+
+	// Alterar a senha do barbeiro
+	public function changePasswordByCode (Request $request) 
+	{
+		// Valida a request
+		$rules = [ 
+			'token'			=> 'required',
+			'code' 			=> 'required|size:4',
+			'password'	=> 'required|min:6' 
+		];
+
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		// Verifica se o barbeiro existe
+		$user_model = new UserModel();
+		$user_db 		= $user_model->getByUuid ($request->token);
+		
+		if (count($user_db) == 0)
+			return JsonHelper::getResponseErro('Não foi possível recuperar o token!');
+
+		$user_db = $user_db[0];
+		
+		if ($user_db->code != $request->code)
+			return JsonHelper::getResponseErro('O código não está correto!');
+
+		// Alterar senha
+		$password	= EncriptacaoHelper::encriptarSenha($request->password);
+		$saved 		= $user_model->updatePassword($user_db->id, $password);
+
+		if (!$saved)
+			return JsonHelper::getResponseErro('Não foi possível alterar sua senha!');
+
+		return JsonHelper::getResponseSucesso('Senha alterda com sucesso!');
+	} // Fim do método changePassword
+
 	// Altera a senha
 	public function changePassword (Request $request) 
 	{

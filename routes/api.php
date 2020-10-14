@@ -16,7 +16,9 @@ Route::prefix('auth')->group(function () {
     Route::post('change-password', 'BarberController@changePassword');
   });
   Route::prefix('user')->group(function() {
+    Route::post('change-password', 'UserController@changePasswordByCode');
     Route::post('login', 'Auth\LoginController@loginUser');
+    Route::post('recovery-password', 'UserController@recoveryPassword');
     Route::post('register', 'UserController@store');
     Route::post('register/confirm', 'UserController@confirm');
   });
