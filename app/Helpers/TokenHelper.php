@@ -10,8 +10,8 @@ class TokenHelper
 	// Gerar um novo token para a aplicação
 	public static function gerarTokenBarber (Request $request, $object = null)
 	{
-		if ($_SERVER['REMOTE_ADDR'] != env('APP_DOMAIN_ACESSO'))
-			return null;
+		//if ($_SERVER['REMOTE_ADDR'] != env('APP_DOMAIN_ACESSO'))
+			//return null;
 
 		return (new TokenHelper)->setToken($request, $object);
 	} // Fim do método gerar token
