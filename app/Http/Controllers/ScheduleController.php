@@ -148,4 +148,22 @@ class ScheduleController extends Controller
 		return JsonHelper::getResponseSucesso('Agendamento cancelado com sucesso!');
 	} // Fim do método cancelByUser
 
+	public function getTotalDoneByBarbershopId ($barbershop_id) 
+	{
+		$data = (new ScheduleModel)->getTotalDoneByBarbershopId($barbershop_id);
+		return JsonHelper::getResponseSucesso($data);
+	}
+
+	public function getTotalWaitingByBarbershopId ($barbershop_id) 
+	{
+		$data = (new ScheduleModel)->getTotalWaitingByBarbershopId($barbershop_id);
+		return JsonHelper::getResponseSucesso($data);
+	}
+
+	public function getTotalOfDayByBarbershopId ($barbershop_id) 
+	{
+		$data = (new ScheduleModel)->getTotalOfDayByBarbershopId($barbershop_id);
+		return JsonHelper::getResponseSucesso($data);
+	}
+
 } // Fim da classe

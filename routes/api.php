@@ -54,6 +54,10 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/{id}', 'BarbershopController@update');
     Route::post('/image', 'BarbershopController@uploadImage');
     Route::post('/background', 'BarbershopController@uploadBackgroundImage');
+    Route::get('/{id}/total-barbers', 'BarberController@getTotalBarbersByBarbershopId');
+    Route::get('/{id}/total-schedules-done', 'ScheduleController@getTotalDoneByBarbershopId');
+    Route::get('/{id}/total-schedules-waiting', 'ScheduleController@getTotalWaitingByBarbershopId');
+    Route::get('/{id}/total-schedules-of-day', 'ScheduleController@getTotalOfDayByBarbershopId');
   });
 
   Route::get('cep/{cep}', 'CepController@getCepFromViaCep');

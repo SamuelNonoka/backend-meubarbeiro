@@ -34,6 +34,13 @@ class BarberModel extends AbstractModel
 		return DB::table($this->tabela)->where('barbershop_id', $barbershop_id)->get();
 	} // Fim do método getByBarbershopId
 
+	public function getTotalBarbersByBarbershopId ($barbershop_id) 
+	{
+		try {
+			return DB::table($this->tabela)->where('barbershop_id', $barbershop_id)->count();
+		} catch (Exception $e) { return 0; }
+	}
+
 	// Confirma o registro
 	public function confirmRegister($id) 
 	{

@@ -304,4 +304,10 @@ class BarberController extends Controller
 		return JsonHelper::getResponseSucesso('Senha alterda com sucesso!');
 	} // Fim do método changePassword
 
+	public function getTotalBarbersByBarbershopId ($barbershop_id) 
+	{
+		$data = (new BarberModel)->getTotalBarbersByBarbershopId($barbershop_id);
+		return JsonHelper::getResponseSucesso($data);
+	}
+
 } // Fim da classe

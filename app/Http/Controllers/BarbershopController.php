@@ -262,6 +262,6 @@ class BarbershopController extends Controller
 		$barbershop_model = new BarbershopModel();
 		$barbershop_model->updateArray($barbershop_id, $barbershop_arr);
 		return JsonHelper::getResponseSucesso($path);
-	} // Fim do método uploadImage
-
+  } // Fim do método uploadImage
+ 
 } // Fim da classe
