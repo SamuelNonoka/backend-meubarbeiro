@@ -10,7 +10,7 @@ Route::get('teste', function() {
 Route::prefix('auth')->group(function () {
   Route::prefix('barber')->group(function() {
     Route::post('login', 'Auth\LoginController@loginBarber');
-    Route::resource('register', 'BarberController');
+    //Route::resource('register', 'BarberController');
     Route::post('register/confirm', 'BarberController@confirm');
     Route::post('recovery-password', 'BarberController@recoveryPassword');
     Route::post('change-password', 'BarberController@changePassword');
@@ -42,12 +42,13 @@ Route::get('service/barbershop/{id}', 'ServiceController@getByBarbershopId');
 // Rotas privadas
 Route::middleware('auth:api')->group(function () {
   Route::resource('profiel', 'ProfileController');
-  Route::resource('barber', 'BarberController');
   Route::prefix('barber')->group(function() {
     Route::post('image', 'BarberController@uploadImage');
+    Route::get('by-barbershop', 'BarberController@getByBarbershop');
     Route::put('plan/{id}', 'BarberController@updatePlan');
     Route::delete('plan/{id}', 'BarberController@cancelPlan');
   });
+  Route::resource('barber', 'BarberController');
 
   Route::prefix('barbershop')->group(function() {
     Route::post('/', 'BarbershopController@store');
