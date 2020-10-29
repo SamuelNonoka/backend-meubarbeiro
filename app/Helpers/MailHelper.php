@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Mail;
+use App\Mail\BarberInvitationMail;
 use App\Mail\ChangeBarberPlanMail;
 use App\Mail\CancelBarberPlanMail;
 use App\Mail\HelpMail;
@@ -12,6 +13,13 @@ use App\Mail\RegisterMail;
 // Classe responsável pelos envios de email
 class MailHelper
 {
+  // Envia e-mail de ajuda
+  public static function sendBarberInvitation($barber_mail, $barbershop_name, $barbershop_id)
+  {
+    $barber_invitation_mail = new BarberInvitationMail($barbershop_name, $barbershop_id);
+    return self::send($to = $barber_mail, $mail = $barber_invitation_mail); // Dispara o e-mail
+  } // Fim do método sendHelpBarber
+
   // Envia e-mail de ajuda
   public static function sendHelpBarber($name, $email, $text)
   {

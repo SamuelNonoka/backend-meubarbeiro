@@ -45,6 +45,7 @@ Route::middleware('auth:api')->group(function () {
   Route::prefix('barber')->group(function() {
     Route::post('image', 'BarberController@uploadImage');
     Route::get('by-barbershop', 'BarberController@getByBarbershop');
+    Route::post('invitation', 'BarberController@sendInvitation');
     Route::put('plan/{id}', 'BarberController@updatePlan');
     Route::delete('plan/{id}', 'BarberController@cancelPlan');
   });

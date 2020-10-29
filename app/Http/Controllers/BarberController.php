@@ -10,6 +10,7 @@ use App\Helpers\TokenHelper;
 use App\Helpers\EncriptacaoHelper;
 use App\Helpers\ValidacaoHelper;
 use App\Models\BarberModel;
+use App\Models\BarbershopModel;
 
 class BarberController extends Controller
 {
@@ -317,5 +318,35 @@ class BarberController extends Controller
 		$data 	= (new BarberModel)->getTotalBarbersByBarbershopId($barbershop_id);
 		return JsonHelper::getResponseSucesso($data);
 	}
+
+	// Envia convite para barbeiro
+	public function sendInvitation (Request $request) 
+	{
+		$rules = [ 'email' => 'required|max:50' ];
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+			return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+
+		$barber_model = new BarberModel();
+		$barber_db 		= $barber_model->getByEmail($request->email);
+		
+		if (count($barber_db) > 0) {
+			if ($barber_db[0]->barber_status_id != $barber_model::AGUARDANDO)
+				return JsonHelper::getResponseErro('Este barbeiro já está cadastrado!');
+		}
+
+		$barber	= TokenHelper::getUser($request);
+		$barbershop_db = (new BarbershopModel)->getById($barber->barbershop_id);
+		$sended = MailHelper::sendBarberInvitation($request->email, $barbershop_db['name'], $barbershop_db['id']);
+		
+		if (!$sended)
+			JsonHelper::getResponseErro('Não foi possível enviar o e-mail!');
+
+		return JsonHelper::getResponseSucesso('Convite enviado para o barbeiro!');
+	} // Fim do método sendInvitation
 
 } // Fim da classe
