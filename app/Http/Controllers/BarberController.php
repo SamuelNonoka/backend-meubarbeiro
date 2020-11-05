@@ -29,15 +29,18 @@ class BarberController extends Controller
 		if ($invalido) 
 			return JsonHelper::getResponseErro($invalido);
 
-		$barbershop_id 	= null;
-		$barber_token		= $request->token ?? null;
+		$barber_model 		= new BarberModel();
+		$barbershop_id 		= null;
+		$barber_token			= $request->token ?? null;
+		$barber_status_id	= $barber_model::AGUARDANDO;
 		
 		if ($barber_token) {
 			if (!TokenHelper::eValido($barber_token))
 				return JsonHelper::getResponseErro('Token Invádido');
 
-			$token 					= TokenHelper::getUser($request);
-			$barbershop_id 	= $token->barbershop_id;
+			$token 						= TokenHelper::getUser($request);
+			$barbershop_id 		= $token->barbershop_id;
+			$barber_status_id	= $barber_model::ATIVO;
 		}
 
 		$name 		= $request->name;
@@ -48,9 +51,6 @@ class BarberController extends Controller
 		// Verifica se o email é válido
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
 			return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
-
-		// Verifica se existe um barbeiro com aquele e-mail cadastrado
-		$barber_model = new BarberModel();
 
 		// Verifica se já existe algum barbeiro cadastro com aquele e-mail
 		$has_email = $barber_model->getByEmail($email);
