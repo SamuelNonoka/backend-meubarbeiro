@@ -28,8 +28,8 @@ class RegisterMail extends Mailable
 		$confirm					= $is_barber ? 'barbeiro/confirmar-cadastro' : 'confirmar-cadastro';
 		$remove						= $is_barber ? 'barbeiro/remover-cadastro' : 'remover-cadastro';
 
-		$this->confirm_link	= env('APP_SITE_URL') . '/' . $confirm . '/' . $uuid;
-		$this->remove_link	= env('APP_SITE_URL') . '/' . $remove . '/' . $uuid;
+		$this->confirm_link	= env('APP_SITE_URL') . 'autenticacao/' . $confirm . '/' . $uuid;
+		$this->remove_link	= env('APP_SITE_URL') . 'autenticacao/' . $remove . '/' . $uuid;
 	}
 
 	public function build()

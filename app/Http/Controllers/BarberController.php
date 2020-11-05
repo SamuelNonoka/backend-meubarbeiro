@@ -29,6 +29,17 @@ class BarberController extends Controller
 		if ($invalido) 
 			return JsonHelper::getResponseErro($invalido);
 
+		$barbershop_id 	= null;
+		$barber_token		= $request->token ?? null;
+		
+		if ($barber_token) {
+			if (!TokenHelper::eValido($barber_token))
+				return JsonHelper::getResponseErro('Token Invádido');
+
+			$token 					= TokenHelper::getUser($request);
+			$barbershop_id 	= $token->barbershop_id;
+		}
+
 		$name 		= $request->name;
 		$email		= $request->email;
 		$password	= EncriptacaoHelper::encriptarSenha($request->password);
@@ -47,7 +58,6 @@ class BarberController extends Controller
 		if (count($has_email) > 0)
 			return JsonHelper::getResponseErro('O e-mail informado já está sendo utilizado!');
 
-		$barbershop_id = $request->barbershop_id ?? null;
 		$barber = array (
 			'uuid'					=> $uuid,
 			'name'					=> $name,

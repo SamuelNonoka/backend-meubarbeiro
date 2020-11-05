@@ -1,16 +1,11 @@
 <?php
 use App\Models\BarbershopModel;
-use App\Helpers\MailHelper;
-
-Route::get('teste', function() {
-  MailHelper::sendHelpBarber('samuel', 'samuel.pereira95@yahoo.com.br', 'texto de teste');
-});
 
 // Rotas públicas
 Route::prefix('auth')->group(function () {
   Route::prefix('barber')->group(function() {
     Route::post('login', 'Auth\LoginController@loginBarber');
-    //Route::resource('register', 'BarberController');
+    Route::post('register', 'BarberController@store');
     Route::post('register/confirm', 'BarberController@confirm');
     Route::post('recovery-password', 'BarberController@recoveryPassword');
     Route::post('change-password', 'BarberController@changePassword');
