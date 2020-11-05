@@ -13,10 +13,10 @@ class BarberInvitationMail extends Mailable
 	private $barbershop_name;
 	private $link;
 
-	public function __construct($barbershop_name, $barbershop_id)
+	public function __construct($barbershop_name, $token)
 	{
 		$this->barbershop_name	= $barbershop_name;
-		$this->link							= env('APP_SITE_URL') . '/autenticacao/barbeiro/cadastro?barbearia=' . $barbershop_id;
+		$this->link							= env('APP_SITE_URL') . '/autenticacao/barbeiro/cadastro?token=' . $token;
 	}
 
 	public function build()

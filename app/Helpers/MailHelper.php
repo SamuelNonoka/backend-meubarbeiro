@@ -14,9 +14,9 @@ use App\Mail\RegisterMail;
 class MailHelper
 {
   // Envia e-mail de ajuda
-  public static function sendBarberInvitation($barber_mail, $barbershop_name, $barbershop_id)
+  public static function sendBarberInvitation($barber_mail, $barbershop_name, $token)
   {
-    $barber_invitation_mail = new BarberInvitationMail($barbershop_name, $barbershop_id);
+    $barber_invitation_mail = new BarberInvitationMail($barbershop_name, $token);
     return self::send($to = $barber_mail, $mail = $barber_invitation_mail); // Dispara o e-mail
   } // Fim do método sendHelpBarber
 

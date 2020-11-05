@@ -47,12 +47,14 @@ class BarberController extends Controller
 		if (count($has_email) > 0)
 			return JsonHelper::getResponseErro('O e-mail informado já está sendo utilizado!');
 
+		$barbershop_id = $request->barbershop_id ?? null;
 		$barber = array (
-			'uuid'				=> $uuid,
-			'name'				=> $name,
-			'email'				=> $email,
-			'password'		=> $password,
-			'created_at'	=> date('Y-m-d')	
+			'uuid'					=> $uuid,
+			'name'					=> $name,
+			'email'					=> $email,
+			'password'			=> $password,
+			'barbershop_id'	=> $barbershop_id,
+			'created_at'		=> date('Y-m-d')	
 		);
 
 		$id = $barber_model->storeObjeto($barber);
@@ -339,9 +341,15 @@ class BarberController extends Controller
 				return JsonHelper::getResponseErro('Este barbeiro já está cadastrado!');
 		}
 
-		$barber	= TokenHelper::getUser($request);
-		$barbershop_db = (new BarbershopModel)->getById($barber->barbershop_id);
-		$sended = MailHelper::sendBarberInvitation($request->email, $barbershop_db['name'], $barbershop_db['id']);
+		$barber					= TokenHelper::getUser($request);
+		$barbershop_db 	= (new BarbershopModel)->getById($barber->barbershop_id);
+		$token					= array(
+			'barbershop_id'	=> $barber->barbershop_id,
+			'barber_mail'		=> $request->email					
+		);
+		$expiration			= date('Y-m-d H:i', strtotime('+1 day'));
+		$token					= TokenHelper::setToken($request, $token, $expiration);
+		$sended 				= MailHelper::sendBarberInvitation($request->email, $barbershop_db['name'], $token);
 		
 		if (!$sended)
 			JsonHelper::getResponseErro('Não foi possível enviar o e-mail!');

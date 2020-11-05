@@ -22,8 +22,11 @@ class TokenHelper
 	} // Atualiza o token do usuário
 
 	// Configura o token
-	public static function setToken ($request, $usuario = []) 
+	public static function setToken ($request, $usuario = [], $expiration = null) 
 	{
+		if (!$expiration)
+			$expiration = date('Y-m-d H:i', strtotime('+1 hour'));
+
 		$header	= array(
 			'alg'	=> 'HS256',
 			'typ'	=> 'JWT'
@@ -33,7 +36,7 @@ class TokenHelper
 		$header = base64_encode($header);
 
 		// Payload
-		$data_expiracao	= date('Y-m-d H:i', strtotime('+1 hour'));
+		$data_expiracao	= $expiration;
 		$payload 				= array(
 			'iss' => 'localhost',
 			"usuario"					=> $usuario,
