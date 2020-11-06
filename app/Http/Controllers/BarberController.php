@@ -367,4 +367,38 @@ class BarberController extends Controller
 		return JsonHelper::getResponseSucesso('Convite enviado para o barbeiro!');
 	} // Fim do método sendInvitation
 
+	// Bloqueia barbeiro
+	public function blockBarber (Request $request, $id) 
+	{
+		$barber_model = new BarberModel();
+		$barber_db 		= $barber_model->getById($id);
+		$barber 			= TokenHelper::getUser($request);
+		
+		if (count($barber_db) == 0)
+			return JsonHelper::getResponseErro('Não foi possível localizar o barbeiro!'); 
+		
+		$barber_db 			= $barber_db[0];
+		$barbershop_db	= (new BarbershopModel)->getById($barber_db->barbershop_id);
+		
+		if ($barbershop_db == null)
+			return JsonHelper::getResponseErro('Não foi possível localizar a barbearia!');
+
+		if ($barbershop_db['id'] != $barber->barbershop_id || $barbershop_db['admin_id'] != $barber->id)
+			return JsonHelper::getResponseErro('Você não tem permissão para realizar essa ação!');
+
+		$barber 	= array('barber_status_id' => $barber_model::BLOQUEADO);
+		$updated 	= $barber_model->updateData($id, $barber); 
+
+		if (!$updated)
+			return JsonHelper::getResponseErro('Não foi possível bloquear o barbeiro!');
+
+		return JsonHelper::getResponseSucesso('Barbeiro bloqueado!');
+	} // Fim do método blockBarber
+
+	// Desbloqueio barbeiro
+	public function unlockBarber (Request $request, $id) 
+	{
+		dd('unlockBarber');
+	} // Fim do método unlockBarber
+
 } // Fim da classe
