@@ -59,12 +59,13 @@ class BarberController extends Controller
 			return JsonHelper::getResponseErro('O e-mail informado já está sendo utilizado!');
 
 		$barber = array (
-			'uuid'					=> $uuid,
-			'name'					=> $name,
-			'email'					=> $email,
-			'password'			=> $password,
-			'barbershop_id'	=> $barbershop_id,
-			'created_at'		=> date('Y-m-d')	
+			'uuid'							=> $uuid,
+			'name'							=> $name,
+			'email'							=> $email,
+			'password'					=> $password,
+			'barbershop_id'			=> $barbershop_id,
+			'barber_status_id'	=> $barber_status_id,
+			'created_at'				=> date('Y-m-d')	
 		);
 
 		$id = $barber_model->storeObjeto($barber);

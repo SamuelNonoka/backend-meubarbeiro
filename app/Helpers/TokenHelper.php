@@ -86,6 +86,7 @@ class TokenHelper
 		$signature 			= stripslashes($signature);
 		$valid 					= stripslashes($valid);
 
+		//dd($signature, $valid);
 		return ($signature == $valid) ? true : false;
 	} // Fim do método eValido
 
