@@ -11,6 +11,7 @@ use App\Helpers\EncriptacaoHelper;
 use App\Helpers\ValidacaoHelper;
 use App\Models\BarberModel;
 use App\Models\BarbershopModel;
+use App\Models\ScheduleModel;
 
 class BarberController extends Controller
 {
@@ -387,8 +388,13 @@ class BarberController extends Controller
 		if ($barbershop_db['id'] != $barber->barbershop_id || $barbershop_db['admin_id'] != $barber->id)
 			return JsonHelper::getResponseErro('Você não tem permissão para realizar essa ação!');
 
+		$schedules = (new ScheduleModel)->getFutureAprovedByBarberId($barber_db->id);
+		
+		if (count($schedules) > 0)
+			return JsonHelper::getResponseErro('Não é possível bloquear o barbeiro pois ele tem agendamentos pendentes!');
+
 		$barber 	= array('barber_status_id' => $barber_model::BLOQUEADO);
-		$updated 	= $barber_model->updateData($id, $barber); 
+		$updated	= $barber_model->updateData($id, $barber); 
 
 		if (!$updated)
 			return JsonHelper::getResponseErro('Não foi possível bloquear o barbeiro!');
@@ -399,7 +405,29 @@ class BarberController extends Controller
 	// Desbloqueio barbeiro
 	public function unlockBarber (Request $request, $id) 
 	{
-		dd('unlockBarber');
+		$barber_model = new BarberModel();
+		$barber_db 		= $barber_model->getById($id);
+		$barber 			= TokenHelper::getUser($request);
+		
+		if (count($barber_db) == 0)
+			return JsonHelper::getResponseErro('Não foi possível localizar o barbeiro!'); 
+		
+		$barber_db 			= $barber_db[0];
+		$barbershop_db	= (new BarbershopModel)->getById($barber_db->barbershop_id);
+		
+		if ($barbershop_db == null)
+			return JsonHelper::getResponseErro('Não foi possível localizar a barbearia!');
+
+		if ($barbershop_db['id'] != $barber->barbershop_id || $barbershop_db['admin_id'] != $barber->id)
+			return JsonHelper::getResponseErro('Você não tem permissão para realizar essa ação!');
+
+		$barber 	= array('barber_status_id' => $barber_model::ATIVO);
+		$updated	= $barber_model->updateData($id, $barber); 
+
+		if (!$updated)
+			return JsonHelper::getResponseErro('Não foi possível desbloquear o barbeiro!');
+
+		return JsonHelper::getResponseSucesso('Barbeiro desbloqueado!');
 	} // Fim do método unlockBarber
 
 } // Fim da classe

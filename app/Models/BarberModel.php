@@ -15,11 +15,10 @@ class BarberModel extends AbstractModel
 	// Busca todos os eventos
 	public function getByEmailAndPassword($email, $password)
 	{
-		$data = DB::table($this->tabela)
+		return DB::table($this->tabela)
 						->where('email', $email)
 						->where('password', $password)
 						->get();
-		return self::removePassword($data);
 	} // Fim do método getByEmailAndPassword
 
 	// Busca todos os barbeiros pelo uuid
@@ -30,10 +29,8 @@ class BarberModel extends AbstractModel
 	} // Fim do método getByUuid
 
 	// Busca todos barbeiros pelo e-mail
-	public function getByEmail ($email) 
-	{
-		$data = DB::table($this->tabela)->where('email', $email)->get();
-		return self::removePassword($data);
+	public function getByEmail ($email) {
+		return DB::table($this->tabela)->where('email', $email)->get();
 	} // Fim do método getByEmail
 
 	// Obtem os barbeiros pelo id da barbearia
@@ -101,8 +98,9 @@ class BarberModel extends AbstractModel
 	{
 		$barbers = [];
 		foreach ($data as $item) {
-			unset($item['password']);
-			$barbers.push($item);
+			$item  = (object) $item;
+			unset($item->password);
+			array_push($barbers, $item);
 		}
 		return $barbers;
 	}

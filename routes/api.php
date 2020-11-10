@@ -39,7 +39,7 @@ Route::middleware('auth:api')->group(function () {
   Route::resource('profile', 'ProfileController');
   Route::prefix('barber')->group(function() {
     Route::post('block/{id}', 'BarberController@blockBarber');
-    Route::post('unlock/{id}', 'BarberController@unlocBarber');
+    Route::post('unlock/{id}', 'BarberController@unlockBarber');
     Route::post('image', 'BarberController@uploadImage');
     Route::get('by-barbershop', 'BarberController@getByBarbershop');
     Route::post('invitation', 'BarberController@sendInvitation');

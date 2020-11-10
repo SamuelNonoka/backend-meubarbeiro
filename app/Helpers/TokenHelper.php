@@ -25,7 +25,7 @@ class TokenHelper
 	public static function setToken ($request, $usuario = [], $expiration = null) 
 	{
 		if (!$expiration)
-			$expiration = date('Y-m-d H:i', strtotime('+1 hour'));
+			$expiration = date('Y-m-d H:i', strtotime('+4 hour'));
 
 		$header	= array(
 			'alg'	=> 'HS256',
