@@ -55,6 +55,8 @@ class BarberModel extends AbstractModel
 						)
 						->Leftjoin('barbers_status', 'barbers.barber_status_id', '=', 'barbers_status.id')
 						->where('barbers.barbershop_id', $barbershop_id)
+						->where('barbers.barber_status_id', self::ATIVO)
+						->where('barbers.enabled', true)
 						->get();
 			return self::formatData($dados);
 		} catch (Exception $e) { 
