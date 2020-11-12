@@ -65,7 +65,22 @@ class TimeModel extends Model
 			return [];
 
 		// Remover os horários já agendados
-		$schedules = (new ScheduleModel)->getByBarbershopDate($barbershop_id, $date);
+		$barbers		= (new BarberModel)->getByBarbershopId($barbershop_id);
+		$schedules 	= (new ScheduleModel)->getByBarbershopDate($barbershop_id, $date);
+		
+		foreach ($barbers as $key => $value) {
+			$barbers[$key]['times'] = $times;
+		}
+		
+		$barbers    = collect($barbers);
+		$barbers		= $barbers->map(function ($barber, $key) {
+			return [
+				'id'				=> $barber['id'],
+				'name'			=> $barber['name'],
+				'image_url'	=> $barber['image_url'],
+				'times'			=> $barber['times']
+			];
+		});
 		
 		foreach ($schedules as $schedule) 
 		{
@@ -74,12 +89,24 @@ class TimeModel extends Model
 				$schedule_start_time	= explode(' ', $schedule->start_date)[1];
 				$schedule_end_time		= explode(' ', $schedule->end_date)[1];
 				
-				if (strtotime($time) >= strtotime($schedule_start_time) && strtotime($time) <= strtotime($schedule_end_time))
-					unset($times[$key]);
+				if (strtotime($time) >= strtotime($schedule_start_time) && strtotime($time) <= strtotime($schedule_end_time)) {
+					foreach ($barbers as $key => $barber) {
+						if ($barber['id'] === $schedule->barber_id) {
+							foreach ($barber['times'] as $key_time => $time) {
+								if (strtotime($time) >= strtotime($schedule_start_time) && strtotime($time) <= strtotime($schedule_end_time)) {
+									unset($barber['times'][$key_time]);
+									$barbers[$key] = $barber;
+									break;
+								}
+							}
+							break;
+						}
+					}
+				}
 			}
 		}
 
-		return $times;
+		return $barbers;
 	} // Fim do método getAvailableByBarbershopId
 
 } // Fim da classe

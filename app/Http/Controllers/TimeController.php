@@ -11,8 +11,8 @@ class TimeController extends Controller
 	// obtem os horários disponíveis da barbearia
 	public function getAvailableByBarbershopId ($barbershop_id, $date) 
 	{
-		$times = (new TimeModel)->getAvailableByBarbershopId($barbershop_id, $date);
-		return JsonHelper::getResponseSucesso(array_values($times));
+		$data = (new TimeModel)->getAvailableByBarbershopId($barbershop_id, $date);
+		return JsonHelper::getResponseSucesso($data);
 	} // Fim do método getAvailableByBarbershopId
 
 } // Fim da classe
