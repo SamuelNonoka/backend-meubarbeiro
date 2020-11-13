@@ -34,10 +34,10 @@ class BarberModel extends AbstractModel
 	} // Fim do método getByEmail
 
 	// Obtem os barbeiros pelo id da barbearia
-	public function getByBarbershopId ($barbershop_id) 
+	public function getByBarbershopId ($barbershop_id, $barbers_ids = []) 
 	{
 		try {
-			$dados = DB::table($this->tabela)
+			$query = DB::table($this->tabela)
 						->select(
 							'barbers.id',
 							'barbers.uuid',
@@ -56,9 +56,13 @@ class BarberModel extends AbstractModel
 						->Leftjoin('barbers_status', 'barbers.barber_status_id', '=', 'barbers_status.id')
 						->where('barbers.barbershop_id', $barbershop_id)
 						->where('barbers.barber_status_id', self::ATIVO)
-						->where('barbers.enabled', true)
-						->get();
-			return self::formatData($dados);
+						->where('barbers.enabled', true);
+			
+			if (count($barbers_ids) > 0)
+				$query->whereIn('barbers.id', $barbers_ids);
+			
+			$data = $query->get();
+			return self::formatData($data);
 		} catch (Exception $e) { 
 			return []; 
 		}
