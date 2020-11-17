@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Helpers\JsonHelper;
 use App\Helpers\TokenHelper;
 use App\Helpers\ValidacaoHelper;
+use App\Models\BarbershopModel;
 use App\Models\ScheduleModel;
 use App\Models\ScheduleServiceModel;
 
@@ -31,7 +32,10 @@ class ScheduleController extends Controller
 		if ($barber->barbershop_id != $barbershop_id)
 			return JsonHelper::getResponseErro("Seu usuário não tem permissão para recuperar esses dados!");
 
-		return (new ScheduleModel)->getByBarbershop($barbershop_id, $request->date);
+		$barbershop_db 	= (new BarbershopModel)->getById($barbershop_id);
+		$barber_id 			= ($barber->id != $barbershop_db['admin_id']) ? $barber->id : null;
+
+		return (new ScheduleModel)->getByBarbershop($barbershop_id, $request->date, $barber_id);
 	} // Fim do método index
 
 	// Obtem os agendamentos pendentes de aprovação da barbearia
@@ -114,6 +118,7 @@ class ScheduleController extends Controller
 	public function getByUserId ($user_id) 
 	{
 		$schedules = (new ScheduleModel)->getByUserId($user_id);
+		dd($schedules);
 		return JsonHelper::getResponseSucesso($schedules);
 	} // Fim do método getByUserId
 

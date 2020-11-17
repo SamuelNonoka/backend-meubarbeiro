@@ -116,6 +116,7 @@ class BarberModel extends AbstractModel
 		try {
 			return DB::table($this->tabela)
 							->where('barbershop_id', $barbershop_id)
+							->where('barber_status_id', BarberModel::ATIVO)
 							->count();
 		} catch (Exception $e) { 
 			return 0; 

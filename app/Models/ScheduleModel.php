@@ -78,10 +78,12 @@ class ScheduleModel extends AbstractModel
 	} // Fim do método repprove
 
 	// Obtém os agendamentos pela data
-	public function getByBarbershop ($barbershop_id, $date) 
+	public function getByBarbershop ($barbershop_id, $date, $barber_id = null) 
 	{
 		$where = "schedules.barbershop_id = {$barbershop_id}";
 		$where .= " and  DATE(schedules.start_date) = '{$date}'";
+		if ($barber_id)
+			$where .= " and  schedules.barber_id = '{$barber_id}'";
 		$data = self::getAll($where);
 		return JsonHelper::getResponseSucesso($data);
 	} // Fim do método getByDate
