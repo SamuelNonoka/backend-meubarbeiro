@@ -38,6 +38,7 @@ class BarbershopModel extends AbstractModel
 			->Leftjoin('addresses', 'barbershops.address_id', '=', 'addresses.id')
 			->Leftjoin('barbershops_schedules_days as bsd', 'bsd.barbershop_id', '=', 'barbershops.id')
 			->Leftjoin('services', 'services.barbershop_id', '=', 'barbershops.id')
+			->where('barbershops.barbershop_status_id', self::ATIVA)
 			->get();
 
 		return self::formatData($data); 
