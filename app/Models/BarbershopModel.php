@@ -9,6 +9,9 @@ class BarbershopModel extends AbstractModel
 {
 	protected $table = "barbershops";
 	protected $tabela = "barbershops";
+	public const AGUARDANDO = 1;
+	public const ATIVA = 2;
+	public const BLOQUEADA = 3;
 	
 	// Busca todas as Barbearias
 	public function getAll () 
