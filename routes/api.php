@@ -43,6 +43,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('image', 'BarberController@uploadImage');
     Route::get('by-barbershop', 'BarberController@getByBarbershop');
     Route::post('invitation', 'BarberController@sendInvitation');
+    Route::get('check-barbershop-request', 'BarberController@checkBarbershopRequest');
     Route::put('plan/{id}', 'BarberController@updatePlan');
     Route::delete('plan/{id}', 'BarberController@cancelPlan');
   });
