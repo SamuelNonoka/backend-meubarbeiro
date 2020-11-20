@@ -442,4 +442,19 @@ class BarberController extends Controller
 		return JsonHelper::getResponseSucesso($requests);
 	} // Fim do método checkBarbershopRequest
 
+	// envia uma solicitação à barbearia
+	public function barbershopRequest (Request $request) 
+	{
+		$barbershop_request_barber_model = new BarbershopRequestBarberModel();
+		$barber_model = new BarberModel();
+		$barber 			= TokenHelper::getUser($request);
+		$barber_db 		= $barber_model->getById($barber->id);
+		$barber_db		= $barber_db[0];
+		$requests 		= $barbershop_request_barber_model->getRequestByBarberId($barber_db->id);
+
+		if (count($requests) > 0)
+			return JsonHelper::getResponseErro('Você já enviou uma solicitação!');
+		return JsonHelper::getResponseSucesso($requests);
+	} // Fim do método checkBarbershopRequest
+
 } // Fim da classe

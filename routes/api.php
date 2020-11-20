@@ -44,6 +44,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('by-barbershop', 'BarberController@getByBarbershop');
     Route::post('invitation', 'BarberController@sendInvitation');
     Route::get('check-barbershop-request', 'BarberController@checkBarbershopRequest');
+    Route::post('barbershop-request', 'BarberController@barbershopRequest');
     Route::put('plan/{id}', 'BarberController@updatePlan');
     Route::delete('plan/{id}', 'BarberController@cancelPlan');
   });

@@ -15,9 +15,10 @@ use DB;
 class BarbershopController extends Controller
 {
   // LIsta todas as barbearias
-  public function index () 
+  public function index (Request $request) 
   {
-    $data = (new BarbershopModel)->getAll();
+    $name = $request->name ?? null;
+    $data = (new BarbershopModel)->getAll($name);
     return JsonHelper::getResponseSucesso($data);
 	} // Fim do método index
 
