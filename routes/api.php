@@ -61,6 +61,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/{id}/total-schedules-of-day', 'ScheduleController@getTotalOfDayByBarbershopId');
   });
 
+  Route::prefix('barbershop-request')->group(function() {
+    Route::delete('/{id}/cancel', 'BarbershopRequestBarberController@cancelByBarber');
+  });
+
   Route::get('cep/{cep}', 'CepController@getCepFromViaCep');
   Route::resource('help', 'helpController');
 
