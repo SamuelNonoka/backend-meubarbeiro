@@ -36,28 +36,59 @@ class BarbershopRequestBarberModel extends Model
 							->where('barber_id', $barber_id)
 							->get();
 			
-			$requests = [];
-			foreach ($data as $item) {
-				array_push($requests, array(
-					'id'						=> $item->id,
-					'barber_id'			=> $item->barber_id,
-					'barbershop_id'	=> $item->barbershop_id,
-					'barber' 				=> array(
-						'id'		=> $item->barber_id,
-						'name'  => $item->barber_name
-					),
-					'barbershop' 		=> array(
-						'id'		=> $item->barbershop_id,
-						'name'	=> $item->barbershop_name
-					)
-				));
-			}
-
-			return $requests; 
+			return self::formatData($data); 
 		} catch (DBException $e) {
 			return [];
 		}
 	} // Fim do método getRequestByBarberId
+
+	// Obtém as requisições do barbeiro
+	public function getRequestByBarbershopId ($barbershop_id) 
+	{
+		try {
+			$data = DB::table($this->table)
+							->select(
+								'barbershops_requests_barbers.*',
+								'barbershops.id as barbershop_id',
+								'barbershops.name as barbershop_name',
+								'barbers.id as barber_id',
+								'barbers.name as barber_name',
+								'barbers.email as barber_email',
+								'barbers.image_url as barber_image_url'
+							)
+							->Join('barbers', 'barbers.id', '=', 'barbershops_requests_barbers.barber_id')
+							->Join('barbershops', 'barbershops.id', '=', 'barbershops_requests_barbers.barbershop_id')
+							->where('barbershops_requests_barbers.barbershop_id', $barbershop_id)
+							->get();
+			
+			return self::formatData($data); 
+		} catch (DBException $e) {
+			return [];
+		}
+	} // Fim do método getRequestByBarberId
+
+	public function formatData ($data) {
+		$requests = [];
+		foreach ($data as $item) {
+			array_push($requests, array(
+				'id'						=> $item->id,
+				'barber_id'			=> $item->barber_id,
+				'barbershop_id'	=> $item->barbershop_id,
+				'barber' 				=> array(
+					'id'				=> $item->barber_id,
+					'name'  		=> $item->barber_name,
+					'email'			=> $item->barber_email,
+					'image_url' => $item->barber_image_url
+				),
+				'barbershop' 		=> array(
+					'id'		=> $item->barbershop_id,
+					'name'	=> $item->barbershop_name
+				)
+			));
+		}
+
+		return $requests;
+	}
 
 	public function getById ($id) 
 	{
