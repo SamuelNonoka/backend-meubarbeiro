@@ -64,6 +64,8 @@ Route::middleware('auth:api')->group(function () {
   Route::prefix('barbershop-request')->group(function() {
     Route::delete('/{id}/cancel', 'BarbershopRequestBarberController@cancelByBarber');
     Route::get('/barbershop/{id}', 'BarbershopRequestBarberController@barbershopRequestsByBarbershop');
+    Route::post('/{id}/approve', 'BarbershopRequestBarberController@approve');
+    Route::delete('/{id}/reprove', 'BarbershopRequestBarberController@reprove');
   });
 
   Route::get('cep/{cep}', 'CepController@getCepFromViaCep');
