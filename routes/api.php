@@ -1,5 +1,12 @@
 <?php
 use App\Models\BarbershopModel;
+use App\Services\CryptService;
+
+Route::get('teste', function () {
+  $encrypted = CryptService::encrypt('olá mundo!');
+  $decrypted = CryptService::decrypt($encrypted);
+  dd($encrypted, $decrypted);
+});
 
 // Rotas públicas
 Route::prefix('auth')->group(function () {
