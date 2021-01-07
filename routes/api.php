@@ -3,7 +3,7 @@ use App\Models\BarbershopModel;
 use App\Services\CryptService;
 
 Route::get('teste', function () {
-  $encrypted = CryptService::encrypt('olá mundo!');
+  $encrypted = CryptService::encrypt('olá mundo! sasjdbjs sabdbjfdnf sasjdbjs snajdhsjdbuhfdjfdfjdsbfsj');
   $decrypted = CryptService::decrypt($encrypted);
   dd($encrypted, $decrypted);
 });

@@ -13,11 +13,22 @@ use App\Models\BarberModel;
 use App\Models\BarbershopModel;
 use App\Models\BarbershopRequestBarberModel;
 use App\Models\ScheduleModel;
+use App\Services\BarberService;
 
 class BarberController extends Controller
 {
+	private $barber_service;
+
+	public function __construct () {
+		$this->barber_service = new BarberService();
+	}
+
+	public function store (Request $request) {
+		return $this->barber_service->store($request);
+	} // Fim do método store
+
 	// Cadastra um barbeiro
-	public function store (Request $request) 
+	public function storeOld (Request $request) 
 	{
 		// Valida a request
 		$rules = [
