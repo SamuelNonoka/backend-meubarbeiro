@@ -76,6 +76,30 @@ class BarberService
 
 		MailHelper::sendRegister($request->name, $request->email, $request->password, $uuid, $is_barber = true);	
 		return JsonHelper::getResponseSucesso($payload);
-  }
+  } // Fim do método store
+
+  public function update ($request, $id) 
+  {
+    $rules = [
+			'name' 	=> 'required|max:50',
+			'phone'	=> 'required|max:11|min:8'
+		];
+
+    $invalido = ValidacaoHelper::validar($request->all(), $rules);
+    
+    if ($invalido) 
+      return JsonHelper::getResponseErro($invalido);
+      
+    $barber = array(
+      'name'  => CryptService::encrypt($request->name),
+      'phone' => CryptService::encrypt($request->phone)
+    );
+
+    $this->barber_repository->update($barber, $id);
+    $barber_db		= $this->barber_repository->getById($id);
+    $token   	    = TokenHelper::atualizarToken($request, $barber_db);
+		$payload	    = array("token" => $token);
+		return JsonHelper::getResponseSucesso($payload);
+  } // Fim do método update
 
 } // Fim da classe

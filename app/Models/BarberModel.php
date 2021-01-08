@@ -7,6 +7,7 @@ use DB;
 
 class BarberModel extends AbstractModel
 {
+	protected $table 				= "barbers";
 	protected $tabela 			= "barbers";
 	public const AGUARDANDO = 1;
 	public const ATIVO 			= 2;
