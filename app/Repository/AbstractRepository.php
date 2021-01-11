@@ -13,6 +13,12 @@ class AbstractRepository
     $this->model = $model;
   } // Fim do Constructor
 
+  public function store ($barber) 
+  {
+    $barber['created_at'] = date('Y-m-d H:i:s');
+   	return $this->model->insertGetId($barber);
+  } // Fim do método store
+
   public function getById ($id) {
     return $this->model->find($id);
   } // Fim do método getById

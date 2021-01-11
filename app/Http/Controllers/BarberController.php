@@ -35,7 +35,10 @@ class BarberController extends Controller
 		return $this->barber_service->update($request, $id);
 	} // Fim do método update
 
-	// Atualiza o plano do barbeiro
+	/*
+	* Atualiza o plano do barbeiro
+	* Não sei se será utilizado
+	**/
 	public function updatePlan (Request $request, $id) 
 	{
 		// Valida a request
@@ -115,7 +118,10 @@ class BarberController extends Controller
 		return JsonHelper::getResponseSucesso($token);
 	} // Fim do método uploadImage
 
-	// Remove o plano
+	/**
+	* Remove o plano
+	* Não sei se será utilzado
+	**/
 	public function cancelPlan(Request $request, $id) 
 	{
 		// Verifica se existe um barbeiro com aquele e-mail cadastrado

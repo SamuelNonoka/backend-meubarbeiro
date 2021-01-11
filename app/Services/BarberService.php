@@ -22,7 +22,7 @@ class BarberService
   public function crypt () 
   {
     $barber_db = $this->barber_repository->getNotEncrypted();
-
+    
     if ($barber_db == null)
       return JsonHelper::getResponseErro('Todos os barbeiros já foram encriptados!');
     
@@ -35,7 +35,15 @@ class BarberService
   
     $this->barber_repository->update($barber, $barber_db->id);
     return JsonHelper::getResponseSucesso('Barberiro encriptado com sucesso!');
-  }
+  } // Fim do método crypt
+
+  private function decrypt ($barber_db) 
+  {
+    $barber_db->email = CryptService::decrypt($barber_db->email);
+    $barber_db->name  = CryptService::decrypt($barber_db->name);
+    $barber_db->phone = CryptService::decrypt($barber_db->phone);
+    return $barber_db;
+  } // Fim do método decrypt
 
   public function store (Request $request) 
   {
@@ -119,6 +127,8 @@ class BarberService
 
     $this->barber_repository->update($barber, $id);
     $barber_db		= $this->barber_repository->getById($id);
+    $barber_db    = $this->decrypt($barber_db);
+    unset($barber_db->password);
     $token   	    = TokenHelper::atualizarToken($request, $barber_db);
 		$payload	    = array("token" => $token);
 		return JsonHelper::getResponseSucesso($payload);

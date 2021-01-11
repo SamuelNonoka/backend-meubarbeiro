@@ -21,19 +21,5 @@ class BarberRepository extends AbstractRepository
     return DB::table($this->tabela)
       ->where('email', $email)
       ->get();
-  }
-
-  public function store ($barber) 
-  {
-    $barber['created_at'] = date('Y-m-d H:i:s');
-    $barber['encrypted']  = true;
-    
-   	try {
-      return DB::table($this->tabela)
-        ->insertGetId($barber);
-		}
-		catch (DBException $e) {
-			return 0;
-		}
-  }
+  } // Fim do método getByEmail
 } 
