@@ -19,6 +19,24 @@ class BarberService
     $this->barber_repository = new BarberRepository();
   }
 
+  public function crypt () 
+  {
+    $barber_db = $this->barber_repository->getNotEncrypted();
+
+    if ($barber_db == null)
+      return JsonHelper::getResponseErro('Todos os barbeiros já foram encriptados!');
+    
+    $barber = array(
+      'email'     => CryptService::encrypt($barber_db->email),
+      'name'      => CryptService::encrypt($barber_db->name),
+      'phone'     => CryptService::encrypt($barber_db->phone),
+      'encrypted' => true
+    );
+  
+    $this->barber_repository->update($barber, $barber_db->id);
+    return JsonHelper::getResponseSucesso('Barberiro encriptado com sucesso!');
+  }
+
   public function store (Request $request) 
   {
     $rules = [
@@ -63,7 +81,8 @@ class BarberService
 			'name'							=> $name,
 			'email'							=> $email,
 			'password'					=> $password,
-			'barbershop_id'			=> $barbershop_id,
+      'encrypted'         => true,
+      'barbershop_id'			=> $barbershop_id,
       'barber_status_id'  => $barber_status_id
 		);
     
@@ -89,10 +108,13 @@ class BarberService
     
     if ($invalido) 
       return JsonHelper::getResponseErro($invalido);
-      
+
+    $token  = TokenHelper::getUser($request);
     $barber = array(
-      'name'  => CryptService::encrypt($request->name),
-      'phone' => CryptService::encrypt($request->phone)
+      'email'     => CryptService::encrypt($token->email),
+      'name'      => CryptService::encrypt($request->name),
+      'phone'     => CryptService::encrypt($request->phone),
+      'encrypted' => true
     );
 
     $this->barber_repository->update($barber, $id);

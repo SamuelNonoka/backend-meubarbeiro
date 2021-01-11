@@ -1,12 +1,5 @@
 <?php
 use App\Models\BarbershopModel;
-use App\Services\CryptService;
-
-Route::get('teste', function () {
-  $encrypted = CryptService::encrypt('olá mundo! sasjdbjs sabdbjfdnf sasjdbjs snajdhsjdbuhfdjfdfjdsbfsj');
-  $decrypted = CryptService::decrypt($encrypted);
-  dd($encrypted, $decrypted);
-});
 
 // Rotas públicas
 Route::prefix('auth')->group(function () {
@@ -40,6 +33,10 @@ Route::prefix('schedule')->group(function() {
 });
 
 Route::get('service/barbershop/{id}', 'ServiceController@getByBarbershopId');
+Route::prefix('crypt')->group(function() {
+  Route::get('barber', 'BarberController@crypt');
+  Route::get('user', 'UserController@crypt');
+});
 
 // Rotas privadas
 Route::middleware('auth:api')->group(function () {

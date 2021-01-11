@@ -23,6 +23,10 @@ class BarberController extends Controller
 		$this->barber_service = new BarberService();
 	}
 
+	public function crypt () {
+		return $this->barber_service->crypt();
+	}
+
 	public function store (Request $request) {
 		return $this->barber_service->store($request);
 	} // Fim do método store

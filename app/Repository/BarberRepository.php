@@ -17,6 +17,12 @@ class BarberRepository extends AbstractRepository
     parent::__construct((new BarberModel));
   }
 
+  public function getByEmail ($email) {
+    return DB::table($this->tabela)
+      ->where('email', $email)
+      ->get();
+  }
+
   public function store ($barber) 
   {
     $barber['created_at'] = date('Y-m-d H:i:s');
@@ -30,10 +36,4 @@ class BarberRepository extends AbstractRepository
 			return 0;
 		}
   }
-
-  public function getByEmail ($email) {
-    return DB::table($this->tabela)
-      ->where('email', $email)
-      ->get();
-	}
 } 
