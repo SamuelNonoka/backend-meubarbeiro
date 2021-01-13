@@ -18,8 +18,10 @@ class BarberRepository extends AbstractRepository
   }
 
   public function getByEmail ($email) {
-    return DB::table($this->tabela)
-      ->where('email', $email)
-      ->get();
+    return $this->model->where('email', $email)->get();
+  } // Fim do método getByEmail
+
+  public function getByUuid ($uuid) {
+    return $this->model->where('uuid', $uuid)->get();
   } // Fim do método getByEmail
 } 

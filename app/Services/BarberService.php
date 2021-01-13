@@ -19,6 +19,34 @@ class BarberService
     $this->barber_repository = new BarberRepository();
   }
 
+  public function changePassword (Request $request) 
+  {
+    $rules = [ 
+			'token'			=> 'required',
+			'code' 			=> 'required|size:4',
+			'password'	=> 'required|min:6' 
+		];
+
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		$barber_db = $this->barber_repository->getByUuid($request->token);
+		
+		if (count($barber_db) == 0)
+			return JsonHelper::getResponseErro('Não foi possível recuperar o token!');
+
+    $barber_db = $barber_db[0];
+    
+		if ($barber_db->code != $request->code)
+			return JsonHelper::getResponseErro('O código não está correto!');
+
+    $password	= CryptService::encrypt($request->password);
+    $this->barber_repository->update(array('password' => $password), $barber_db->id);
+		return JsonHelper::getResponseSucesso('Senha alterda com sucesso!');
+  } // Fim do método changePassword
+
   public function crypt () 
   {
     $barber_db = $this->barber_repository->getNotEncrypted();
@@ -37,7 +65,7 @@ class BarberService
     return JsonHelper::getResponseSucesso('Barberiro encriptado com sucesso!');
   } // Fim do método crypt
 
-  private function decrypt ($barber_db) 
+  public function decrypt ($barber_db) 
   {
     $barber_db->email = CryptService::decrypt($barber_db->email);
     $barber_db->name  = CryptService::decrypt($barber_db->name);
@@ -104,6 +132,35 @@ class BarberService
 		MailHelper::sendRegister($request->name, $request->email, $request->password, $uuid, $is_barber = true);	
 		return JsonHelper::getResponseSucesso($payload);
   } // Fim do método store
+
+  public function recoveryPassword (Request $request) 
+  {
+    $rules    = [ 'email' => 'required|max:50' ];
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+    
+    $email      = CryptService::encrypt($request->email);
+		$barber_db  = $this->barber_repository->getByEmail($email);
+		
+		if (count($barber_db) == 0)
+      return JsonHelper::getResponseErro('Esse mail não está cadastrado na plataforma!');
+      
+    $barber_db	= $this->decrypt($barber_db[0]);
+    $code 			= mt_rand(1000, 9999);
+    $this->barber_repository->update(array('code' => $code), $barber_db->id);
+
+    $sended = MailHelper::sendRecoveryPassword($barber_db->email, $barber_db->name, $code, $barber_db->uuid, true);
+
+    if (!$sended)
+      return JsonHelper::getResponseErro('Não foi possível enviar o e-mail!');
+
+    return JsonHelper::getResponseSucesso($barber_db->uuid);
+  } // Fim do método recoveryPassword
 
   public function update ($request, $id) 
   {

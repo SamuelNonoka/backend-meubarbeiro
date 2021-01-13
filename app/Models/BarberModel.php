@@ -29,11 +29,6 @@ class BarberModel extends AbstractModel
 		return self::removePassword($data);
 	} // Fim do método getByUuid
 
-	// Busca todos barbeiros pelo e-mail
-	public function getByEmail ($email) {
-		return DB::table($this->tabela)->where('email', $email)->get();
-	} // Fim do método getByEmail
-
 	// Obtem os barbeiros pelo id da barbearia
 	public function getByBarbershopId ($barbershop_id, $barbers_ids = []) 
 	{
@@ -137,10 +132,5 @@ class BarberModel extends AbstractModel
 			return false;
 		}
 	} // Fim do método confirmRegister
-
-	// Altera a senha
-	public function updatePassword ($id, $password) {
-		return self::updateData($id, array('password' => $password));
-	} // Fim do método updateRange
 
 }  // Fim da classe

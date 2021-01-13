@@ -19,7 +19,7 @@ class RecoveryPasswordMail extends Mailable
 		$this->name = $name;
 		$this->code	= $code;
 		$this->link	= env('APP_SITE_URL');
-		$this->link .= ($is_barber) ? "/barbeiro/alterar-senha/{$uuid}" : "/alterar-senha/{$uuid}";
+		$this->link .= ($is_barber) ? "/autenticacao/barbeiro/alterar-senha/{$uuid}" : "/autenticacao/alterar-senha/{$uuid}";
 	}
 
 	public function build()

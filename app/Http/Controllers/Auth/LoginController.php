@@ -10,57 +10,19 @@ use App\Helpers\TokenHelper;
 use App\Helpers\ValidacaoHelper;
 use App\Models\BarberModel;
 use App\Models\UserModel;
+use App\Services\LoginService;
 
 class LoginController extends Controller
 {
+	private $login_service;
+
+	public function __construct () {
+		$this->login_service = new LoginService();
+	}
+
 	// Tenta fazer login na aplicacao
-	public function loginBarber (Request $request) 
-	{
-		// Valida a request
-		$rules = [
-      'email' 		=> 'required',
-      'password'	=> 'required|min:6'
-    ];
-		
-		$invalido = ValidacaoHelper::validar($request->all(), $rules);
-
-		if ($invalido) 
-			return JsonHelper::getResponseErro($invalido);
-
-		// Verifica se o email é válido
-    if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
-      return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
-		
-		// Verifica se existe um barbeiro com aquele e-mail cadastrado
-		$barber_model = new BarberModel();
-		$barber_db 		= $barber_model->getByEmail($request->email);
-
-		if (count($barber_db) == 0)
-			return JsonHelper::getResponseErro("E-mail e/ou senha incorreta.");
-
-		$barber = null;
-
-		foreach ($barber_db as $barber_item) 
-		{
-			$has_barber = EncriptacaoHelper::validarSenha($request->password, $barber_item->password);
-			
-			if ($has_barber) 
-			{
-				$barber = $barber_item;
-				break;
-			}
-		}
-		
-		if (!$barber)
-			return JsonHelper::getResponseErro("E-mail e/ou senha incorreta.");
-
-		unset($barber->password);
-		$token = TokenHelper::gerarTokenBarber($request, $object = $barber);
-		
-		if (!$token) 
-			return JsonHelper::getResponseErroAutenticacao("Não foi possível gerar o token de acesso!");
-
-		return JsonHelper::getResponseSucesso($token);
+	public function loginBarber (Request $request) {
+		return $this->login_service->loginBarber($request);
 	} // Fim do método logar
 
 	// Faz login do usuário
