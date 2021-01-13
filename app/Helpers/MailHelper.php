@@ -38,7 +38,7 @@ class MailHelper
   public static function sendRegister($name, $email, $password, $uuid, $is_barber = false)
   {
     $registerMail = new RegisterMail($name, $email, $password, $uuid, $is_barber);
-    return self::send($to = $email, $mail = $registerMail); // Dispara o e-mail
+    return self::send($email, $registerMail); // Dispara o e-mail
   } // Fim do método sendRegister
 
   // Envia e-mail quando o barbeiro altera o plano
