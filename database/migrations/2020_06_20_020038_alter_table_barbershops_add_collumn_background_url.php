@@ -14,7 +14,7 @@ class AlterTableBarbershopsAddCollumnBackgroundUrl extends Migration
     public function up()
     {
         Schema::table('barbershops', function (Blueprint $table) {
-            $table->text('background_url')->nullable();
+            $table->text('background_url', 500)->nullable();
         });
     }
 

@@ -30,6 +30,9 @@ class AlterTableBarbersAddcolumnIdPlan extends Migration
 	 */
 	public function down()
 	{
-		Schema::table('barbers', function (Blueprint $table) {});
+		Schema::table('barbers', function (Blueprint $table) {
+			$table->dropForeign(['plan_id']);
+			$table->dropForeign(['plan_old_id']);
+		});
 	}
 }

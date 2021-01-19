@@ -26,7 +26,7 @@ class AlterTableBarbersAddColumnEncrypted extends Migration
     public function down()
     {
         Schema::table('barbers', function (Blueprint $table) {
-            //
+            $table->dropColumn('encrypted');
         });
     }
 }

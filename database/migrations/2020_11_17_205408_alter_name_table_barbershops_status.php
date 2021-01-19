@@ -13,7 +13,7 @@ class AlterNameTableBarbershopsStatus extends Migration
      */
     public function up()
     {
-        Schema::rename('barbarshops_status', 'barbershops_status');
+        //Schema::rename('barbershops_status', 'barbershops_status');
     }
 
     /**

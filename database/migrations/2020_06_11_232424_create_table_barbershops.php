@@ -18,11 +18,11 @@ class CreateTableBarbershops extends Migration
 			$table->unsignedInteger('address_id')->nullable();
 			$table->unsignedInteger('admin_id')->nullable();
 			$table->string('name', 50);
-			$table->text('image_url');
+			$table->text('image_url', 500);
 			$table->string('description', 200);
 			$table->string('phone_number', 11);
-			$table->text('instagram_url');
-			$table->text('facebook_url');
+			$table->text('instagram_url', 500);
+			$table->text('facebook_url', 500);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->foreign('address_id')->references('id')->on('addresses');
@@ -37,6 +37,10 @@ class CreateTableBarbershops extends Migration
 	 */
 	public function down()
 	{
+		Schema::table('barbershops', function (Blueprint $table) {
+			$table->dropForeign(['address_id']);
+			$table->dropForeign(['admin_id']);
+		});
 		Schema::dropIfExists('barbershops');
 	}
 }

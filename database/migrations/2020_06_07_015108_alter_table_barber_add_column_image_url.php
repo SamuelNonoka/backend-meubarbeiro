@@ -14,7 +14,7 @@ class AlterTableBarberAddColumnImageUrl extends Migration
     public function up()
     {
         Schema::table('barbers', function (Blueprint $table) {
-            $table->text('image_url')->nullable();
+            $table->text('image_url', 500)->nullable();
         });
     }
 

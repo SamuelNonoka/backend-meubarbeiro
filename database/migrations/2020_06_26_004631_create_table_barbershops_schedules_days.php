@@ -34,6 +34,10 @@ class CreateTableBarbershopsSchedulesDays extends Migration
      */
     public function down()
     {
+        Schema::table('barbershops_schedules_days', function (Blueprint $table) {
+            $table->dropForeign(['barbershop_id']);
+            $table->dropForeign(['schedule_day_id']);
+	    });
         Schema::dropIfExists('barbershops_schedules_days');
     }
 }

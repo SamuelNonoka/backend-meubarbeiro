@@ -14,10 +14,10 @@ class AlterTableUsersAlterColumsSize extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('name', 500)->change();
-            $table->string('email', 500)->change();
-            $table->string('phone_number', 250)->change();
-            $table->text('image_url')->change();
+            $table->longText('name')->nullable()->change();
+            $table->longText('email')->nullable()->change();
+            $table->longText('phone_number')->nullable()->change();
+            $table->longText('image_url')->nullable()->change();
         });
     }
 

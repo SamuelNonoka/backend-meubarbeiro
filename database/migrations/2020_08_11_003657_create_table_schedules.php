@@ -37,6 +37,12 @@ class CreateTableSchedules extends Migration
      */
     public function down()
     {
+        Schema::table('schedules', function (Blueprint $table) {
+            $table->dropForeign(['barbershop_id']);
+            $table->dropForeign(['barber_id']);
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['schedule_status_id']);
+        });
         Schema::dropIfExists('schedules');
     }
 }

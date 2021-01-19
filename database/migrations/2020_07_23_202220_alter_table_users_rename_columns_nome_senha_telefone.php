@@ -28,11 +28,6 @@ class AlterTableUsersRenameColumnsNomeSenhaTelefone extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('name', 'nome');
-            $table->renameColumn('phone_number', 'telefone');
-            $table->renameColumn('password', 'senha');
-            $table->renameColumn('image_url', 'url_imagem');
-        });
+
     }
 }

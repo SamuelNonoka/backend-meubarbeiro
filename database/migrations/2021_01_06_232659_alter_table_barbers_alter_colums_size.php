@@ -14,11 +14,11 @@ class AlterTableBarbersAlterColumsSize extends Migration
     public function up()
     {
         Schema::table('barbers', function (Blueprint $table) {
-            $table->string('name', 500)->change();
-            $table->string('email', 500)->change();
-            $table->string('phone', 250)->change();
-            $table->string('cpf', 250)->change();
-            $table->text('image_url')->change();
+            $table->longText('name')->nullable()->change();
+            $table->longText('email')->nullable()->change();
+            $table->longText('phone')->nullable()->change();
+            $table->longText('cpf')->nullable()->change();
+            $table->longText('image_url')->nullable()->change();
         });
     }
 

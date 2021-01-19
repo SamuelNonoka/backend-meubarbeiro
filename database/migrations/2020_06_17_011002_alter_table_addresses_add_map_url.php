@@ -14,7 +14,7 @@ class AlterTableAddressesAddMapUrl extends Migration
     public function up()
     {
         Schema::table('addresses', function (Blueprint $table) {
-            $table->text('map_url')->nullable();
+            $table->text('map_url', 500)->nullable();
         });
     }
 

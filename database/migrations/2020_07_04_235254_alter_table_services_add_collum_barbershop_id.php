@@ -27,7 +27,7 @@ class AlterTableServicesAddCollumBarbershopId extends Migration
     public function down()
     {
         Schema::table('services', function (Blueprint $table) {
-            //
+            $table->dropForeign(['barbershop_id']);
         });
     }
 }

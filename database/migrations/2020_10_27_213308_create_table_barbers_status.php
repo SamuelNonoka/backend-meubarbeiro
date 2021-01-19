@@ -13,11 +13,11 @@ class CreateTableBarbersStatus extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('barbers_status', function (Blueprint $table) {
+		/*Schema::create('barbers_status', function (Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->string('name', 50);
 			$table->timestamps();
-		});
+		});*/
 	}
 
 	/**
@@ -26,6 +26,6 @@ class CreateTableBarbersStatus extends Migration
 	 * @return void
 	 */
 	public function down() {
-		Schema::dropIfExists('barbers_status');
+		//Schema::dropIfExists('barbers_status');
 	}
 }

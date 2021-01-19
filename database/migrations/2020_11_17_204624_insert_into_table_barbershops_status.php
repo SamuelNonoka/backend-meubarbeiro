@@ -13,10 +13,10 @@ class InsertIntoTableBarbershopsStatus extends Migration
      */
     public function up()
     {
-        Schema::table('barbarshops_status', function (Blueprint $table) {
-            DB::table('barbarshops_status')->insert(array('name' => 'Aguardando aprovação'));
-            DB::table('barbarshops_status')->insert(array('name' => 'Ativada'));
-            DB::table('barbarshops_status')->insert(array('name' => 'Bloqueada'));
+        Schema::table('barbershops_status', function (Blueprint $table) {
+            DB::table('barbershops_status')->insert(array('name' => 'Aguardando aprovação'));
+            DB::table('barbershops_status')->insert(array('name' => 'Ativada'));
+            DB::table('barbershops_status')->insert(array('name' => 'Bloqueada'));
         });
     }
 
@@ -27,7 +27,7 @@ class InsertIntoTableBarbershopsStatus extends Migration
      */
     public function down()
     {
-        Schema::table('barbarshops_status', function (Blueprint $table) {
+        Schema::table('barbershops_status', function (Blueprint $table) {
             //
         });
     }
