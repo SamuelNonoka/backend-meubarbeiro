@@ -19,6 +19,10 @@ class AbstractRepository
    	return $this->model->insertGetId($barber);
   } // Fim do método store
 
+  public function getByEmail ($email) {
+    return $this->model->where('email', $email)->get();
+  } // Fim do método getByEmail
+
   public function getById ($id) {
     return $this->model->find($id);
   } // Fim do método getById

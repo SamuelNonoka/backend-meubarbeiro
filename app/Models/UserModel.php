@@ -11,6 +11,7 @@ use App\Models;
 // Classe responsavel pela entidade usuario
 class UserModel extends AbstractModel
 {
+	protected $table = 'users';
   protected $tabela = "users";
 
   // Busca todos os usuarios
@@ -24,11 +25,6 @@ class UserModel extends AbstractModel
 		}
 
 	} // Fim do método get
-
-	// Busca todos barbeiros pelo e-mail
-	public function getByEmail ($email) {
-		return DB::table($this->tabela)->where('email', $email)->get();
-	} // Fim do método getByEmail
 
 	// Busca todos os barbeiros pelo uuid
 	public function getByUuid ($uuid) {
