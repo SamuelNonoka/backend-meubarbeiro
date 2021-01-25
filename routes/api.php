@@ -15,6 +15,7 @@ Route::prefix('auth')->group(function () {
     Route::post('login', 'Auth\LoginController@loginUser');
     Route::post('recovery-password', 'UserController@recoveryPassword');
     Route::post('register', 'UserController@store');
+    Route::post('register-google', 'UserController@storeWithGoogle');
     Route::post('register/confirm', 'UserController@confirm');
   });
 });

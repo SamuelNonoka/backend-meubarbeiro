@@ -25,6 +25,10 @@ class UserController extends Controller
 		return $this->user_service->store($request);
 	} // Fim do método store
 
+	public function storeWithGoogle (Request $request) {
+		return $this->user_service->storeWithGoogle($request);
+	} // Fim do método store with google
+
 	public function update (Request $request, $id) {
 		return $this->user_service->update($request, $id);
 	} // Fim do método update

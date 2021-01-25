@@ -9,6 +9,7 @@ use App\Mail\CancelBarberPlanMail;
 use App\Mail\HelpMail;
 use App\Mail\RecoveryPasswordMail;
 use App\Mail\RegisterMail;
+use App\Mail\RegisterGoogleMail;
 
 // Classe responsável pelos envios de email
 class MailHelper
@@ -34,10 +35,15 @@ class MailHelper
     return self::send($to = $email, $mail = $recoveryPasswordMail); // Dispara o e-mail
   } // Fim do método sendRecoveryPassword
 
-  // Envia e-mail quando o usuário se cadastra
   public static function sendRegister($name, $email, $password, $uuid, $is_barber = false)
   {
     $registerMail = new RegisterMail($name, $email, $password, $uuid, $is_barber);
+    return self::send($email, $registerMail); // Dispara o e-mail
+  } // Fim do método sendRegister
+
+  public static function sendRegisterWithGoogle($name, $email)
+  {
+    $registerMail = new RegisterGoogleMail($name, $email);
     return self::send($email, $registerMail); // Dispara o e-mail
   } // Fim do método sendRegister
 

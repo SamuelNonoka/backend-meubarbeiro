@@ -80,6 +80,48 @@ class UserService
 		return JsonHelper::getResponseSucesso($payload);
   } // Fim do método store
 
+  public function storeWithGoogle (Request $request) 
+  {
+    $rules = [
+			'name'			=> 'required|max:50',
+      'email' 		=> 'required|max:50',
+      'google_id'  => 'required|min:6'
+    ];
+		
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+      return JsonHelper::getResponseErro($invalido);
+
+    $uuid = (string) Str::uuid();
+    $user = array (
+      'uuid'			=> $uuid,
+      'name'			=> CryptService::encrypt($request->name),
+      'email'			=> CryptService::encrypt($request->email),
+      'google_id' => $request->google_id,
+      'enabled'   => true
+    );
+
+    if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+    
+    $email_db = $this->user_repository->getByEmail($user['email']);
+    
+    if (count($email_db) > 0)
+      return JsonHelper::getResponseErro('O e-mail informado já está sendo utilizado!');
+
+    $id = $this->user_repository->store($user);
+      
+    if (!$id)
+      return JsonHelper::getResponseErro('Não foi possível finalizar o seu cadastro!');
+  
+    $token   	= TokenHelper::atualizarToken($request, array('uuid' => $uuid));
+    $payload	= array("token" => $token);
+  
+    MailHelper::sendRegisterWithGoogle($request->name, $request->email);			
+    return JsonHelper::getResponseSucesso($payload);
+  } // Fim do método storeWithGoogle
+
   public function update (Request $request, $id) 
   {
     $token 		= $request->header('token');
