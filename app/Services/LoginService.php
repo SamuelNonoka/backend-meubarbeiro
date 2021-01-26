@@ -132,4 +132,38 @@ class LoginService
 		return JsonHelper::getResponseSucesso($token);
   } // Fim do método loginUserWithGoogle
 
+  public function loginBarberWithGoogle (Request $request) 
+  {
+    $rules = [
+      'email' 		=> 'required',
+      'google_id' => 'required'
+    ];
+		
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+		
+		$barber_db = $this->user_repository->getByEmail(CryptService::encrypt($request->email));
+    
+    if (count($barber_db) == 0)
+			return JsonHelper::getResponseErro("E-mail e/ou senha incorreta.");
+
+    $barber_db = $barber_db[0];
+    if ($barber_db->google_id && $barber_db->google_id != $request->google_id)
+      return JsonHelper::getResponseErroAutenticacao("Não foi possível fazer o login!");
+
+    $barber_db = (new BarberService)->decrypt($barber_db);
+		unset($barber_db->password);
+		$token = TokenHelper::gerarTokenBarber($request, $barber_db);
+		
+		if (!$token) 
+			return JsonHelper::getResponseErroAutenticacao("Não foi possível gerar o token de acesso!");
+
+		return JsonHelper::getResponseSucesso($token);
+  } // Fim do método loginBarberWithGoogle
+
 } // Fim da classe

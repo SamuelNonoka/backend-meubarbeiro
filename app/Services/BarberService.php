@@ -133,6 +133,54 @@ class BarberService
 		return JsonHelper::getResponseSucesso($payload);
   } // Fim do método store
 
+  public function storeWithGoogle (Request $request) 
+  {
+    $rules = [
+			'name'			=>	'required|max:50',
+      'email' 		=> 'required|max:50',
+      'google_id' => 'required'
+    ];
+
+    $invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+    if ($invalido) 
+      return JsonHelper::getResponseErro($invalido);
+      
+    if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro('Por favor, informe um e-mail válido.');
+      
+    $name 		        = CryptService::encrypt($request->name);
+    $email		        = CryptService::encrypt($request->email);
+    $uuid			        = (string) Str::uuid();
+    $barber_status_id	= $this->barber_repository::ATIVO;
+
+    $has_email = $this->barber_repository->getByEmail($email);
+  
+    if (count($has_email) > 0)
+      return JsonHelper::getResponseErro('O e-mail informado já está sendo utilizado!');
+
+    $barber = array (
+			'uuid'							=> $uuid,
+			'name'							=> $name,
+			'email'							=> $email,
+			'google_id'					=> $request->google_id,
+      'encrypted'         => true,
+      'enabled'           => true,
+      'barbershop_id'			=> null,
+      'barber_status_id'  => $barber_status_id
+		);
+    
+    $id = $this->barber_repository->store($barber);
+    if ($id == 0)
+			return JsonHelper::getResponseErro('Não foi possível finalizar o seu cadastro!');
+	
+		$token   	= TokenHelper::atualizarToken($request, array('uuid' => $uuid));
+		$payload	= array("token" => $token);
+
+		MailHelper::sendRegisterWithGoogle($request->name, $request->email);	
+		return JsonHelper::getResponseSucesso($payload);
+  } // Fim do método storeWithGoogle
+
   public function recoveryPassword (Request $request) 
   {
     $rules    = [ 'email' => 'required|max:50' ];

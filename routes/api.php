@@ -5,7 +5,9 @@ use App\Models\BarbershopModel;
 Route::prefix('auth')->group(function () {
   Route::prefix('barber')->group(function() {
     Route::post('login', 'Auth\LoginController@loginBarber');
+    Route::post('login-google', 'Auth\LoginController@loginBarberWithGoogle');
     Route::post('register', 'BarberController@store');
+    Route::post('register-google', 'BarberController@storeWithGoogle');
     Route::post('register/confirm', 'BarberController@confirm');
     Route::post('recovery-password', 'BarberController@recoveryPassword');
     Route::post('change-password', 'BarberController@changePassword');

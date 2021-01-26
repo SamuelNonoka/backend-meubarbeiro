@@ -33,4 +33,8 @@ class LoginController extends Controller
 		return $this->login_service->loginUserWithGoogle($request);
 	} // Fim do método logar com o google
 
+	public function loginBarberWithGoogle (Request $request) {
+		return $this->login_service->loginBarberWithGoogle($request);
+	} // Fim do método logar com o google
+
 } // Fim da classe

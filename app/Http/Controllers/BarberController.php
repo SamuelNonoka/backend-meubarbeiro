@@ -35,6 +35,10 @@ class BarberController extends Controller
 		return $this->barber_service->store($request);
 	} // Fim do método store
 
+	public function storeWithGoogle (Request $request) {
+		return $this->barber_service->storeWithGoogle($request);
+	} // Fim do método storeWithGoogle
+
 	public function recoveryPassword (Request $request) {
 		return $this->barber_service->recoveryPassword($request);
 	} // Fim do método recoveryPassword
