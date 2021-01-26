@@ -13,6 +13,7 @@ Route::prefix('auth')->group(function () {
   Route::prefix('user')->group(function() {
     Route::post('change-password', 'UserController@changePasswordByCode');
     Route::post('login', 'Auth\LoginController@loginUser');
+    Route::post('login-google', 'Auth\LoginController@loginUserWithGoogle');
     Route::post('recovery-password', 'UserController@recoveryPassword');
     Route::post('register', 'UserController@store');
     Route::post('register-google', 'UserController@storeWithGoogle');

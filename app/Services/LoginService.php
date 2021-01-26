@@ -98,4 +98,38 @@ class LoginService
 		return JsonHelper::getResponseSucesso($token);
   } // Fim do método loginUser
 
+  public function loginUserWithGoogle (Request $request) 
+  {
+    $rules = [
+      'email' 		=> 'required',
+      'google_id' => 'required'
+    ];
+		
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+		
+		$user_db = $this->user_repository->getByEmail(CryptService::encrypt($request->email));
+    
+    if (count($user_db) == 0)
+			return JsonHelper::getResponseErro("E-mail e/ou senha incorreta.");
+
+    $user_db = $user_db[0];
+    if ($user_db->google_id && $user_db->google_id != $request->google_id)
+      return JsonHelper::getResponseErroAutenticacao("Não foi possível fazer o login!");
+
+    $user_db = (new UserService)->decrypt($user_db);
+		unset($user_db->password);
+		$token = TokenHelper::gerarTokenBarber($request, $user_db);
+		
+		if (!$token) 
+			return JsonHelper::getResponseErroAutenticacao("Não foi possível gerar o token de acesso!");
+
+		return JsonHelper::getResponseSucesso($token);
+  } // Fim do método loginUserWithGoogle
+
 } // Fim da classe
