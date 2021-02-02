@@ -193,7 +193,7 @@ class BarberService
       return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
     
     $email      = CryptService::encrypt($request->email);
-		$barber_db  = $this->barber_repository->getByEmail($email);
+    $barber_db  = $this->barber_repository->getByEmail($email);
 		
 		if (count($barber_db) == 0)
       return JsonHelper::getResponseErro('Esse mail não está cadastrado na plataforma!');

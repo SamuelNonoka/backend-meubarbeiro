@@ -1,6 +1,11 @@
 <?php
 use App\Models\BarbershopModel;
 
+use App\Helpers\MailHelper;
+Route::get('send-mail', function () {
+  MailHelper::sendRegisterWithGoogle('SAMUEL', 'nonokapereira@gmail.com');	
+});
+
 // Rotas públicas
 Route::prefix('auth')->group(function () {
   Route::prefix('barber')->group(function() {

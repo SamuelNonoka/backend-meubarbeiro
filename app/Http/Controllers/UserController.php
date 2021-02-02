@@ -54,38 +54,8 @@ class UserController extends Controller
 	} // Fim do método confirm
 
 	// Envia e-mail de recuperar senha para um barbeiro
-	public function recoveryPassword (Request $request) 
-	{
-		// Valida a request
-		$rules = [ 'email' => 'required|max:50' ];
-		$invalido = ValidacaoHelper::validar($request->all(), $rules);
-
-		if ($invalido) 
-			return JsonHelper::getResponseErro($invalido);
-
-		// Verifica se o email é válido
-    if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
-			return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
-
-		// Verifica se existe um barbeiro com aquele e-mail cadastrado
-		$user_model = new UserModel();
-
-		// Verifica se já existe algum barbeiro cadastro com aquele e-mail
-		$user_db = $user_model->getByEmail($request->email);
-		
-		if (count($user_db) == 0)
-			return JsonHelper::getResponseErro('Esse mail não está cadastrado na plataforma!');
-
-		$user_db	= $user_db[0];
-		$code 		= mt_rand(1000, 9999); // Código gerado para verificar o cadastro		
-		$user_model->updateCode ($user_db->id, $code);
-
-		$sended = MailHelper::sendRecoveryPassword($user_db->email, $user_db->name, $code, $user_db->uuid);
-
-		if (!$sended)
-			return JsonHelper::getResponseErro('Não foi possível enviar o e-mail!');
-
-		return JsonHelper::getResponseSucesso($user_db->uuid);
+	public function recoveryPassword (Request $request)  {
+		return $this->user_service->recoveryPassword($request);
 	} // Fim do método
 
 	// Alterar a senha do barbeiro

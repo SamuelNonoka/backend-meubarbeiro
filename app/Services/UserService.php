@@ -22,19 +22,19 @@ class UserService
   public function decrypt ($user) 
   {
     if (isset($user->name))
-      $user['name'] = CryptService::encrypt($user->name);
+      $user['name'] = CryptService::decrypt($user->name);
     
     if (isset($user->email))
-      $user['email'] = CryptService::encrypt($user->email);
+      $user['email'] = CryptService::decrypt($user->email);
     
     if (isset($user->phone_number))
-      $user['phone_number'] = CryptService::encrypt($user->phone_number);
+      $user['phone_number'] = CryptService::decrypt($user->phone_number);
     
     if (isset($user->password))
-      $user['password'] = CryptService::encrypt($user->password);
+      $user['password'] = CryptService::decrypt($user->password);
     
     if (isset($user->name))
-      $user['image_url'] = CryptService::encrypt($user->image_url);
+      $user['image_url'] = CryptService::decrypt($user->image_url);
     
       return $user;
   } // Fim do método decrypt
@@ -146,5 +146,34 @@ class UserService
 
 		return JsonHelper::getResponseSucesso($token);
   }
+
+  public function recoveryPassword (Request $request) 
+  {
+    $rules    = [ 'email' => 'required|max:50' ];
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+    
+    $email      = CryptService::encrypt($request->email);
+    $user_db  = $this->user_repository->getByEmail($email);
+		
+		if (count($user_db) == 0)
+      return JsonHelper::getResponseErro('Esse mail não está cadastrado na plataforma!');
+      
+    $user_db	= $this->decrypt($user_db[0]);
+    $code 			= mt_rand(1000, 9999);
+    $this->user_repository->update(array('code' => $code), $user_db->id);
+
+    $sended = MailHelper::sendRecoveryPassword($user_db->email, $user_db->name, $code, $user_db->uuid, false);
+
+    if (!$sended)
+      return JsonHelper::getResponseErro('Não foi possível enviar o e-mail!');
+
+    return JsonHelper::getResponseSucesso($user_db->uuid);
+  } // Fim do método recoveryPassword
 
 } // Fim da classe
