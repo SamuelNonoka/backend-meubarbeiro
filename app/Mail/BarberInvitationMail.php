@@ -21,7 +21,7 @@ class BarberInvitationMail extends Mailable
 
 	public function build()
 	{
-		return $this->from('contato@appmeubarbeiro.com.br')
+		return $this->from(env('MAIL_FROM_ADDRESS'))
 						->subject('Meu Barbeiro - Convite!')
 						->view('mails.barber-invitation')
 						->with(array(
