@@ -6,6 +6,20 @@ Route::get('send-mail', function () {
   MailHelper::sendRegisterWithGoogle('SAMUEL', 'nonokapereira@gmail.com');	
 });
 
+Route::get('teste-email', function () {
+  MailHelper::sendRegister('Samuel Pereira', 'nonokapereira@gmail.com', '123123', '123123', false);
+  /*return view('mails.register')->with(array(
+    "name"  				=> 'Samuel Pereira da Silva',
+    "password"			=> '123123',
+    "email"					=> 'nonokapereira@gmail.com',
+    "confirm_link"	=> 'link',  
+    "remove_link"		=> 'removelink',
+    "is_barber"			=> true
+  ));*/
+  dd('email-teste');
+  //MailHelper::sendRegisterWithGoogle('SAMUEL', 'nonokapereira@gmail.com');	
+});
+
 // Rotas públicas
 Route::prefix('auth')->group(function () {
   Route::prefix('barber')->group(function() {

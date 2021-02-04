@@ -4,56 +4,47 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="http://novaintranet.alterdata.com.br/app_Themes/NewIntranet/style.css" rel="stylesheet" type="text/css">
-  <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
-<body style="padding: 0; margin: 0;">
-<div style="background-color: #e6e1d8;">
-  <div style="width:600px; max-width:100%; margin: auto; background-color: #fff;font-family: Roboto, sans-serif;">
-    <div style="padding: 15px;">
-      <h1>
-        Seja Bem-vindo!!
-      </h1>
-
-      <p style="margin-top: 15px; font-size: 14px;">
-        Olá {{ $name }}, seja bem-vindo ao <strong>MeuBarbeiro</strong>!!
-      </p>
-
-      <p style="margin-top: 15px; font-size: 14px;">
-        Seguem abaixo os seus dados de acesso:
-      </p>
-      
-      <p style="margin-top: 15px; font-size: 14px;">
-        <strong>E-mail:</strong>
-        <span style="font-size:16px;color:#333333;">
+<body>
+  <div style="font-family: 'Montserrat', sans-serif; color=#3B3B3B; background-color: #000000; max-width: 100%; width: 900px; margin: auto; background-image: url('../storage/tesoura.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 150px;">
+    <div style="padding: 30px 15px; width: 600px; max-width: 100%; margin: auto; box-sizing: border-box; overflow: hidden; background-color: #000000;">
+      <div style="width: 49%; display: inline-block; min-width: 250px; margin-bottom: 60px;">
+        <img src="../storage/logo.png" style="width: 180px; max-width: 100%;" />
+      </div>
+      <div style="width: 49%; display: inline-block; min-width: 250px; transform: translateY(-100%);">
+        <h1 style="color: #fff;">
+          Seja Bem-vindo!
+        </h1>
+      </div>
+      <div style="background-color: #DCB975; border-radius: 10px; padding: 30px; font-size: 16px;">
+        <p>
+          Olá {{ $name }}, seja bem-vindo(a) ao <strong style="white-space: nowrap;">Meu Barbeiro</strong>
+        </p>
+        <p style="margin-top: 16px;">
+          Seguem os dados de acesso:
+        </p>
+        <p style="margin-top: 16px;">
+          <strong>E-mail:</strong>
+          <br>
           {{ $email }}
-        </span>
-      </p>
-
-      <p style="margin-top: 5px; font-size: 14px;">
-        <strong>Sua senha:</strong>
-        <span style="font-size:16px;color:#333333;">
+        </p>
+        <p style="margin-top: 16px;">
+          <strong>Sua senha:</strong>
+          <br>
           {{ $password }}
-        </span>
-      </p>
-
-      <p style="margin-top: 15px; font-size: 14px;">
-        <a
-          href="{{ $confirm_link }}"
-          style="display: inline-block; background: #FFAB00; color: #333; padding: 10px 15px; text-decoration: none;"
-        >
-          Clique aqui para confirmar seu cadastro
+        </p>
+      </div>
+      <div style="text-align: center; margin-top: 30px;">
+        <a  href="{{ $confirm_link }}" style="background-color: #6CD4CA; color: #3B3B3B; font-weight: 600; font-size: 14px; padding: 15px 60px; border-radius: 50px; display: inline-block;">
+          Confirmar seu cadastro
         </a>
-      </p>
-
-      <p style="margin-top: 15px; font-size: 14px;">
-        Caso não tenha sido você que se cadastrou,
-        <a href="{{ $remove_link }}" style="font-weigth: 800; color:#333333; text-decoration: underline;">
-          Clique aqui
-        </a>
-      </p>
+      </div>
+      <div style="margin: 60px 0 10px; color: #fff; font-size: 16px;">
+        Caso não tenha sido você que se cadastrou. <a href="{{ $remove_link }}" style="color: #fff; text-decoration: underline;">Clique aqui</a>
+      </div>
     </div>
-
-    <div style="background-color: #423a38; color: #fff; text-align: center; padding: 15px; font-size: 14px; margin-top: 30px;">
+    <div style="background-color: #6cd4cacc; text-align: center; padding: 15px 0; font-size: 18px; ">
       Meu Barbeiro - &copy; Todos os direitos reservados
     </div>
   </div>
