@@ -7,10 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div style="font-family: 'Montserrat', sans-serif; color=#3B3B3B; background-color: #000000; max-width: 100%; width: 900px; margin: auto; background-image: url('../storage/tesoura.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 150px;">
-    <div style="padding: 30px 15px; width: 600px; max-width: 100%; margin: auto; box-sizing: border-box; overflow: hidden; background-color: #000000;">
+  <div style="font-family: 'Montserrat', sans-serif; color=#3B3B3B; background: #000; max-width: 100%; width: 900px; margin: auto; background-image: url('https://appmeubarbeiro.com.br/tesoura.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 150px;">
+    <div style="padding: 30px 15px; width: 600px; max-width: 100%; margin: auto; box-sizing: border-box; overflow: hidden; background-color: #000;">
       <div style="width: 49%; display: inline-block; min-width: 250px; margin-bottom: 60px;">
-        <img src="../storage/logo.png" style="width: 180px; max-width: 100%;" />
+        <img src="https://appmeubarbeiro.com.br/logo.png" style="width: 180px; max-width: 100%;" />
       </div>
       <div style="width: 49%; display: inline-block; min-width: 250px; transform: translateY(-100%);">
         <h1 style="color: #fff;">
