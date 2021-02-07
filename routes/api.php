@@ -2,23 +2,20 @@
 use App\Models\BarbershopModel;
 
 use App\Helpers\MailHelper;
-Route::get('send-mail', function () {
+/*Route::get('send-mail', function () {
   MailHelper::sendRegisterWithGoogle('SAMUEL', 'nonokapereira@gmail.com');	
-});
+});*/
 
-Route::get('teste-email', function () {
-  //MailHelper::sendRegister('Samuel Pereira', 'nonokapereira@gmail.com', '123123', '123123', false);
-  return view('mails.register')->with(array(
-    "name"  				=> 'Samuel Pereira da Silva',
-    "password"			=> '123123',
-    "email"					=> 'nonokapereira@gmail.com',
-    "confirm_link"	=> 'link',  
-    "remove_link"		=> 'removelink',
-    "is_barber"			=> true
+/*Route::get('teste-email', function () {
+  MailHelper::sendHelpBarber('Samuel Pereira', 'nonokapereira@gmail.com', 'descriao da duvida');
+  return view('mails.help')->with(array(
+    "name" => 'name',
+    "email"	=> 'nonokapereira@gmail.com',
+    'text'  => 'texto\ntexto'
   ));
   dd('email-teste');
   //MailHelper::sendRegisterWithGoogle('SAMUEL', 'nonokapereira@gmail.com');	
-});
+});*/
 
 // Rotas públicas
 Route::prefix('auth')->group(function () {
