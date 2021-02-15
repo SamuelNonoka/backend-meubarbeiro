@@ -17,11 +17,11 @@ class Authenticate
   {
     // Aplicação não possui acesso
     if ($request->header('host') != env('APP_DOMAIN_ACESSO'))
-      return JsonHelper::getResponseErroPermissao("A API Meu Barbeiro é privada!");
+      return JsonHelper::getResponseErroPermissao("A API Meu Barbeiro é privada! " . $request->header('host'));
 
     // Verifica se o usuário possui token
     if ($request->header('token') == null)
-      return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado! " . $request->header('host'));
+      return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado!");
 
     // Verifica se o token é válido
     if(!TokenHelper::eValido($request->header('token')))
