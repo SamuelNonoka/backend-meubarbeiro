@@ -13,7 +13,7 @@ class AutenticacaoController extends Controller
 	public function autenticar(Request $request) 
 	{
 		// Aplicação não possui acesso
-    if ($request->header('host') != env('APP_DOMAIN_ACESSO'))
+    if ($request->header('origin') != env('APP_DOMAIN_ACESSO'))
       return JsonHelper::getResponseErroPermissao("A API Meu Barbeiro é privada!");
     
 		return TokenHelper::gerarToken($request);
