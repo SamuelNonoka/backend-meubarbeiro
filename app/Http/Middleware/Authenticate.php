@@ -21,7 +21,7 @@ class Authenticate
 
     // Verifica se o usuário possui token
     if ($request->header('token') == null)
-      return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado!");
+      return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado! " . $request->header('host'));
 
     // Verifica se o token é válido
     if(!TokenHelper::eValido($request->header('token')))
