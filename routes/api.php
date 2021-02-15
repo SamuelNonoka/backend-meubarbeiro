@@ -6,16 +6,19 @@ use App\Helpers\MailHelper;
   MailHelper::sendRegisterWithGoogle('SAMUEL', 'nonokapereira@gmail.com');	
 });*/
 
-/*Route::get('teste-email', function () {
-  MailHelper::sendHelpBarber('Samuel Pereira', 'nonokapereira@gmail.com', 'descriao da duvida');
-  return view('mails.help')->with(array(
+Route::get('teste-email', function () {
+  //MailHelper::sendHelpBarber('Samuel Pereira', 'nonokapereira@gmail.com', 'descriao da duvida');
+  /*return view('mails.help')->with(array(
     "name" => 'name',
     "email"	=> 'nonokapereira@gmail.com',
     'text'  => 'texto\ntexto'
   ));
-  dd('email-teste');
-  //MailHelper::sendRegisterWithGoogle('SAMUEL', 'nonokapereira@gmail.com');	
-});*/
+  dd('email-teste');*/
+  MailHelper::sendRegister('SAMUEL', 'samuel.mkt@alterdata.com.br', '123123', '123123', true);
+  MailHelper::sendRegister('SAMUEL', 'samuel.pereira95@yahoo.com.br', '123123', '123123', true);	
+  MailHelper::sendRegister('SAMUEL', 'nonokapereira@gmail.com', '123123', '123123', true);
+  dd('enviou');
+});
 
 // Rotas públicas
 Route::prefix('auth')->group(function () {

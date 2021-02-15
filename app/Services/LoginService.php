@@ -147,7 +147,7 @@ class LoginService
 		if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
       return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
 		
-		$barber_db = $this->user_repository->getByEmail(CryptService::encrypt($request->email));
+		$barber_db = $this->barber_repository->getByEmail(CryptService::encrypt($request->email));
     
     if (count($barber_db) == 0)
 			return JsonHelper::getResponseErro("E-mail e/ou senha incorreta.");
