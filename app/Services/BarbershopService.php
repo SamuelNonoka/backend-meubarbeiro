@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\JsonHelper;
 use App\Repository\BarbershopRepository;
 
 class BarbershopService 
@@ -13,7 +14,7 @@ class BarbershopService
   }
 
   public function getByName ($name) {
-    return $this->barbershop_repository->getByName($name); 
+    return JsonHelper::getResponseSucesso($this->barbershop_repository->getByName($name)); 
   } // Fim do método getByName
 
 } // Fim da classe
