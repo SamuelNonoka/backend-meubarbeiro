@@ -10,16 +10,26 @@ use App\Models\AddressModel;
 use App\Models\BarberModel;
 use App\Models\BarbershopModel;
 use App\Models\BarbershopScheduleDayModel;
+use App\Services\BarbershopService;
 use DB;
 
 class BarbershopController extends Controller
 {
-  // LIsta todas as barbearias
+  private $barbershop_service;
+
+  public function __construct () {
+    $this->barbershop_service = new BarbershopService();
+  }
+
   public function index (Request $request) 
   {
-    $name = $request->name ?? null;
+    if ($request->name)
+      return $this->barbershop_service->getByName($request->name);
+    
+    /* $name = $request->name ?? null;
+
     $data = (new BarbershopModel)->getAll($name);
-    return JsonHelper::getResponseSucesso($data);
+    return JsonHelper::getResponseSucesso($data); */
 	} // Fim do método index
 
   public function show ($id) 

@@ -13,11 +13,13 @@ class CreateTableBarbershopsStatus extends Migration
      */
     public function up()
     {
-        Schema::create('barbershops_status', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 50);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('barbershops_status')) {
+            Schema::create('barbershops_status', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('name', 50);
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -27,6 +29,6 @@ class CreateTableBarbershopsStatus extends Migration
      */
     public function down()
     {
-        //Schema::dropIfExists('barbarshops_status');
+        //Schema::dropIfExists('barbershops_status');
     }
 }

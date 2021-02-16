@@ -17,7 +17,7 @@ class Authenticate
   {
     // Aplicação não possui acesso
     if ($request->header('origin') != env('APP_DOMAIN_ACESSO'))
-      return JsonHelper::getResponseErroPermissao("A API Meu Barbeiro é privada! " . $request->header('origin'));
+      return JsonHelper::getResponseErroPermissao("A API Meu Barbeiro é privada!");
 
     // Verifica se o usuário possui token
     if ($request->header('token') == null)

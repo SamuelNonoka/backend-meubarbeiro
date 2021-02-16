@@ -23,7 +23,7 @@ class AlterNameTableBarbershopsStatus extends Migration
      */
     public function down()
     {
-        Schema::table('barbarshops_status', function (Blueprint $table) {
+        Schema::table('barbershops_status', function (Blueprint $table) {
             //
         });
     }
