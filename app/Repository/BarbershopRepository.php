@@ -12,8 +12,15 @@ class BarbershopRepository extends AbstractRepository
     parent::__construct((new BarbershopModel));
   }
 
-  public function getByName ($name) {
-    return $this->model->where('name', 'like', '%'.$name.'%')->get();
+  public function getByName ($name) 
+  {
+    $data = $this->model->where('name', 'like', '%'.$name.'%')->get();
+
+    foreach ($data as $key => $item) {
+      $data[$key]['address'] = $item->address;
+    }
+    
+    return $data;
   } // Fim do método getByName
 
 } // Fim da classe
