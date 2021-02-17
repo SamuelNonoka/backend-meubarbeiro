@@ -115,11 +115,13 @@ class UserService
     if (!$id)
       return JsonHelper::getResponseErro('Não foi possível finalizar o seu cadastro!');
   
-    $token   	= TokenHelper::atualizarToken($request, array('uuid' => $uuid));
-    $payload	= array("token" => $token);
-  
+    $user_db = $this->user_repository->getById($id);
+    unset($user_db->password);
+    $user_db  = $this->decrypt($user_db);
+    $token    = TokenHelper::atualizarToken($request, $user_db);
+    
     MailHelper::sendRegisterWithGoogle($request->name, $request->email);			
-    return JsonHelper::getResponseSucesso($payload);
+    return JsonHelper::getResponseSucesso($token);
   } // Fim do método storeWithGoogle
 
   public function update (Request $request, $id) 
