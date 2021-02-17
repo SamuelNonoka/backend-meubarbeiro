@@ -174,11 +174,13 @@ class BarberService
     if ($id == 0)
 			return JsonHelper::getResponseErro('Não foi possível finalizar o seu cadastro!');
 	
-		$token   	= TokenHelper::atualizarToken($request, array('uuid' => $uuid));
-		$payload	= array("token" => $token);
-
+    $barber_db = $this->barber_repository->getById($id);
+    unset($barber_db->password);
+    $barber_db = $this->decrypt($barber_db);
+		$token = TokenHelper::atualizarToken($request, $barber_db);
+		
 		MailHelper::sendRegisterWithGoogle($request->name, $request->email);	
-		return JsonHelper::getResponseSucesso($payload);
+		return JsonHelper::getResponseSucesso($token);
   } // Fim do método storeWithGoogle
 
   public function recoveryPassword (Request $request) 
