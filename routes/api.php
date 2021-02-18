@@ -8,16 +8,21 @@ use App\Helpers\MailHelper;
 
 Route::get('teste-email', function () {
   //MailHelper::sendHelpBarber('Samuel Pereira', 'nonokapereira@gmail.com', 'descriao da duvida');
-  /*return view('mails.help')->with(array(
-    "name" => 'name',
-    "email"	=> 'nonokapereira@gmail.com',
-    'text'  => 'texto\ntexto'
-  ));
-  dd('email-teste');*/
-  MailHelper::sendRegister('SAMUEL', 'samuel.mkt@alterdata.com.br', '123123', '123123', true);
-  MailHelper::sendRegister('SAMUEL', 'samuel.pereira95@yahoo.com.br', '123123', '123123', true);	
-  MailHelper::sendRegister('SAMUEL', 'nonokapereira@gmail.com', '123123', '123123', true);
-  dd('enviou');
+  /*return view('mails.register')->with(array(
+    "name"      => 'name',
+    "email"	    => 'nonokapereira@gmail.com',
+    'password'  => '123',
+    'uuid'      => '123',
+    'is_barber' => false,
+    'confirm_link' => 'kdsk',
+    'remove_link' => 'dsjbfdj',
+    'acesso' => 'sasa'
+  ));*/
+  //dd('email-teste');
+  //MailHelper::sendRegister('SAMUEL', 'nonokapereira@gmail.com', '123123', '123123', true);
+  //MailHelper::sendRegister('SAMUEL', 'samuel.pereira95@yahoo.com.br', '123123', '123123', true);	
+  //MailHelper::sendRegister('SAMUEL', 'nonokapereira@gmail.com', '123123', '123123', true);
+  //dd('enviou');
 });
 
 // Rotas públicas

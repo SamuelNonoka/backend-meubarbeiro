@@ -12,11 +12,13 @@ class RegisterGoogleMail extends Mailable
 	use Queueable, SerializesModels;
 	private $name;
 	private $email;
+	private $acesso;
     
 	public function __construct($name, $email)
 	{
 		$this->name   		= $name;
 		$this->email			= $email;
+		$this->acesso			= $is_barber ? env('APP_SITE_URL') . '/autenticacao/login' : env('APP_SITE_URL') . '/autenticacao/barbeiro/login';
 	}
 
 	public function build()
@@ -26,7 +28,8 @@ class RegisterGoogleMail extends Mailable
 						->view('mails.register-google')
 						->with(array(
 							"name"	=> $this->name,
-							"email"	=> $this->email
+							"email"	=> $this->email,
+							"acesso" => $this->acesso
 						));
 	}
 }

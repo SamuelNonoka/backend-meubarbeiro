@@ -17,6 +17,7 @@ class RegisterMail extends Mailable
 	private $uuid;
 	private $confirm_link;
 	private $remove_link;
+	private $acesso;
 	
 	public function __construct($name, $email, $password, $uuid, $is_barber = false)
 	{
@@ -27,6 +28,7 @@ class RegisterMail extends Mailable
 		$this->is_barber	= $is_barber;
 		$confirm					= $is_barber ? 'barbeiro/confirmar-cadastro' : 'confirmar-cadastro';
 		$remove						= $is_barber ? 'barbeiro/remover-cadastro' : 'remover-cadastro';
+		$this->acesso			= $is_barber ? env('APP_SITE_URL') . '/autenticacao/login' : env('APP_SITE_URL') . '/autenticacao/barbeiro/login';
 
 		$this->confirm_link	= env('APP_SITE_URL') . '/autenticacao/' . $confirm . '/' . $uuid;
 		$this->remove_link	= env('APP_SITE_URL') . '/autenticacao/' . $remove . '/' . $uuid;
@@ -43,7 +45,8 @@ class RegisterMail extends Mailable
 							"email"					=> $this->email,
 							"confirm_link"	=> $this->confirm_link,  
 							"remove_link"		=> $this->remove_link,
-							"is_barber"			=> $this->is_barber
+							"is_barber"			=> $this->is_barber,
+							"acesso"				=> $this->acesso
 						));
 	}
 }

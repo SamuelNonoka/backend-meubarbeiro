@@ -26,6 +26,11 @@
           Seguem os dados de acesso:
         </p>
         <p style="margin-top: 16px;">
+          <strong>Acesse através do link:</strong>
+          <br>
+          {{ $acesso }}
+        </p>
+        <p style="margin-top: 16px;">
           <strong>E-mail:</strong>
           <br>
           {{ $email }}
