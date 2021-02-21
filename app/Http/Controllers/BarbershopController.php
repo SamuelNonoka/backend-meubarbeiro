@@ -21,6 +21,10 @@ class BarbershopController extends Controller
     $this->barbershop_service = new BarbershopService();
   }
 
+  public function barberRequest (Request $request) {
+    return $this->barbershop_service->sendBarberRequest($request);
+  } // Barbeiro solicita fazer parte da barbearia
+
   public function index (Request $request) 
   {
     if ($request->name)

@@ -3,21 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\BarberModel;
+use App\Models\BarbershopModel;
 use DB;
 
-class BarbershopRequestBarberModel extends Model
+class BarbershopRequestBarberModel extends AbstractModel
 {
   protected $table = "barbershops_requests_barbers";
 
-	// Salva a requisição
-	public function store ($barber_request) 
-	{
-		try {
-			return DB::table($this->table)->insertGetId($barber_request);
-		} catch (DBException $e) {
-			return 0;
-		}
-	} // Fim do método store
+	public function barber () {
+		return $this->belongsTo('App\Models\BarberModel');
+	}
+
+	public function barbershop () {
+		return $this->belongsTo('App\Models\BarbershopModel');
+	}
 
 	// Obtém as requisições do barbeiro
 	public function getRequestByBarberId ($barber_id) 

@@ -14,9 +14,8 @@ class BarbershopModel extends AbstractModel
 	public const ATIVA = 2;
 	public const BLOQUEADA = 3;
 
-	public function address()
-	{
-			return $this->belongsTo('App\Models\AddressModel');
+	public function address() {
+		return $this->belongsTo('App\Models\AddressModel');
 	}
 	
 	// Busca todas as Barbearias

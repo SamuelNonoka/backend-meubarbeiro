@@ -16,7 +16,16 @@ class Authenticate
   public function handle($request, Closure $next)
   {
     // Aplicação não possui acesso
-    if ($request->header('origin') != env('APP_DOMAIN_ACESSO'))
+    $domains = explode(',', env('APP_DOMAIN_ACESSO'));
+    $has_permission = false;
+    foreach ($domains as $domain) {
+      if ($request->header('host') == $domain) {
+        $has_permission = true;
+        break;
+      }  
+    }
+  
+    if (!$has_permission)
       return JsonHelper::getResponseErroPermissao("A API Meu Barbeiro é privada!");
 
     // Verifica se o usuário possui token
