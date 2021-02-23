@@ -1,30 +1,6 @@
 <?php
 use App\Models\BarbershopModel;
 
-use App\Helpers\MailHelper;
-/*Route::get('send-mail', function () {
-  MailHelper::sendRegisterWithGoogle('SAMUEL', 'nonokapereira@gmail.com');	
-});*/
-
-Route::get('teste-email', function () {
-  //MailHelper::sendHelpBarber('Samuel Pereira', 'nonokapereira@gmail.com', 'descriao da duvida');
-  /*return view('mails.register')->with(array(
-    "name"      => 'name',
-    "email"	    => 'nonokapereira@gmail.com',
-    'password'  => '123',
-    'uuid'      => '123',
-    'is_barber' => false,
-    'confirm_link' => 'kdsk',
-    'remove_link' => 'dsjbfdj',
-    'acesso' => 'sasa'
-  ));*/
-  //dd('email-teste');
-  //MailHelper::sendRegister('SAMUEL', 'nonokapereira@gmail.com', '123123', '123123', true);
-  //MailHelper::sendRegister('SAMUEL', 'samuel.pereira95@yahoo.com.br', '123123', '123123', true);	
-  //MailHelper::sendRegister('SAMUEL', 'nonokapereira@gmail.com', '123123', '123123', true);
-  //dd('enviou');
-});
-
 // Rotas públicas
 Route::prefix('auth')->group(function () {
   Route::prefix('barber')->group(function() {
@@ -75,8 +51,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('image', 'BarberController@uploadImage');
     Route::get('by-barbershop', 'BarberController@getByBarbershop');
     Route::post('invitation', 'BarberController@sendInvitation');
-    Route::get('check-barbershop-request', 'BarberController@checkBarbershopRequest');
-    Route::post('barbershop-request', 'BarbershopController@barberRequest');
+    Route::get('check-barbershop-request', 'BarbershopRequestBarberController@checkBarbershopRequest');
+    Route::post('barbershop-request', 'BarbershopRequestBarberController@barberRequest');
     Route::put('plan/{id}', 'BarberController@updatePlan');
     Route::delete('plan/{id}', 'BarberController@cancelPlan');
   });

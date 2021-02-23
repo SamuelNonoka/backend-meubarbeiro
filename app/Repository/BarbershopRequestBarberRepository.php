@@ -12,6 +12,10 @@ class BarbershopRequestBarberRepository extends AbstractRepository
     parent::__construct((new BarbershopRequestBarberModel));
   }
 
+  public function deleteById ($id) {
+    $this->model->destroy($id);
+  }
+
   public function getByBarberId ($barber_id) {
     $data = $this->model->where('barber_id', $barber_id)->get();
 
@@ -23,6 +27,22 @@ class BarbershopRequestBarberRepository extends AbstractRepository
       $barbershop               = $item->barbershop;
       $data[$key]['barbershop'] = $barbershop;
     }
+    
+    return $data;
+  }
+
+  public function getById ($id) {
+    $data = $this->model->find($id);
+
+    if (!$data)
+      return $data;
+    
+    $barber = $data->barber;
+    unset($barber->password);
+    
+    $data['barber']     = $barber;
+    $barbershop         = $data->barbershop;
+    $data['barbershop'] = $barbershop;
     
     return $data;
   }

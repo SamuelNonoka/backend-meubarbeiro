@@ -8,9 +8,24 @@ use App\Models\BarbershopModel;
 use App\Models\BarbershopRequestBarberModel;
 use App\Helpers\JsonHelper;
 use App\Helpers\TokenHelper;
+use App\Services\BarbershopRequestBarberService;
 
 class BarbershopRequestBarberController extends Controller
-{
+{	
+	private $barbershop_request_barber_service;
+
+  public function __construct () {
+    $this->barbershop_request_barber_service = new BarbershopRequestBarberService();
+  } // Fim do construtor
+
+	public function barberRequest (Request $request) {
+    return $this->barbershop_request_barber_service->sendBarberRequest($request);
+  } // Barbeiro solicita fazer parte da barbearia
+
+	public function checkBarbershopRequest (Request $request) {
+		return $this->barbershop_request_barber_service->checkBarbershopRequest($request);
+	} // Fim do método checkBarbershopRequest
+
 	// Busca as requisições da barbearia
 	public function barbershopRequestsByBarbershop (Request $request, $id) {
 		$barber = TokenHelper::getUser($request);
@@ -22,26 +37,8 @@ class BarbershopRequestBarberController extends Controller
 		return JsonHelper::getResponseSucesso($data);
 	} // fim do método barbershopRequestsByBarbershop
 
-	public function cancelByBarber (Request $request, $id) 
-	{
-		$barber		= TokenHelper::getUser($request);
-		$model 		= new BarbershopRequestBarberModel();
-		$requests = $model->getById($id);
-		
-		if (count($requests) == 0)
-			return JsonHelper::getResponseErro('Não foi possível cancelar a solicitação!');
-		
-		$barber_request = $requests[0];
-		
-		if ($barber->id != $barber_request->barber_id)
-			return JsonHelper::getResponseErro('Você não tem permissão para cancelar esta solicitação!');
-			
-		$deleted = $model->deleteById($id);
-
-		if (!$deleted)
-			return JsonHelper::getResponseErro('Não foi possível cancelar a solicitação!');
-		
-		return JsonHelper::getResponseSucesso('Solicitação cancelada com sucesso!');
+	public function cancelByBarber (Request $request, $id) {
+		return $this->barbershop_request_barber_service->cancelByBarber($request, $id);
 	} // Fim do método cancelByBarber
 
 	// Aprova solicitação do barbeiro

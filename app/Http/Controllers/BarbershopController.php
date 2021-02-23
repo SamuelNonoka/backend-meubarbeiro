@@ -19,11 +19,7 @@ class BarbershopController extends Controller
 
   public function __construct () {
     $this->barbershop_service = new BarbershopService();
-  }
-
-  public function barberRequest (Request $request) {
-    return $this->barbershop_service->sendBarberRequest($request);
-  } // Barbeiro solicita fazer parte da barbearia
+  } // fim do construtor
 
   public function index (Request $request) 
   {

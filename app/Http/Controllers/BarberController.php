@@ -301,15 +301,4 @@ class BarberController extends Controller
 		return JsonHelper::getResponseSucesso('Barbeiro desbloqueado!');
 	} // Fim do método unlockBarber
 
-	// Verifica se o barbeiro já enviou uma solicitação
-	public function checkBarbershopRequest (Request $request) 
-	{
-		$barber_model = new BarberModel();
-		$barber 			= TokenHelper::getUser($request);
-		$barber_db 		= $barber_model->getById($barber->id);
-		$barber_db		= $barber_db[0];
-		$requests 		= (new BarbershopRequestBarberModel)->getRequestByBarberId($barber_db->id);
-		return JsonHelper::getResponseSucesso($requests);
-	} // Fim do método checkBarbershopRequest
-
 } // Fim da classe
