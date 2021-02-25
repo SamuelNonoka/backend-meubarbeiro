@@ -16,9 +16,22 @@ class BarbershopRequestBarberRepository extends AbstractRepository
     $this->model->destroy($id);
   }
 
+  private function formatData ($data) {
+    foreach ($data as $key => $item) {
+      $barber = $item->barber;
+      unset($barber->password);
+      
+      $data[$key]['barber']     = $barber;
+      $barbershop               = $item->barbershop;
+      $data[$key]['barbershop'] = $barbershop;
+    }
+
+    return $data;
+  }
+
   public function getByBarberId ($barber_id) {
     $data = $this->model->where('barber_id', $barber_id)->get();
-
+    
     foreach ($data as $key => $item) {
       $barber = $item->barber;
       unset($barber->password);
@@ -28,6 +41,12 @@ class BarbershopRequestBarberRepository extends AbstractRepository
       $data[$key]['barbershop'] = $barbershop;
     }
     
+    return $data;
+  }
+
+  public function getByBarbershopId ($barbershop_id) {
+    $data = $this->model->where('barbershop_id', $barbershop_id)->get();
+    $data = $this->formatData($data);
     return $data;
   }
 
