@@ -32,83 +32,21 @@ class BarbershopController extends Controller
     return JsonHelper::getResponseSucesso($data); */
 	} // Fim do método index
 
+  public function store(Request $request) {
+    return $this->barbershop_service->store($request);
+  } // Fim do método store
+
   public function show ($id) 
   {
     $data = (new BarbershopModel)->getById($id);
     return JsonHelper::getResponseSucesso($data);
   } // Fim do método show
 
-  // Obtém os barbeiros da barbearia
   public function getBarbers ($id) 
   {
     $data = (new BarberModel)->getByBarbershopId($id);
     return JsonHelper::getResponseSucesso($data);
   } // Fim do método getBarbers
-
-  public function store(Request $request)
-	{
-    // Valida a request
-		$rules = [
-			'name'			=> 'required|max:50',
-      'barber_id' => 'required'
-    ];
-
-    $messages = [
-      'name.required' => 'O nome da barbearia deve ser informado',
-      'name.max'      => 'O nome da barbearia deve ter no máximo 50 caracteres',
-      'barber_id'     => 'Informe o barbeiro'
-    ];
-		
-		$invalido = ValidacaoHelper::validar($request->all(), $rules, $messages);
-
-		if ($invalido) 
-			return JsonHelper::getResponseErro($invalido);
-    
-    // Verifica se o usuário está habilitado
-    $barber_model = new BarberModel();
-    $barber_db    = $barber_model->getById($request->barber_id);
-
-    if (count($barber_db) == 0)
-      return JsonHelper::getResponseErro('O barbeiro informado não existe na plataforma.');
-    
-    $barber_db = (object) $barber_db[0];
-    
-    if (!$barber_db->enabled)
-      return JsonHelper::getResponseErro('Seu acesso está bloqueado na plataforma.');
-
-    if ($barber_db->barbershop_id)
-      return JsonHelper::getResponseErro('Você já possui uma barbearia cadastrada na plataforma.');
-
-    // Cadastra a barbearia
-    $barbershop_arr = array (
-      'admin_id'  => $barber_db->id,
-      'name'      => $request->name
-    );
-
-    DB::beginTransaction();
-    $id = (new BarbershopModel)->storeObjeto($barbershop_arr);
-
-    if ($id == 0)
-      return JsonHelper::getResponseErro('Não foi possível salvar a barbearia.');
-    
-    // Atualiza o token do usuário
-    $barber_arr = array('barbershop_id' => $id);
-    $saved      = $barber_model->updateData($barber_db->id, $barber_arr); 
-
-    if (!$saved) 
-    {
-      DB::rollBack();
-      return JsonHelper::getResponseErro('Não foi possível salvar a barbearia.');
-    }
-    
-    DB::commit();
-    $barber_db->barbershop_id = $id;
-    
-    $token   	= TokenHelper::atualizarToken($request, $barber_db);
-		$payload	= array("token" => $token);
-
-    return JsonHelper::getResponseSucesso($payload);
-  } // Fim do método store
 
   public function update (Request $request, $id) 
   {
