@@ -47,6 +47,11 @@ class BarberController extends Controller
 		return $this->barber_service->update($request, $id);
 	} // Fim do método update
 
+	// Faz o upload de uma nova imagem para o barbeiro
+	public function uploadImage (Request $request) {
+		return $this->barber_service->uploadImage($request);
+	} // Fim do método uploadImage
+
 	/*
 	* Atualiza o plano do barbeiro
 	* Não sei se será utilizado
@@ -96,39 +101,6 @@ class BarberController extends Controller
 			
 		return JsonHelper::getResponseSucesso($payload);
 	} // Fim do método updatePlan
-
-	// Faz o upload de uma nova imagem para o barbeiro
-	public function uploadImage (Request $request) 
-	{
-		$barber 	= TokenHelper::getUser($request);
-		$rules 		= ['img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'];
-		$invalido	= ValidacaoHelper::validar($request->all(), $rules);
-
-		if ($invalido) 
-			return JsonHelper::getResponseErro($invalido);
-
-		if (!$request->hasFile('img'))
-			return JsonHelper::getResponseErro('Por favor, envie uma imagem');
-
-		// Salva a imagem 
-		$image 						= $request->file('img');
-		$name							= $barber->uuid . rand(10, 99);
-		$name 						=	$name .'.'.$image->getClientOriginalExtension();
-		$path							= '/storage/uploads/barbers/profile/' . $barber->uuid;
-    $destinationPath 	= public_path($path);
-    $imagePath	 			= $destinationPath. "/".  $name;
-		$image->move($destinationPath, $name);
-		
-		// Atualiza o barbeiro
-		$path 				= $path . '/' . $name;
-		$barber_arr 	= array('image_url' => $path);
-		$barber_model	= new BarberModel();
-		$barber_model->updateArray($barber->id, $barber_arr);
-		
-		$barber_db 	= $barber_model->getById($barber->id);
-		$token			= TokenHelper::gerarTokenBarber ($request, $barber_db[0]);
-		return JsonHelper::getResponseSucesso($token);
-	} // Fim do método uploadImage
 
 	/**
 	* Remove o plano
