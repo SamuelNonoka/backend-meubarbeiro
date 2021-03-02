@@ -229,6 +229,7 @@ class BarberService
       'email'     => CryptService::encrypt($token->email),
       'name'      => CryptService::encrypt($request->name),
       'phone'     => CryptService::encrypt($request->phone),
+      'profile'   => $request->profile,
       'encrypted' => true
     );
 
@@ -240,5 +241,35 @@ class BarberService
 		$payload	    = array("token" => $token);
 		return JsonHelper::getResponseSucesso($payload);
   } // Fim do método update
+
+  public function uploadImage ($request) 
+  {
+    $barber 	= TokenHelper::getUser($request);
+		$rules 		= ['img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'];
+		$invalido	= ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!$request->hasFile('img'))
+			return JsonHelper::getResponseErro('Por favor, envie uma imagem');
+
+		$image 						= $request->file('img');
+		$name							= $barber->uuid . rand(10, 99);
+		$name 						=	$name .'.'.$image->getClientOriginalExtension();
+		$path							= '/storage/uploads/barbers/profile/' . $barber->uuid;
+    $destinationPath 	= public_path($path);
+    $imagePath	 			= $destinationPath. "/".  $name;
+		$image->move($destinationPath, $name);
+		
+		$path 				= $path . '/' . $name;
+		$barber_arr 	= array('image_url' => $path);
+		$this->barber_repository->update($barber_arr, $barber->id);
+    $barber_db		= $this->barber_repository->getById($barber->id);
+    $barber_db    = $this->decrypt($barber_db);
+    unset($barber_db->password);
+		$token			= TokenHelper::gerarTokenBarber ($request, $barber_db);
+		return JsonHelper::getResponseSucesso($token);
+  } // Fim do método uploadImage
 
 } // Fim da classe
