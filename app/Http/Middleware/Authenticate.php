@@ -27,7 +27,7 @@ class Authenticate
       }
     
       if (!$has_permission)
-        return JsonHelper::getResponseErroPermissao("A api meu Barbeiro é privada!");
+        return JsonHelper::getResponseErroPermissao("A api meu Barbeiro é privada! " . $request->header('origin'));
     }
 
     // Verifica se o usuário possui token

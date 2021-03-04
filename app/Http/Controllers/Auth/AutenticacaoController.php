@@ -24,7 +24,7 @@ class AutenticacaoController extends Controller
       }
     
       if (!$has_permission)
-        return JsonHelper::getResponseErroPermissao("A api meu Barbeiro é privada!");
+        return JsonHelper::getResponseErroPermissao("A api meu Barbeiro é privada! " . $request->header('origin'));
     }
     
 		return TokenHelper::gerarToken($request);
