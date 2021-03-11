@@ -25,11 +25,7 @@ class BarbershopController extends Controller
   {
     if ($request->name)
       return $this->barbershop_service->getByName($request->name);
-    
-    /* $name = $request->name ?? null;
-
-    $data = (new BarbershopModel)->getAll($name);
-    return JsonHelper::getResponseSucesso($data); */
+    else return $this->barbershop_service->getAll();
 	} // Fim do método index
 
   public function store(Request $request) {
