@@ -25,7 +25,7 @@ class BarbershopController extends Controller
   {
     if ($request->name)
       return $this->barbershop_service->getByName($request->name);
-    else return $this->barbershop_service->getAll();
+    else return $this->barbershop_service->getAllEnabled();
 	} // Fim do método index
 
   public function store(Request $request) {

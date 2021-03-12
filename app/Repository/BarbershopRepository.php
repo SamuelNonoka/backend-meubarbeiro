@@ -8,13 +8,17 @@ use DB;
 
 class BarbershopRepository extends AbstractRepository
 {
+  public const AGUARDANDO = 1;
+	public const ATIVO 			= 2;
+  public const BLOQUEADO 	= 3;
+
   public function __construct () {
     parent::__construct((new BarbershopModel));
   }
 
-  public function getAll () 
+  public function getAllEnabled () 
   {
-    $data = $this->model->get();
+    $data = $this->model->where('barbershop_status_id', self::ATIVO)->get();
 
     foreach ($data as $key => $item) {
       $data[$key]['address'] = $item->address;

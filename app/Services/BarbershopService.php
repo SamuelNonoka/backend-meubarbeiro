@@ -22,6 +22,10 @@ class BarbershopService
     $this->barber_service         = new BarberService();
   }
 
+  public function getAllEnabled () {
+    return JsonHelper::getResponseSucesso($this->barbershop_repository->getAllEnabled());
+  } // Fim do método getAll
+
   public function getAll () {
     return JsonHelper::getResponseSucesso($this->barbershop_repository->getAll());
   } // Fim do método getAll
