@@ -10,14 +10,17 @@ use App\Models\AddressModel;
 use App\Models\BarberModel;
 use App\Models\BarbershopModel;
 use App\Models\BarbershopScheduleDayModel;
+use App\Services\BarberService;
 use App\Services\BarbershopService;
 use DB;
 
 class BarbershopController extends Controller
 {
   private $barbershop_service;
+  private $barber_service;
 
   public function __construct () {
+    $this->barber_service = new BarberService();
     $this->barbershop_service = new BarbershopService();
   } // fim do construtor
 
@@ -38,10 +41,8 @@ class BarbershopController extends Controller
     return JsonHelper::getResponseSucesso($data);
   } // Fim do método show
 
-  public function getBarbers ($id) 
-  {
-    $data = (new BarberModel)->getByBarbershopId($id);
-    return JsonHelper::getResponseSucesso($data);
+  public function getBarbers ($id) {
+    return $this->barber_service->getByBarbershopId($id);
   } // Fim do método getBarbers
 
   public function update (Request $request, $id) 
