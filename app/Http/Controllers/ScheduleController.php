@@ -9,9 +9,12 @@ use App\Helpers\ValidacaoHelper;
 use App\Models\BarbershopModel;
 use App\Models\ScheduleModel;
 use App\Models\ScheduleServiceModel;
+use App\Services\ScheduleService;
 
 class ScheduleController extends Controller
 {
+	private $schedule_service;
+
 	protected $rules = [
 		'barbershop_id'	=> 'required',
 		'user_id'				=> 'required',
@@ -20,6 +23,18 @@ class ScheduleController extends Controller
 		'start_date'		=> 'required',
 		'end_date'			=> 'required'
 	];
+
+	public function __construct () {
+		$this->schedule_service = new ScheduleService();
+	}
+
+	public function getByUserId ($user_id) {
+		return $this->schedule_service->getByUserId($user_id);
+	} // Fim do método getByUserId
+
+	public function show ($id) {
+		return $this->schedule_service->getById($id);
+	} // Fim do método show
 
 	// Busca todos os agendamentos
 	public function getByBarbershopDate (Request $request, $barbershop_id) 
@@ -106,21 +121,6 @@ class ScheduleController extends Controller
 	public function repprove (Request $request, $id) {
 		return (new ScheduleModel)->repprove($request, $id);
 	} // Fim do método repprove
-
-	// Mostra os dados do agendamento
-	public function show ($id) 
-	{
-		$data = (new ScheduleModel)->getById($id);
-		return JsonHelper::getResponseSucesso($data);
-	} // Fim do método show
-
-	// Lista os agendamentos do usuário
-	public function getByUserId ($user_id) 
-	{
-		$schedules = (new ScheduleModel)->getByUserId($user_id);
-		dd($schedules);
-		return JsonHelper::getResponseSucesso($schedules);
-	} // Fim do método getByUserId
 
 	// Usuário cancela o agendamento
 	public function cancelByUser (Request $request, $id) 
