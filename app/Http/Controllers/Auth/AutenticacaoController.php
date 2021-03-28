@@ -13,7 +13,7 @@ class AutenticacaoController extends Controller
 	public function autenticar(Request $request) 
 	{
     // Aplicação não possui acesso
-    if (env('AMBIENTE') != 'DEV') {
+    if (env('APP_AMBIENTE') != 'DEV') {
       $domains = explode(',', env('APP_DOMAIN_ACESSO'));
       $has_permission = false;
       foreach ($domains as $domain) {

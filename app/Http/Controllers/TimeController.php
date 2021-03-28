@@ -5,15 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\JsonHelper;
 use App\Models\TimeModel;
+use App\Services\TimeService;
 
 class TimeController extends Controller
 {
+	private $time_service;
+
+	public function __construct () {
+		$this->time_service = new TimeService();
+	}
+ 
 	// obtem os horários disponíveis da barbearia
-	public function getAvailableByBarbershopId (Request $request, $barbershop_id, $date) 
-	{
-		$barbers_ids = $request->barbers ? explode(',', $request->barbers) : [];
-		$data = (new TimeModel)->getAvailableByBarbershopId($barbershop_id, $date, $barbers_ids);
-		return JsonHelper::getResponseSucesso($data);
+	public function getAvailableByBarbershopId (Request $request, $barbershop_id, $date) {
+		return $this->time_service->getAvailableByBarbershopId($request, $barbershop_id, $date);
 	} // Fim do método getAvailableByBarbershopId
 
 } // Fim da classe

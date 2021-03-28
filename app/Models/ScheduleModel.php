@@ -11,6 +11,7 @@ use DB;
 class ScheduleModel extends AbstractModel
 {
 	protected $tabela = "schedules";
+	protected $table 	= 'schedules';
 
 	public const AGUARDANDO = 3;
 	public const AGENDADO = 1;

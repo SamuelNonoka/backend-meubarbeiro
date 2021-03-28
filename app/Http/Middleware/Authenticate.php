@@ -16,7 +16,7 @@ class Authenticate
   public function handle($request, Closure $next)
   {
     // Aplicação não possui acesso
-    if (env('AMBIENTE') != 'DEV') {
+    if (env('APP_AMBIENTE') != 'DEV') {
       $domains = explode(',', env('APP_DOMAIN_ACESSO'));
       $has_permission = false;
       foreach ($domains as $domain) {

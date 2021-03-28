@@ -31,6 +31,12 @@ class BarberController extends Controller
 		return $this->barber_service->crypt();
 	}
 
+	public function getByBarbershop (Request $request) 
+	{
+		$barber	= TokenHelper::getUser($request);
+		return $this->barber_service->getByBarbershopId($barber->barbershop_id);
+	} // Fim do método getByBarbershopId
+
 	public function store (Request $request) {
 		return $this->barber_service->store($request);
 	} // Fim do método store
@@ -47,7 +53,6 @@ class BarberController extends Controller
 		return $this->barber_service->update($request, $id);
 	} // Fim do método update
 
-	// Faz o upload de uma nova imagem para o barbeiro
 	public function uploadImage (Request $request) {
 		return $this->barber_service->uploadImage($request);
 	} // Fim do método uploadImage
@@ -161,14 +166,6 @@ class BarberController extends Controller
 
 		return JsonHelper::getResponseSucesso('Cadastro confirmado :) !');
 	} // Fim do método confirm
-
-	// Busca barbeiro pelo id da barbearia
-	public function getByBarbershop (Request $request) 
-	{
-		$barber	= TokenHelper::getUser($request);
-		$data = (new BarberModel)->getByBarbershopId($barber->barbershop_id);
-		return JsonHelper::getResponseSucesso($data);
-	} // Fim do método getByBarbershopId
 
 	public function getTotalBarbersByBarbershopId ($barbershop_id) 
 	{

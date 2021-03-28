@@ -78,6 +78,7 @@ class BarberService
     $barbers_db = $this->barber_repository->getByBarbershopId($barbershop_id);
     foreach ($barbers_db as $key => $barber_db) {
       $barbers_db[$key] = $this->decrypt($barber_db);
+      unset($barbers_db[$key]['password']);
     }
     return JsonHelper::getResponseSucesso($barbers_db);
   } // Fim do método getByBarbsershopId

@@ -12,6 +12,10 @@ class BarberModel extends AbstractModel
 	public const AGUARDANDO = 1;
 	public const ATIVO 			= 2;
 	public const BLOQUEADO 	= 3;
+
+	public function status() {
+		return $this->belongsTo('App\Models\BarbersStatusModel', 'barber_status_id');
+	}
 	
 	// Busca todos os eventos
 	public function getByEmailAndPassword($email, $password)

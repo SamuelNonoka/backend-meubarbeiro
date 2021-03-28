@@ -22,7 +22,13 @@ class BarberRepository extends AbstractRepository
   } // Fim do método getByEmail
 
   public function getByBarbershopId ($barbershop_id) {
-    return $this->model->where('barbershop_id', $barbershop_id)->get();
+    $data = $this->model->where('barbershop_id', $barbershop_id)->get();
+
+    foreach ($data as $key => $item) {
+      $data[$key]['status'] = $item->status;
+    }
+
+    return $data;
   } // Fim do método getByEmail
 
   public function getById ($id) {
