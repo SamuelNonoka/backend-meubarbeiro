@@ -21,8 +21,15 @@ class ScheduleRepository extends AbstractRepository
 
   public function getById ($id) 
   {
-		$data = $this->model->find($id)->get();
-    dd($data);
+		$data = $this->model->find($id);
+
+    $data->status               = $data->status;
+    $data->barber               = $data->barber;
+    $data->user                 = $data->user;
+    $data->barbershop           = $data->barbershop;
+    $data->barbershop->address  = $data->barbershop->address;
+    $data->services             = $data->services;
+    return $data;
 	} // Fim do método getByUserId
 
   public function getByUserId ($user_id) {

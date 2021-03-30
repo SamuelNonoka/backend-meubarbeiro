@@ -8,6 +8,7 @@ use DB;
 class ServiceModel extends AbstractModel
 {
 	protected $tabela = "services";
+	protected $table = "services";
 	
 	// Busca os servicos de uma barbearia
 	public function getByBarbershopId($barbershop_id) 

@@ -18,6 +18,26 @@ class ScheduleModel extends AbstractModel
 	public const CANCELADO = 2;
 	public const REPROVADO = 4;
 
+	public function barber() {
+		return $this->belongsTo('App\Models\BarberModel', 'barber_id');
+	}
+
+	public function barbershop() {
+		return $this->belongsTo('App\Models\BarbershopModel', 'barbershop_id');
+	}
+
+	public function services () {
+		return $this->belongsToMany('App\Models\ServiceModel', 'schedules_services', 'schedule_id', 'service_id');
+	}
+
+	public function status() {
+		return $this->belongsTo('App\Models\ScheduleStatusModel', 'schedule_status_id');
+	}
+
+	public function user () {
+		return $this->belongsTo('App\Models\UserModel', 'user_id');
+	}
+
 	// Aprovar agendamento
 	public function approve (Request $request, $id) 
 	{

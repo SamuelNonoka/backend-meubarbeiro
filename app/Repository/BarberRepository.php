@@ -32,7 +32,7 @@ class BarberRepository extends AbstractRepository
   } // Fim do método getByEmail
 
   public function getById ($id) {
-    return $this->model->find($id);
+    $data = $this->model->find($id);
   } // Fim do método getById
 
   public function getByUuid ($uuid) {
