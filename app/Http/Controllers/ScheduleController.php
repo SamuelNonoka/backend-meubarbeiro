@@ -28,6 +28,10 @@ class ScheduleController extends Controller
 		$this->schedule_service = new ScheduleService();
 	}
 
+	public function getByBarbershopPending (Request $request, $barbershop_id) {
+		return $this->schedule_service->getByBarbershopPending($request, $barbershop_id);
+	} // Fim do método getByBarbershopPending
+
 	public function getByUserId ($user_id) {
 		return $this->schedule_service->getByUserId($user_id);
 	} // Fim do método getByUserId
@@ -52,17 +56,6 @@ class ScheduleController extends Controller
 
 		return (new ScheduleModel)->getByBarbershop($barbershop_id, $request->date, $barber_id);
 	} // Fim do método index
-
-	// Obtem os agendamentos pendentes de aprovação da barbearia
-	public function getByBarbershopPending (Request $request, $barbershop_id) 
-	{
-		$barber = TokenHelper::getUser($request);
-		
-		if ($barber->barbershop_id != $barbershop_id)
-			return JsonHelper::getResponseErro("Seu usuário não tem permissão para recuperar esses dados!");
-
-		return (new ScheduleModel)->getByBarbershopPending($barbershop_id, $barber->id);
-	} // Fim do método getByBarbershopPending
 
 	// Faz um agendamento
 	public function store (Request $request) 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\JsonHelper;
+use App\Helpers\TokenHelper;
 use App\Repository\ScheduleRepository;
 use App\Services\BarberService;
 
@@ -17,6 +18,23 @@ class ScheduleService
     $this->barber_service      = new BarberService();
     $this->user_service        = new UserService();
   }
+
+  public function getByBarbershopPending ($request, $barbershop_id) 
+	{
+		$barber = TokenHelper::getUser($request);
+		
+		if ($barber->barbershop_id != $barbershop_id)
+			return JsonHelper::getResponseErro("Seu usuário não tem permissão para recuperar esses dados!");
+
+		$data = $this->schedule_repository->getByBarbershopPending($barbershop_id, $barber->id);
+
+    foreach ($data as $key => $item) {
+      $data[$key]->barber = $this->barber_service->decrypt($item->barber);
+      $data[$key]->user   = $this->user_service->decrypt($item->user);
+    }
+
+    return JsonHelper::getResponseSucesso($data);
+  } // Fim do método getByBarbershopPending
 
   public function getById ($id) 
   {

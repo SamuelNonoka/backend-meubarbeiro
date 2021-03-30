@@ -19,6 +19,25 @@ class ScheduleRepository extends AbstractRepository
             ->get();
 	} // Fim do método getByBarbershopDate
 
+  public function getByBarbershopPending ($barbershop_id, $barber_id) 
+  {
+    $data = $this->model->where('barbershop_id', $barbershop_id)
+            ->where('barber_id', $barber_id)
+            ->get();
+
+    foreach ($data as $key => $item) 
+    {
+      $data[$key]->status               = $item->status;
+      $data[$key]->barber               = $item->barber;
+      $data[$key]->user                 = $item->user;
+      $data[$key]->barbershop           = $item->barbershop;
+      $data[$key]->barbershop->address  = $item->barbershop->address;
+      $data[$key]->services             = $item->services;
+    }
+
+    return $data;
+  } // Fim do método getByBarbershopPending
+
   public function getById ($id) 
   {
 		$data = $this->model->find($id);
