@@ -13,6 +13,10 @@ class AbstractRepository
     $this->model = $model;
   } // Fim do Constructor
 
+  public function remove ($id) {
+		$this->model->where('id', $id)->delete();
+	} // Fim do método remove
+
   public function store ($barber) 
   {
     $barber['created_at'] = date('Y-m-d H:i:s');
@@ -31,8 +35,9 @@ class AbstractRepository
     return $this->model->where('encrypted', false)->first();
 	} // Fim do método getNotCrypted
 
-  public function update ($data, $id) {
-    $barber['updated_at'] = date('Y-m-d H:i:s');
+  public function update ($data, $id) 
+  {
+    $data['updated_at'] = date('Y-m-d H:i:s');
     $this->model->where('id', $id)->update($data);
   } // Fim do método update
 

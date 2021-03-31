@@ -24,6 +24,10 @@ class BarbershopController extends Controller
     $this->barbershop_service = new BarbershopService();
   } // fim do construtor
 
+  public function getBarbers ($id) {
+    return $this->barber_service->getByBarbershopId($id);
+  } // Fim do método getBarbers
+
   public function index (Request $request) 
   {
     if ($request->name)
@@ -35,119 +39,17 @@ class BarbershopController extends Controller
     return $this->barbershop_service->store($request);
   } // Fim do método store
 
+  public function update (Request $request, $id) {
+    return $this->barbershop_service->update($request, $id);
+  } // Atualiza os dados da barbearia
+
+  /** Controlles antigos **/
   public function show ($id) 
   {
     $data = (new BarbershopModel)->getById($id);
     return JsonHelper::getResponseSucesso($data);
   } // Fim do método show
 
-  public function getBarbers ($id) {
-    return $this->barber_service->getByBarbershopId($id);
-  } // Fim do método getBarbers
-
-  public function update (Request $request, $id) 
-  {
-    $barber_arr = $request->only(['name', 'description', 'phone_number', 'instagram_url', 'facebook_url']);
-    
-    if ($request->address) {
-      $address_request = (object) $request->address;
-      $address_arr     = [];
-    
-      if (isset($address_request->cep))
-        $address_arr['cep'] = $address_request->cep;
-      
-      if (isset($address_request->public_place))
-        $address_arr['public_place'] = $address_request->public_place;
-
-      if (isset($address_request->number))
-        $address_arr['number'] = $address_request->number;
-
-      if (isset($address_request->neighborhood))
-        $address_arr['neighborhood'] = $address_request->neighborhood;
-
-      if (isset($address_request->city))
-        $address_arr['city'] = $address_request->city;
-
-      if (isset($address_request->uf))
-        $address_arr['uf'] = $address_request->uf;
-
-      if (isset($address_request->map_url))
-        $address_arr['map_url'] = $address_request->map_url;
-
-      if (isset($address_request->complement))
-        $address_arr['complement'] = $address_request->complement;
-
-      $address_model = new AddressModel();
-
-      if ($request->address_id) {
-        $address_model->updateData($request->address_id, $address_arr);
-      }
-      else {
-        $address_id = $address_model->storeObjeto($address_arr);
-        if ($address_id != 0)
-          $barber_arr['address_id'] = $address_id;
-      }
-    }
-
-    // Schedules days
-    if ($request->schedules_days) 
-    {
-      $schedules                    = $request->schedules_days;
-      $barbershop_scheduleday_model = new BarbershopScheduleDayModel();
-      $schedules_db                 = $barbershop_scheduleday_model->getByBarbershopId($id);
-
-      // Faz o loop com os horários enviados
-      foreach ($schedules as $schedule) 
-      {
-        $has_schedule   = false;
-        $schedule_db_id = null;
-
-        foreach ($schedules_db as $schedule_db) 
-        {
-          if ($schedule['schedule_day_id'] == $schedule_db->schedule_day_id) {
-            $schedule_db_id = $schedule_db->id;
-            $has_schedule   = true;
-            break;
-          }
-        } // Fim do loop dos horários do db
-
-        $schedule_arr = array (
-          'schedule_day_id' => $schedule['schedule_day_id'],
-          'barbershop_id'   => $id,
-          'open'            => true,
-          'start'           => $schedule['start'],
-          'end'             => $schedule['end']
-        );
-
-        if ($has_schedule) {
-          if ($schedule['open']) {
-            $barbershop_scheduleday_model->updateData($schedule_db_id, $schedule_arr);
-          } else {
-            $barbershop_scheduleday_model->remove($schedule_db_id);
-          }
-        } else if ($schedule['open']) {
-          $barbershop_scheduleday_model->storeObjeto($schedule_arr);
-        }
-      } // Fim do loop
-    
-    } // Fim do schedules days
-
-    $barbershop_model = new BarbershopModel();
-    $saved            = $barbershop_model->updateData($id, $barber_arr); 
-
-    if (!$saved)
-      return JsonHelper::getResponseErro('Não foi possível salvar a barbearia.');
-  
-    $barbershop_db  = $barbershop_model->getById($id);
-    $token   	      = TokenHelper::atualizarToken($request, $barbershop_db);
-		$payload	      = array(
-      'token'       => $token, 
-      'barbershop'  => $barbershop_db
-    );
-
-    return JsonHelper::getResponseSucesso($payload);
-  } // Atualiza os dados da barbearia
-  
   // Faz o upload de uma nova imagem para o barbeiro
 	public function uploadImage (Request $request) 
 	{
