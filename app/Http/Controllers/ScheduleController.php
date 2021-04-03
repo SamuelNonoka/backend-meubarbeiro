@@ -28,6 +28,14 @@ class ScheduleController extends Controller
 		$this->schedule_service = new ScheduleService();
 	}
 
+	public function approve (Request $request, $id) {
+		return $this->schedule_service->approve($request, $id);
+	} // Fim do método approve
+
+	public function getByBarbershopDate (Request $request, $barbershop_id) {
+		return $this->schedule_service->getByBarbershopDate($request, $barbershop_id);
+	} // Fim do método index
+
 	public function getByBarbershopPending (Request $request, $barbershop_id) {
 		return $this->schedule_service->getByBarbershopPending($request, $barbershop_id);
 	} // Fim do método getByBarbershopPending
@@ -36,26 +44,13 @@ class ScheduleController extends Controller
 		return $this->schedule_service->getByUserId($user_id);
 	} // Fim do método getByUserId
 
+	public function repprove (Request $request, $id) {
+		return $this->schedule_service->repprove($request, $id);
+	} // Fim do método repprove
+
 	public function show ($id) {
 		return $this->schedule_service->getById($id);
 	} // Fim do método show
-
-	// Busca todos os agendamentos
-	public function getByBarbershopDate (Request $request, $barbershop_id) 
-	{
-		if (!$request->date)
-			return JsonHelper::getResponseErro("Informe a data para filtrar os agendamentos!");
-
-		$barber = TokenHelper::getUser($request);
-		
-		if ($barber->barbershop_id != $barbershop_id)
-			return JsonHelper::getResponseErro("Seu usuário não tem permissão para recuperar esses dados!");
-
-		$barbershop_db 	= (new BarbershopModel)->getById($barbershop_id);
-		$barber_id 			= ($barber->id != $barbershop_db['admin_id']) ? $barber->id : null;
-
-		return (new ScheduleModel)->getByBarbershop($barbershop_id, $request->date, $barber_id);
-	} // Fim do método index
 
 	// Faz um agendamento
 	public function store (Request $request) 
@@ -104,16 +99,6 @@ class ScheduleController extends Controller
 		
 		return JsonHelper::getResponseSucesso($schedule); 
 	} // Fim da classe
-
-	// Aprovar agendamento
-	public function approve (Request $request, $id) {
-		return (new ScheduleModel)->approve($request, $id);
-	} // Fim do método approve
-
-	// Reprovar agendamento
-	public function repprove (Request $request, $id) {
-		return (new ScheduleModel)->repprove($request, $id);
-	} // Fim do método repprove
 
 	// Usuário cancela o agendamento
 	public function cancelByUser (Request $request, $id) 

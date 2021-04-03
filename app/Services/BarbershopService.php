@@ -52,7 +52,7 @@ class BarbershopService
 			return JsonHelper::getResponseErro($invalido);
 
     $barber_db = $this->barber_repository->getById($request->barber_id);
-
+    
     if (!$barber_db)
       return JsonHelper::getResponseErro('O barbeiro informado não existe na plataforma.');
 

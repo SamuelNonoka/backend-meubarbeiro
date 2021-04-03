@@ -21,22 +21,19 @@ class UserService
 
   public function decrypt ($user) 
   {
-    if (isset($user->name))
-      $user['name'] = CryptService::decrypt($user->name);
+    if (isset($user['name']))
+      $user['name'] = CryptService::decrypt($user['name']);
     
-    if (isset($user->email))
-      $user['email'] = CryptService::decrypt($user->email);
+    if (isset($user['email']))
+      $user['email'] = CryptService::decrypt($user['email']);
     
-    if (isset($user->phone_number))
-      $user['phone_number'] = CryptService::decrypt($user->phone_number);
+    if (isset($user['phone_number']))
+      $user['phone_number'] = CryptService::decrypt($user['phone_number']);
     
-    if (isset($user->password))
-      $user['password'] = CryptService::decrypt($user->password);
+    if (isset($user['password']))
+      $user['password'] = CryptService::decrypt($user['password']);
     
-    if (isset($user->name))
-      $user['image_url'] = CryptService::decrypt($user->image_url);
-    
-      return $user;
+    return $user;
   } // Fim do método decrypt
 
   public function store (Request $request) 
