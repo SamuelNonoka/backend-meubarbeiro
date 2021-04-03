@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\JsonHelper;
 use App\Helpers\TokenHelper;
 use App\Repository\ScheduleRepository;
+use App\Repository\BarbershopRepository;
 use App\Services\BarberService;
 
 class ScheduleService
@@ -14,10 +15,62 @@ class ScheduleService
   private $user_service;
 
   public function __construct () {
-    $this->schedule_repository = new ScheduleRepository();
-    $this->barber_service      = new BarberService();
-    $this->user_service        = new UserService();
+    $this->barbershop_repository  = new BarbershopRepository();
+    $this->schedule_repository    = new ScheduleRepository();
+    $this->barber_service         = new BarberService();
+    $this->user_service           = new UserService();
   }
+
+  public function approve ($request, $id) 
+  {
+    $schedule_db = $this->schedule_repository->getById($id);
+
+    if (!$schedule_db || $schedule_db['schedule_status_id'] != $this->schedule_repository::AGUARDANDO)
+      return JsonHelper::getResponseErro('Não foi possível aprovar o agendamento!');
+		
+    $barber = TokenHelper::getUser($request);
+
+    if ($schedule_db['barber_id'] != $barber->id)
+			return JsonHelper::getResponseErro('Seu usuário não tem permissão para aprovar o agendamento!');
+		
+		if ($schedule_db['start_date'] < date('Y-m-d H:i:s'))
+			return JsonHelper::getResponseErro('Este agendamento não pode ser aprovado!');
+		
+    $schedule = array ('schedule_status_id' => $this->schedule_repository::AGENDADO);
+    $this->schedule_repository->update($schedule, $id);
+
+		return JsonHelper::getResponseSucesso('Agendamento aprovado com sucesso!');
+  } // Fim do método approve
+
+  public function getByBarbershopDate ($request, $barbershop_id) 
+  {
+    if (!$request->date)
+			return JsonHelper::getResponseErro("Informe a data para filtrar os agendamentos!");
+
+		$barber = TokenHelper::getUser($request);
+		
+		if ($barber->barbershop_id != $barbershop_id)
+			return JsonHelper::getResponseErro("Seu usuário não tem permissão para recuperar esses dados!");
+
+		$barbershop_db 	=$this->barbershop_repository->getById($barbershop_id);
+    $barber_id 			= ($barber->id != $barbershop_db['admin_id']) ? $barber->id : null;
+
+		$data = $this->schedule_repository->getByBarbershop($barbershop_id, $request->date, $barber_id);
+
+    foreach ($data as $key => $item) {
+      unset( $item['password']);
+      $data[$key] = $this->barber_service->decrypt((object) $item);
+      
+      foreach ($item['schedules'] as $i => $schedule) {
+        unset( $schedule['user']['password']);
+        $user = $schedule['user'];
+        $user = $this->user_service->decrypt($user);
+        $data[$key]->schedules[$i]['user'] = $user;
+      }
+    }
+
+    return JsonHelper::getResponseSucesso($data);
+  } // Fim do método getByBarbershopDate
 
   public function getByBarbershopPending ($request, $barbershop_id) 
 	{
@@ -49,5 +102,25 @@ class ScheduleService
     $schedules = $this->schedule_repository->getByUserId($user_id);
 		return JsonHelper::getResponseSucesso($schedules);
   } // Fim do método getByUserId
+
+  public function repprove ($request, $id) 
+  {
+    $schedule_db = $this->schedule_repository->getById($id);
+		
+		if (!$schedule_db || $schedule_db['schedule_status_id'] != $this->schedule_repository::AGUARDANDO)
+			return JsonHelper::getResponseErro('Não foi possível reprovar o agendamento!');
+
+		$barber = TokenHelper::getUser($request);
+
+		if ($schedule_db['barber_id'] != $barber->id)
+			return JsonHelper::getResponseErro('Seu usuário não tem permissão para reprovar o agendamento!');
+		
+		if ($schedule_db['start_date'] < date('Y-m-d H:i:s'))
+			return JsonHelper::getResponseErro('Este agendamento não pode ser reprovado!');
+
+		$schedule = array ('schedule_status_id' => $this->schedule_repository::REPROVADO);
+		$this->update($schedule, $id);
+		return JsonHelper::getResponseSucesso('Agendamento reprovado com sucesso!');
+	} // Fim do método repprove
 
 } // Fim da classe
