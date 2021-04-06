@@ -14,7 +14,7 @@ class RegisterGoogleMail extends Mailable
 	private $email;
 	private $acesso;
     
-	public function __construct($name, $email)
+	public function __construct($name, $email, $is_barber)
 	{
 		$this->name   		= $name;
 		$this->email			= $email;
