@@ -41,7 +41,8 @@ class UserService
     $rules = [
 			'name'			=> 'required|max:50',
       'email' 		=> 'required|max:50',
-      'password'  => 'required|min:6'
+      'password'  => 'required|min:6',
+      'born_date' => 'required'
     ];
 		
 		$invalido = ValidacaoHelper::validar($request->all(), $rules);
@@ -51,11 +52,22 @@ class UserService
 
     $uuid = (string) Str::uuid();
     $user = array (
-			'uuid'			=> $uuid,
-			'name'			=> CryptService::encrypt($request->name),
-			'email'			=> CryptService::encrypt($request->email),
-			'password'  => CryptService::encrypt($request->password)	
+			'uuid'			    => $uuid,
+      'born_date'     => $request->born_date,
+      'acepted_term'  => date('Y-m-d H:i:s'),
+			'name'			    => CryptService::encrypt($request->name),
+			'email'			    => CryptService::encrypt($request->email),
+			'password'      => CryptService::encrypt($request->password)	
     );
+
+    if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+
+    $date       = date('Y-m-d', strtotime('-18 years'));
+    $born_date  = date('Y-m-d', strtotime($request->born_date));
+
+    if(strtotime($date) < strtotime($born_date))
+      return JsonHelper::getResponseErro("O Meu Barbeiro só é permitido para maiores de idade!");
 
     if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
       return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
@@ -82,7 +94,8 @@ class UserService
     $rules = [
 			'name'			=> 'required|max:50',
       'email' 		=> 'required|max:50',
-      'google_id'  => 'required|min:6'
+      'google_id'  => 'required|min:6',
+      'born_date' => 'required'
     ];
 		
 		$invalido = ValidacaoHelper::validar($request->all(), $rules);
@@ -96,8 +109,16 @@ class UserService
       'name'			=> CryptService::encrypt($request->name),
       'email'			=> CryptService::encrypt($request->email),
       'google_id' => $request->google_id,
-      'enabled'   => true
+      'enabled'   => true,
+      'acepted_term'  => date('Y-m-d H:i:s'),
+      'born_date'     => $request->born_date
     );
+
+    $date       = date('Y-m-d', strtotime('-18 years'));
+    $born_date  = date('Y-m-d', strtotime($request->born_date));
+
+    if(strtotime($date) < strtotime($born_date))
+      return JsonHelper::getResponseErro("O Meu Barbeiro só é permitido para maiores de idade!");
 
     if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
       return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");

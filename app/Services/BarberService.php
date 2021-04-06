@@ -88,7 +88,8 @@ class BarberService
     $rules = [
 			'name'			=>	'required|max:50',
       'email' 		=> 'required|max:50',
-      'password'	=> 'required|min:6'
+      'password'	=> 'required|min:6',
+      'born_date' => 'required'
     ];
 
     $invalido = ValidacaoHelper::validar($request->all(), $rules);
@@ -122,6 +123,12 @@ class BarberService
     if (count($has_email) > 0)
       return JsonHelper::getResponseErro('O e-mail informado já está sendo utilizado!');
 
+    $date       = date('Y-m-d', strtotime('-18 years'));
+    $born_date  = date('Y-m-d', strtotime($request->born_date));
+
+    if(strtotime($date) < strtotime($born_date))
+      return JsonHelper::getResponseErro("O Meu Barbeiro só é permitido para maiores de idade!");
+
     $barber = array (
 			'uuid'							=> $uuid,
 			'name'							=> $name,
@@ -129,7 +136,9 @@ class BarberService
 			'password'					=> $password,
       'encrypted'         => true,
       'barbershop_id'			=> $barbershop_id,
-      'barber_status_id'  => $barber_status_id
+      'barber_status_id'  => $barber_status_id,
+      'born_date'         => $request->born_date,
+      'acepted_term'      => date('Y-m-d H:i:s'),
 		);
     
     $id = $this->barber_repository->store($barber);
@@ -148,13 +157,20 @@ class BarberService
     $rules = [
 			'name'			=>	'required|max:50',
       'email' 		=> 'required|max:50',
-      'google_id' => 'required'
+      'google_id' => 'required',
+      'born_date' => 'required'
     ];
 
     $invalido = ValidacaoHelper::validar($request->all(), $rules);
 
     if ($invalido) 
       return JsonHelper::getResponseErro($invalido);
+
+    $date       = date('Y-m-d', strtotime('-18 years'));
+    $born_date  = date('Y-m-d', strtotime($request->born_date));
+
+    if(strtotime($date) < strtotime($born_date))
+      return JsonHelper::getResponseErro("O Meu Barbeiro só é permitido para maiores de idade!");
       
     if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
       return JsonHelper::getResponseErro('Por favor, informe um e-mail válido.');
@@ -177,7 +193,9 @@ class BarberService
       'encrypted'         => true,
       'enabled'           => true,
       'barbershop_id'			=> null,
-      'barber_status_id'  => $barber_status_id
+      'barber_status_id'  => $barber_status_id,
+      'acepted_term'  => date('Y-m-d H:i:s'),
+      'born_date'     => $request->born_date
 		);
     
     $id = $this->barber_repository->store($barber);
@@ -189,7 +207,7 @@ class BarberService
     $barber_db = $this->decrypt($barber_db);
 		$token = TokenHelper::atualizarToken($request, $barber_db);
 		
-		MailHelper::sendRegisterWithGoogle($request->name, $request->email);	
+		MailHelper::sendRegisterWithGoogle($request->name, $request->email, true);	
 		return JsonHelper::getResponseSucesso($token);
   } // Fim do método storeWithGoogle
 

@@ -41,9 +41,9 @@ class MailHelper
     return self::send($email, $registerMail); // Dispara o e-mail
   } // Fim do método sendRegister
 
-  public static function sendRegisterWithGoogle($name, $email)
+  public static function sendRegisterWithGoogle($name, $email, $is_barber = false)
   {
-    $registerMail = new RegisterGoogleMail($name, $email);
+    $registerMail = new RegisterGoogleMail($name, $email, $is_barber);
     return self::send($email, $registerMail); // Dispara o e-mail
   } // Fim do método sendRegister
 
