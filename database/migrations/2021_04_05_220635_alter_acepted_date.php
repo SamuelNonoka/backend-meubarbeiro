@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterAceptedDate extends Migration
+class AlterAceptedDateBarbers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class AlterAceptedDate extends Migration
      */
     public function up()
     {
-        Schema::table('barbers', function (Blueprint $table) {
-            $table->renameColumn('acepted_date', 'acepted_term');
-        });
+        if (Schema::hasColumn('barbers', 'acepted_date'))
+        {
+            Schema::table('barbers', function (Blueprint $table) {
+                $table->renameColumn('acepted_date', 'acepted_term');
+            });
+        }
     }
 
     /**

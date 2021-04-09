@@ -138,7 +138,7 @@ class UserService
     $user_db  = $this->decrypt($user_db);
     $token    = TokenHelper::atualizarToken($request, $user_db);
     
-    MailHelper::sendRegisterWithGoogle($request->name, $request->email);			
+    MailHelper::sendRegisterWithGoogle($request->name, $request->email, false);			
     return JsonHelper::getResponseSucesso($token);
   } // Fim do método storeWithGoogle
 
@@ -154,15 +154,33 @@ class UserService
 		if ($id != $usuario->id)
 			return JsonHelper::getResponseErro('Seu usuário não tem permissão para alterar os dados!');
 
+    $rules = [
+      'name'			    => 'required|max:50',
+      'phone_number'  => 'required',
+      'born_date'     => 'required'
+    ];
+    
+    $invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+    if ($invalido) 
+      return JsonHelper::getResponseErro($invalido);
+
+    $date       = date('Y-m-d', strtotime('-18 years'));
+    $born_date  = date('Y-m-d', strtotime($request->born_date));
+
+    if(strtotime($date) < strtotime($born_date))
+      return JsonHelper::getResponseErro("O Meu Barbeiro só é permitido para maiores de idade!");
+
 		$user = array(
 			'name'					=> CryptService::encrypt($request->name),
-			'phone_number'  => CryptService::encrypt($request->phone_number)
+			'phone_number'  => CryptService::encrypt($request->phone_number),
+      'born_date'     => $request->born_date
 		);
 		
 		$this->user_repository->update($user, $id);
 
 		$user_db = $this->user_repository->getById($id);
-    $token 	 = TokenHelper::gerarTokenBarber($request, $this->decrypt($user_db[0]));
+    $token 	 = TokenHelper::gerarTokenBarber($request, $this->decrypt($user_db));
 
 		return JsonHelper::getResponseSucesso($token);
   }

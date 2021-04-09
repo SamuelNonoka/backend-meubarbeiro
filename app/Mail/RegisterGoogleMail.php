@@ -18,7 +18,7 @@ class RegisterGoogleMail extends Mailable
 	{
 		$this->name   		= $name;
 		$this->email			= $email;
-		$this->acesso			= $is_barber ? env('APP_SITE_URL') . '/autenticacao/login' : env('APP_SITE_URL') . '/autenticacao/barbeiro/login';
+		$this->acesso			= !$is_barber ? env('APP_SITE_URL') . '/autenticacao/login' : env('APP_SITE_URL') . '/autenticacao/barbeiro/login';
 	}
 
 	public function build()
