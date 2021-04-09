@@ -12,10 +12,13 @@ class AlterAceptedDate extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('acepted_date', 'acepted_term');
-        });
+    {   
+        if (Schema::hasColumn('users', 'acepted_date'))
+        {
+            Schema::table('users', function (Blueprint $table) {
+                $table->renameColumn('acepted_date', 'acepted_term');
+            });
+        }
     }
 
     /**
