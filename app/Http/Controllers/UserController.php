@@ -29,6 +29,10 @@ class UserController extends Controller
 		return $this->user_service->changePasswordByCode($request);
 	} // Fim do método changePassword
 
+	public function recoveryPassword (Request $request)  {
+		return $this->user_service->recoveryPassword($request);
+	} // Fim do método
+
   public function store (Request $request) {
 		return $this->user_service->store($request);
 	} // Fim do método store
@@ -60,10 +64,5 @@ class UserController extends Controller
 
 		return JsonHelper::getResponseSucesso('Cadastro confirmado :)');
 	} // Fim do método confirm
-
-	// Envia e-mail de recuperar senha para um barbeiro
-	public function recoveryPassword (Request $request)  {
-		return $this->user_service->recoveryPassword($request);
-	} // Fim do método
 
 } // Fim da classe
