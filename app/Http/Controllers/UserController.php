@@ -21,6 +21,10 @@ class UserController extends Controller
 		$this->user_service = new UserService();
 	}
 
+	public function changePassword (Request $request) {
+		return $this->user_service->changePassword($request);
+	} // Fim do método changePassword
+
   public function store (Request $request) {
 		return $this->user_service->store($request);
 	} // Fim do método store
@@ -93,26 +97,6 @@ class UserController extends Controller
 			return JsonHelper::getResponseErro('Não foi possível alterar sua senha!');
 
 		return JsonHelper::getResponseSucesso('Senha alterda com sucesso!');
-	} // Fim do método changePassword
-
-	// Altera a senha
-	public function changePassword (Request $request) 
-	{
-		if (!$request->password)
-			return JsonHelper::getResponseErro('Por favor, informe a senha!');
-
-		$token 		= $request->header('token');
-		$payload 	= explode(".",$token);
-		$payload 	= $payload[1];
-		$payload	= base64_decode($payload);
-		$payload	= json_decode($payload);
-		$user 		= array('password' => EncriptacaoHelper::encriptarSenha($request->password));
-		$saved 		= (new UserModel)->updateData($payload->usuario->id, $user);
-
-		if (!$saved)
-			return JsonHelper::getResponseErro('Não foi possível alterar a senha!');
-
-		return JsonHelper::getResponseSucesso('Senha alterada com sucesso!');
 	} // Fim do método changePassword
 
 } // Fim da classe

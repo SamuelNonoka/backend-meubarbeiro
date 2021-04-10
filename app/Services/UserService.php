@@ -19,6 +19,21 @@ class UserService
     $this->user_repository = new UserRepository();
   }
 
+  public function changePassword ($request)
+  {
+    if (!$request->password)
+			return JsonHelper::getResponseErro('Por favor, informe a senha!');
+
+		$token 		= $request->header('token');
+		$payload 	= explode(".",$token);
+		$payload 	= $payload[1];
+		$payload	= base64_decode($payload);
+		$payload	= json_decode($payload);
+		$user 		= array('password' => CryptService::encrypt($request->password));
+    $this->user_repository->update($user, $payload->usuario->id);
+		return JsonHelper::getResponseSucesso('Senha alterada com sucesso!');
+  }
+
   public function decrypt ($user) 
   {
     if (isset($user['name']))
