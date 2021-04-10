@@ -34,6 +34,29 @@ class UserService
 		return JsonHelper::getResponseSucesso('Senha alterada com sucesso!');
   }
 
+  public function changePasswordByCode ($request) 
+	{
+    $rules = [ 
+			'token'			=> 'required',
+			'code' 			=> 'required|size:4',
+			'password'	=> 'required|min:6' 
+		];
+
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		$user_db = $this->user_repository->getByUuid($request->token);
+		
+		if ($user_db->code != $request->code)
+			return JsonHelper::getResponseErro('O código não está correto!');
+
+		$password	= CryptService::encrypt($request->password);
+		$this->user_repository->update(array('password' => $password), $user_db->id);
+		return JsonHelper::getResponseSucesso('Senha alterda com sucesso!');
+  } // Fim do método changePasswordByCode
+
   public function decrypt ($user) 
   {
     if (isset($user['name']))

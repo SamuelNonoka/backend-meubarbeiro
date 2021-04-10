@@ -10,4 +10,8 @@ class UserRepository extends AbstractRepository
     parent::__construct((new UserModel));
   }
 
+  public function getByUuid ($uuid) {
+    return $this->model->where('uuid', $uuid)->first();
+  } // Fim do método getById
+
 } // Fim da classe

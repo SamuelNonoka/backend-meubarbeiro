@@ -25,6 +25,10 @@ class UserController extends Controller
 		return $this->user_service->changePassword($request);
 	} // Fim do método changePassword
 
+	public function changePasswordByCode (Request $request) {
+		return $this->user_service->changePasswordByCode($request);
+	} // Fim do método changePassword
+
   public function store (Request $request) {
 		return $this->user_service->store($request);
 	} // Fim do método store
@@ -61,42 +65,5 @@ class UserController extends Controller
 	public function recoveryPassword (Request $request)  {
 		return $this->user_service->recoveryPassword($request);
 	} // Fim do método
-
-	// Alterar a senha do barbeiro
-	public function changePasswordByCode (Request $request) 
-	{
-		// Valida a request
-		$rules = [ 
-			'token'			=> 'required',
-			'code' 			=> 'required|size:4',
-			'password'	=> 'required|min:6' 
-		];
-
-		$invalido = ValidacaoHelper::validar($request->all(), $rules);
-
-		if ($invalido) 
-			return JsonHelper::getResponseErro($invalido);
-
-		// Verifica se o barbeiro existe
-		$user_model = new UserModel();
-		$user_db 		= $user_model->getByUuid ($request->token);
-		
-		if (count($user_db) == 0)
-			return JsonHelper::getResponseErro('Não foi possível recuperar o token!');
-
-		$user_db = $user_db[0];
-		
-		if ($user_db->code != $request->code)
-			return JsonHelper::getResponseErro('O código não está correto!');
-
-		// Alterar senha
-		$password	= EncriptacaoHelper::encriptarSenha($request->password);
-		$saved 		= $user_model->updatePassword($user_db->id, $password);
-
-		if (!$saved)
-			return JsonHelper::getResponseErro('Não foi possível alterar sua senha!');
-
-		return JsonHelper::getResponseSucesso('Senha alterda com sucesso!');
-	} // Fim do método changePassword
 
 } // Fim da classe
