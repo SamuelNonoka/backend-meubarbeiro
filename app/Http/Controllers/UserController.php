@@ -45,6 +45,10 @@ class UserController extends Controller
 		return $this->user_service->update($request, $id);
 	} // Fim do método update
 
+	public function uploadImage (Request $request) {
+		return $this->user_service->uploadImage($request);
+	} // Fim do método uploadImage
+
 	// Confirme o cadastro do usuário
 	public function confirm (Request $request) 
 	{

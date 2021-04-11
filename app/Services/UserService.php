@@ -223,6 +223,36 @@ class UserService
 		return JsonHelper::getResponseSucesso($token);
   }
 
+  public function uploadImage ($request) 
+  {
+    $user 	= TokenHelper::getUser($request);
+		$rules 		= ['img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'];
+		$invalido	= ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!$request->hasFile('img'))
+			return JsonHelper::getResponseErro('Por favor, envie uma imagem');
+
+		$image 						= $request->file('img');
+		$name							= $user->uuid . rand(10, 99);
+		$name 						=	$name .'.'.$image->getClientOriginalExtension();
+		$path							= '/storage/uploads/users/profile/' . $user->uuid;
+    $destinationPath 	= public_path($path);
+    $imagePath	 			= $destinationPath. "/".  $name;
+		$image->move($destinationPath, $name);
+		
+		$path 				= $path . '/' . $name;
+		$user_arr 	  = array('image_url' => $path);
+		$this->user_repository->update($user_arr, $user->id);
+    $user_db		= $this->user_repository->getById($user->id);
+    $user_db    = $this->decrypt($user_db);
+    unset($user_db->password);
+		$token			= TokenHelper::gerarTokenBarber($request, $user_db);
+		return JsonHelper::getResponseSucesso($token);
+  } // Fim do método uploadImage
+
   public function recoveryPassword (Request $request) 
   {
     $rules    = [ 'email' => 'required|max:50' ];

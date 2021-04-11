@@ -93,6 +93,7 @@ Route::middleware('auth:api')->group(function () {
   });
 
   Route::prefix('user')->group(function() {
+    Route::post('/image', 'UserController@uploadImage');
     Route::post('/change-password', 'UserController@changePassword');
     Route::put('/{id}', 'UserController@update');
   });
