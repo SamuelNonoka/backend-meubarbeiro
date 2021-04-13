@@ -42,6 +42,34 @@ class ScheduleService
 		return JsonHelper::getResponseSucesso('Agendamento aprovado com sucesso!');
   } // Fim do método approve
 
+  public function getByBarberId ($request, $barber_id) 
+  {
+    if (!$request->start_date || !$request->end_date)
+      return JsonHelper::getResponseErro("Por favor, informe o período!");
+
+    $start_date = date('z', strtotime($request->start_date));
+    $end_date   = date('z', strtotime($request->end_date));
+    
+    if ($end_date - $start_date >= 7)
+      return JsonHelper::getResponseErro("O período máximo de filtro é de uma semana!");
+      
+    $schedules_db = $this->schedule_repository->getByBarber(
+      $barber_id,
+      $request->start_date,
+      $request->end_date
+    );
+    
+    foreach ($schedules_db as $key => $schedule) 
+    {
+      $schedules_db[$key]['barber'] = $this->barber_service->decrypt($schedule->barber);
+      $schedules_db[$key]['user']   = $this->user_service->decrypt($schedule->user);
+      unset( $schedules_db[$key]['barber']['password']);
+      unset( $schedules_db[$key]['user']['password']);
+    }
+
+    return JsonHelper::getResponseSucesso($schedules_db);
+  } // Fim do método getByBarberId
+
   public function getByBarbershopDate ($request, $barbershop_id) 
   {
     if (!$request->date)

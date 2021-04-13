@@ -15,6 +15,26 @@ class ScheduleRepository extends AbstractRepository
     parent::__construct((new ScheduleModel));
   }
 
+  public function getByBarber ($barber_id, $start_date, $end_date) 
+  {
+    $data = $this->model->where('schedules.barber_id', $barber_id)
+              ->where('schedules.schedule_status_id', self::AGENDADO)
+              ->whereRaw("DATE(schedules.start_date) >= '$start_date'")
+              ->whereRaw("DATE(schedules.end_date) <= '$end_date'")
+              ->get();
+		
+    $schedules = [];
+    foreach ($data as $schedule)
+    {
+      $schedule['user']     = $schedule->user;
+      $schedule['barber']   = $schedule->barber;
+      $schedule['services'] = $schedule->services;
+      array_push($schedules, $schedule);
+    }
+
+    return $schedules;
+  } // Fim do método getByBarber
+
   public function getByBarbershopDate ($barbershop_id, $date) 
 	{
     return $this->model->where('barbershop_id', $barbershop_id)

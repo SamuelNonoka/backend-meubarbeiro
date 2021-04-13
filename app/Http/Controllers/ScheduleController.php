@@ -32,6 +32,10 @@ class ScheduleController extends Controller
 		return $this->schedule_service->approve($request, $id);
 	} // Fim do método approve
 
+	public function getByBarberId (Request $request, $barber_id) {
+		return $this->schedule_service->getByBarberId($request, $barber_id);
+	} // Fim do método getByBarberId
+
 	public function getByBarbershopDate (Request $request, $barbershop_id) {
 		return $this->schedule_service->getByBarbershopDate($request, $barbershop_id);
 	} // Fim do método index
