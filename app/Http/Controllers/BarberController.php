@@ -21,7 +21,7 @@ class BarberController extends Controller
 
 	public function __construct () {
 		$this->barber_service = new BarberService();
-	}
+	} // Construtor da classe
 
 	public function changePassword (Request $request) {
 		return $this->barber_service->changePassword($request);
@@ -29,13 +29,17 @@ class BarberController extends Controller
 
 	public function crypt () {
 		return $this->barber_service->crypt();
-	}
+	} // Encripta dados
 
 	public function getByBarbershop (Request $request) 
 	{
 		$barber	= TokenHelper::getUser($request);
 		return $this->barber_service->getByBarbershopId($barber->barbershop_id);
 	} // Fim do método getByBarbershopId
+
+	public function getTotalBarbersByBarbershopId ($barbershop_id) {
+		return $this->barber_service->getTotalBarbersByBarbershopId($barbershop_id);
+	} // Fim do método getTotalBarbersByBarbershopId
 
 	public function store (Request $request) {
 		return $this->barber_service->store($request);
@@ -57,96 +61,6 @@ class BarberController extends Controller
 		return $this->barber_service->uploadImage($request);
 	} // Fim do método uploadImage
 
-	/*
-	* Atualiza o plano do barbeiro
-	* Não sei se será utilizado
-	**/
-	public function updatePlan (Request $request, $id) 
-	{
-		// Valida a request
-		$rules 		= ['plan_id' => 'required'];
-		$invalido = ValidacaoHelper::validar($request->all(), $rules);
-
-		if ($invalido) 
-			return JsonHelper::getResponseErro($invalido);
-
-		// Verifica se existe um barbeiro com aquele e-mail cadastrado
-		$barber_model = new BarberModel();
-		$barber_db 		= $barber_model->getById($id);
-
-		if (count($barber_db) == 0)
-			return JsonHelper::getResponseErro('Usuário informado não existe na aplicação!');
-
-		$barber_db = $barber_db[0];
-		
-		if ($barber_db->plan_id == $request->plan_id)
-			return JsonHelper::getResponseErro('Você já possui este plano!');
-
-		$plan_due_date 	= date('Y-m-d');
-		$plan_due_date 	= strtotime("+1 months", strtotime($plan_due_date));
-
-		$update = array (
-			'plan_id'				=> $request->plan_id,
-			'plan_due_date'	=> $plan_due_date
-		);
-
-		$saved = $barber_model->updateArray($id, $update);
-
-		if (!$saved)
-			return JsonHelper::getResponseErro('Não foi possível alterar o seu plano!');
-		
-		$barber_db->plan_due_date	= $plan_due_date;
-		$barber_db->plan_id				= $request->plan_id;
-
-		$token 		= TokenHelper::atualizarToken($request, $barber_db);
-		$payload	= array("token" => $token);
-
-		// Envia o e-mail de troca de plano
-		MailHelper::sendChangeBarberPlan($barber_db->email, $barber_db->name, 'Free');
-			
-		return JsonHelper::getResponseSucesso($payload);
-	} // Fim do método updatePlan
-
-	/**
-	* Remove o plano
-	* Não sei se será utilzado
-	**/
-	public function cancelPlan(Request $request, $id) 
-	{
-		// Verifica se existe um barbeiro com aquele e-mail cadastrado
-		$barber_model = new BarberModel();
-		$barber_db 		= $barber_model->getById($id);
-
-		if (count($barber_db) == 0)
-			return JsonHelper::getResponseErro('Usuário informado não existe na aplicação!');
-
-		$barber_db = $barber_db[0];	
-		
-		if (!$barber_db->plan_id)
-			return JsonHelper::getResponseErro('Seu plano já foi cancelado!');
-		
-		$update =	array (
-			'plan_id'				=> null,
-			'plan_due_date'	=> null
-		);
-
-		$saved = $barber_model->updateArray($id, $update);
-
-		if (!$saved)
-			return JsonHelper::getResponseErro('Não foi possível cancelar o seu plano!');
-		
-		$barber_db->plan_due_date	= null;
-		$barber_db->plan_id				= null;
-
-		$token 		= TokenHelper::atualizarToken($request, $barber_db);
-		$payload	= array("token" => $token);
-
-		// Envia o e-mail de troca de plano
-		MailHelper::sendCancelBarberPlan($barber_db->email, $barber_db->name, 'Free');
-			
-		return JsonHelper::getResponseSucesso($payload);
-	} // Fim do método destroyPlan
-
 	// Confirme o cadastro do barbeiro
 	public function confirm (Request $request) 
 	{
@@ -166,12 +80,6 @@ class BarberController extends Controller
 
 		return JsonHelper::getResponseSucesso('Cadastro confirmado :) !');
 	} // Fim do método confirm
-
-	public function getTotalBarbersByBarbershopId ($barbershop_id) 
-	{
-		$data 	= (new BarberModel)->getTotalBarbersByBarbershopId($barbershop_id);
-		return JsonHelper::getResponseSucesso($data);
-	}
 
 	// Envia convite para barbeiro
 	public function sendInvitation (Request $request) 
@@ -269,5 +177,97 @@ class BarberController extends Controller
 
 		return JsonHelper::getResponseSucesso('Barbeiro desbloqueado!');
 	} // Fim do método unlockBarber
+
+	/*** MÉTODOS NÃO UTILIZADOS */
+
+	/*
+	* Atualiza o plano do barbeiro
+	* Não sei se será utilizado
+	**/
+	public function updatePlan (Request $request, $id) 
+	{
+		// Valida a request
+		$rules 		= ['plan_id' => 'required'];
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		// Verifica se existe um barbeiro com aquele e-mail cadastrado
+		$barber_model = new BarberModel();
+		$barber_db 		= $barber_model->getById($id);
+
+		if (count($barber_db) == 0)
+			return JsonHelper::getResponseErro('Usuário informado não existe na aplicação!');
+
+		$barber_db = $barber_db[0];
+		
+		if ($barber_db->plan_id == $request->plan_id)
+			return JsonHelper::getResponseErro('Você já possui este plano!');
+
+		$plan_due_date 	= date('Y-m-d');
+		$plan_due_date 	= strtotime("+1 months", strtotime($plan_due_date));
+
+		$update = array (
+			'plan_id'				=> $request->plan_id,
+			'plan_due_date'	=> $plan_due_date
+		);
+
+		$saved = $barber_model->updateArray($id, $update);
+
+		if (!$saved)
+			return JsonHelper::getResponseErro('Não foi possível alterar o seu plano!');
+		
+		$barber_db->plan_due_date	= $plan_due_date;
+		$barber_db->plan_id				= $request->plan_id;
+
+		$token 		= TokenHelper::atualizarToken($request, $barber_db);
+		$payload	= array("token" => $token);
+
+		// Envia o e-mail de troca de plano
+		MailHelper::sendChangeBarberPlan($barber_db->email, $barber_db->name, 'Free');
+			
+		return JsonHelper::getResponseSucesso($payload);
+	} // Fim do método updatePlan
+
+	/**
+	* Remove o plano
+	* Não sei se será utilzado
+	**/
+	public function cancelPlan(Request $request, $id) 
+	{
+		// Verifica se existe um barbeiro com aquele e-mail cadastrado
+		$barber_model = new BarberModel();
+		$barber_db 		= $barber_model->getById($id);
+
+		if (count($barber_db) == 0)
+			return JsonHelper::getResponseErro('Usuário informado não existe na aplicação!');
+
+		$barber_db = $barber_db[0];	
+		
+		if (!$barber_db->plan_id)
+			return JsonHelper::getResponseErro('Seu plano já foi cancelado!');
+		
+		$update =	array (
+			'plan_id'				=> null,
+			'plan_due_date'	=> null
+		);
+
+		$saved = $barber_model->updateArray($id, $update);
+
+		if (!$saved)
+			return JsonHelper::getResponseErro('Não foi possível cancelar o seu plano!');
+		
+		$barber_db->plan_due_date	= null;
+		$barber_db->plan_id				= null;
+
+		$token 		= TokenHelper::atualizarToken($request, $barber_db);
+		$payload	= array("token" => $token);
+
+		// Envia o e-mail de troca de plano
+		MailHelper::sendCancelBarberPlan($barber_db->email, $barber_db->name, 'Free');
+			
+		return JsonHelper::getResponseSucesso($payload);
+	} // Fim do método destroyPlan
 
 } // Fim da classe

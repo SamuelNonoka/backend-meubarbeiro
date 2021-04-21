@@ -38,4 +38,12 @@ class BarberRepository extends AbstractRepository
   public function getByUuid ($uuid) {
     return $this->model->where('uuid', $uuid)->get();
   } // Fim do método getByEmail
+
+  public function getTotalBarbersByBarbershopId ($barbershop_id) 
+  {
+    return $this->model->where('barbershop_id', $barbershop_id)
+            ->where('barber_status_id', self::ATIVO)
+            ->count();
+		
+  } // Fim do método getTotalBarbersByBarbershopId
 } 

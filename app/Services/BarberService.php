@@ -83,6 +83,12 @@ class BarberService
     return JsonHelper::getResponseSucesso($barbers_db);
   } // Fim do método getByBarbsershopId
 
+  public function getTotalBarbersByBarbershopId ($barbershop_id) 
+  {
+    $data = $this->barber_repository->getTotalBarbersByBarbershopId($barbershop_id);
+		return JsonHelper::getResponseSucesso($data);
+  }
+
   public function store (Request $request) 
   {
     $rules = [
