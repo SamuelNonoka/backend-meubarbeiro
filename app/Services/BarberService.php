@@ -9,15 +9,19 @@ use App\Helpers\MailHelper;
 use App\Helpers\TokenHelper;
 use App\Helpers\ValidacaoHelper;
 use App\Repository\BarberRepository;
+use App\Repository\BarbershopRepository;
 use App\Services\CryptService;
 
 class BarberService 
 {
   private $barber_repository;
+  private $barbershop_repository;
 
-  public function __construct () {
-    $this->barber_repository = new BarberRepository();
-  }
+  public function __construct () 
+  {
+    $this->barber_repository      = new BarberRepository();
+    $this->barbershop_repository  = new BarbershopRepository();
+  } // Fim do Construtor
 
   public function changePassword (Request $request) 
   {
@@ -97,7 +101,7 @@ class BarberService
   {
     $data = $this->barber_repository->getTotalBarbersByBarbershopId($barbershop_id);
 		return JsonHelper::getResponseSucesso($data);
-  }
+  } // Fim do método getTotalBarbershopByBarbershopId
 
   public function store (Request $request) 
   {
@@ -255,6 +259,36 @@ class BarberService
 
     return JsonHelper::getResponseSucesso($barber_db->uuid);
   } // Fim do método recoveryPassword
+
+  public function sendInvitation ($request) 
+  {
+    $rules    = [ 'email' => 'required|max:50' ];
+		$invalido = ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+			return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
+
+    $email      = CryptService::encrypt($request->email);
+    $barber_db  = $this->barber_repository->getByEmail($email);
+    $barber_db  = $barber_db[0];
+
+    if ($barber_db->barber_status_id != $this->barber_repository::AGUARDANDO)
+      return JsonHelper::getResponseErro('Este barbeiro já está cadastrado!'); 
+
+		$barber					= TokenHelper::getUser($request);
+		$barbershop_db 	= $this->barbershop_repository->getById($barber->barbershop_id);
+		$token					= array(
+			'barbershop_id'	=> $barber->barbershop_id,
+			'barber_mail'		=> $request->email					
+		);
+		$expiration			= date('Y-m-d H:i', strtotime('+1 day'));
+		$token					= TokenHelper::setToken($request, $token, $expiration);
+		MailHelper::sendBarberInvitation($request->email, $barbershop_db->name, $token);
+		return JsonHelper::getResponseSucesso('Convite enviado para o barbeiro!');
+  } // Fim do método sendInvitation
 
   public function update ($request, $id) 
   {

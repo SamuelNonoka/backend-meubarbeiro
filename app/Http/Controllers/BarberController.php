@@ -49,6 +49,10 @@ class BarberController extends Controller
 		return $this->barber_service->recoveryPassword($request);
 	} // Fim do método recoveryPassword
 
+	public function sendInvitation (Request $request) {
+		return $this->barber_service->sendInvitation($request);
+	} // Fim do método sendInvitation
+
 	public function update (Request $request, $id) {
 		return $this->barber_service->update($request, $id);
 	} // Fim do método update
@@ -56,42 +60,6 @@ class BarberController extends Controller
 	public function uploadImage (Request $request) {
 		return $this->barber_service->uploadImage($request);
 	} // Fim do método uploadImage
-
-	// Envia convite para barbeiro
-	public function sendInvitation (Request $request) 
-	{
-		$rules = [ 'email' => 'required|max:50' ];
-		$invalido = ValidacaoHelper::validar($request->all(), $rules);
-
-		if ($invalido) 
-			return JsonHelper::getResponseErro($invalido);
-
-		if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
-			return JsonHelper::getResponseErro("Por favor, informe um e-mail válido.");
-
-		$barber_model = new BarberModel();
-		$barber_db 		= $barber_model->getByEmail($request->email);
-		
-		if (count($barber_db) > 0) {
-			if ($barber_db[0]->barber_status_id != $barber_model::AGUARDANDO)
-				return JsonHelper::getResponseErro('Este barbeiro já está cadastrado!');
-		}
-
-		$barber					= TokenHelper::getUser($request);
-		$barbershop_db 	= (new BarbershopModel)->getById($barber->barbershop_id);
-		$token					= array(
-			'barbershop_id'	=> $barber->barbershop_id,
-			'barber_mail'		=> $request->email					
-		);
-		$expiration			= date('Y-m-d H:i', strtotime('+1 day'));
-		$token					= TokenHelper::setToken($request, $token, $expiration);
-		$sended 				= MailHelper::sendBarberInvitation($request->email, $barbershop_db['name'], $token);
-		
-		if (!$sended)
-			JsonHelper::getResponseErro('Não foi possível enviar o e-mail!');
-
-		return JsonHelper::getResponseSucesso('Convite enviado para o barbeiro!');
-	} // Fim do método sendInvitation
 
 	// Bloqueia barbeiro
 	public function blockBarber (Request $request, $id) 
