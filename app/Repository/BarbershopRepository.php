@@ -14,7 +14,14 @@ class BarbershopRepository extends AbstractRepository
 
   public function __construct () {
     parent::__construct((new BarbershopModel));
-  }
+  } // Fim do Construtor
+
+  public function getById ($id) 
+  {
+    $data           = $this->model->find($id);
+    $data->address  = $data->address;
+    return $data;
+  } // Fim da classe getById
 
   public function getAllEnabled () 
   {

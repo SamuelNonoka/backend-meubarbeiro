@@ -36,6 +36,12 @@ class BarbershopService
     return JsonHelper::getResponseSucesso($this->barbershop_repository->getAll());
   } // Fim do método getAll
 
+  public function getById ($id) 
+  {
+    $data = $this->barbershop_repository->getById($id);
+    return JsonHelper::getResponseSucesso($data);
+  } // Fim da classe getById
+
   public function getByName ($name) {
     return JsonHelper::getResponseSucesso($this->barbershop_repository->getByName($name)); 
   } // Fim do método getByName
@@ -171,5 +177,63 @@ class BarbershopService
 
     return JsonHelper::getResponseSucesso($payload);
   } // Fim do método update
+
+  public function uploadImage ($request) 
+	{
+		$barber 	= TokenHelper::getUser($request);
+		$rules 		= ['img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'];
+		$invalido	= ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!$request->hasFile('img'))
+			return JsonHelper::getResponseErro('Por favor, envie uma imagem');
+
+    // Salva a imagem
+    $barbershop_id    = $barber->barbershop_id;                
+		$image 						= $request->file('img');
+		$name							= $barber->uuid . rand(10, 99);
+		$name 						=	$name .'.'.$image->getClientOriginalExtension();
+		$path							= '/storage/uploads/barbershop/profile/' . $barbershop_id;
+    $destinationPath 	= public_path($path);
+    $imagePath	 			= $destinationPath. "/".  $name;
+		$image->move($destinationPath, $name);
+		
+		// Atualiza o barbeiro
+		$path 				    = $path . '/' . $name;
+		$barbershop_arr   = array('image_url' => $path);
+		$this->barbershop_repository->update($barbershop_arr, $barbershop_id);
+    return JsonHelper::getResponseSucesso($path);
+  } // Fim do método uploadImage
+
+  public function uploadBackgroundImage ($request) 
+	{
+		$barber 	= TokenHelper::getUser($request);
+		$rules 		= ['img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'];
+		$invalido	= ValidacaoHelper::validar($request->all(), $rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		if (!$request->hasFile('img'))
+			return JsonHelper::getResponseErro('Por favor, envie uma imagem');
+
+    // Salva a imagem
+    $barbershop_id    = $barber->barbershop_id;                
+		$image 						= $request->file('img');
+		$name							= $barber->uuid . rand(10, 99);
+		$name 						=	$name .'.'.$image->getClientOriginalExtension();
+		$path							= '/storage/uploads/barbershop/background/' . $barbershop_id;
+    $destinationPath 	= public_path($path);
+    $imagePath	 			= $destinationPath. "/".  $name;
+		$image->move($destinationPath, $name);
+		
+		// Atualiza o barbeiro
+		$path 				    = $path . '/' . $name;
+		$barbershop_arr   = array('background_url' => $path);
+		$this->barbershop_repository->update($barbershop_arr, $barbershop_id);
+		return JsonHelper::getResponseSucesso($path);
+  } // Fim do método uploadImage
 
 } // Fim da classe
