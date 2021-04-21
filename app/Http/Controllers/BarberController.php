@@ -15,6 +15,10 @@ class BarberController extends Controller
 		$this->barber_service = new BarberService();
 	} // Construtor da classe
 
+	public function blockBarber (Request $request, $id) {
+		return $this->barber_service->blockBarber($request, $id);
+	} // Fim do método blockBarber
+
 	public function changePassword (Request $request) {
 		return $this->barber_service->changePassword($request);
 	} // Fim do método changePassword
@@ -61,65 +65,8 @@ class BarberController extends Controller
 		return $this->barber_service->uploadImage($request);
 	} // Fim do método uploadImage
 
-	// Bloqueia barbeiro
-	public function blockBarber (Request $request, $id) 
-	{
-		$barber_model = new BarberModel();
-		$barber_db 		= $barber_model->getById($id);
-		$barber 			= TokenHelper::getUser($request);
-		
-		if (count($barber_db) == 0)
-			return JsonHelper::getResponseErro('Não foi possível localizar o barbeiro!'); 
-		
-		$barber_db 			= $barber_db[0];
-		$barbershop_db	= (new BarbershopModel)->getById($barber_db->barbershop_id);
-		
-		if ($barbershop_db == null)
-			return JsonHelper::getResponseErro('Não foi possível localizar a barbearia!');
-
-		if ($barbershop_db['id'] != $barber->barbershop_id || $barbershop_db['admin_id'] != $barber->id)
-			return JsonHelper::getResponseErro('Você não tem permissão para realizar essa ação!');
-
-		$schedules = (new ScheduleModel)->getFutureAprovedByBarberId($barber_db->id);
-		
-		if (count($schedules) > 0)
-			return JsonHelper::getResponseErro('Não é possível bloquear o barbeiro pois ele tem agendamentos pendentes!');
-
-		$barber 	= array('barber_status_id' => $barber_model::BLOQUEADO);
-		$updated	= $barber_model->updateData($id, $barber); 
-
-		if (!$updated)
-			return JsonHelper::getResponseErro('Não foi possível bloquear o barbeiro!');
-
-		return JsonHelper::getResponseSucesso('Barbeiro bloqueado!');
-	} // Fim do método blockBarber
-
-	// Desbloqueio barbeiro
-	public function unlockBarber (Request $request, $id) 
-	{
-		$barber_model = new BarberModel();
-		$barber_db 		= $barber_model->getById($id);
-		$barber 			= TokenHelper::getUser($request);
-		
-		if (count($barber_db) == 0)
-			return JsonHelper::getResponseErro('Não foi possível localizar o barbeiro!'); 
-		
-		$barber_db 			= $barber_db[0];
-		$barbershop_db	= (new BarbershopModel)->getById($barber_db->barbershop_id);
-		
-		if ($barbershop_db == null)
-			return JsonHelper::getResponseErro('Não foi possível localizar a barbearia!');
-
-		if ($barbershop_db['id'] != $barber->barbershop_id || $barbershop_db['admin_id'] != $barber->id)
-			return JsonHelper::getResponseErro('Você não tem permissão para realizar essa ação!');
-
-		$barber 	= array('barber_status_id' => $barber_model::ATIVO);
-		$updated	= $barber_model->updateData($id, $barber); 
-
-		if (!$updated)
-			return JsonHelper::getResponseErro('Não foi possível desbloquear o barbeiro!');
-
-		return JsonHelper::getResponseSucesso('Barbeiro desbloqueado!');
+	public function unlockBarber (Request $request, $id) {
+		return $this->barber_service->unlockBarber($request, $id);
 	} // Fim do método unlockBarber
 
 	/*** MÉTODOS NÃO UTILIZADOS */

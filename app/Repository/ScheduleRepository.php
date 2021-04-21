@@ -124,4 +124,13 @@ class ScheduleRepository extends AbstractRepository
 		return $this->model->where('user_id', $user_id)->get();
 	} // Fim do método getByUserId
 
+  public function getFutureAprovedByBarberId ($barber_id) 
+	{
+    $date = date('Y-m-d H:i:s');
+    return $this->model->where('barber_id', $barber_id)
+            ->where('schedule_status_id', '=', self::AGENDADO)
+            ->whereRaw("date(start_date) >= '$date'")
+            ->get();
+	} // Obtem os agendamentos aprovados do barbeiro
+
 } // Fim da classe

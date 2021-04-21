@@ -10,18 +10,40 @@ use App\Helpers\TokenHelper;
 use App\Helpers\ValidacaoHelper;
 use App\Repository\BarberRepository;
 use App\Repository\BarbershopRepository;
+use App\Repository\ScheduleRepository;
 use App\Services\CryptService;
 
 class BarberService 
 {
   private $barber_repository;
   private $barbershop_repository;
+  private $schedule_repository;
 
   public function __construct () 
   {
     $this->barber_repository      = new BarberRepository();
     $this->barbershop_repository  = new BarbershopRepository();
+    $this->schedule_repository    = new ScheduleRepository();
   } // Fim do Construtor
+
+  public function blockBarber ($request, $id) 
+  {
+    $barber_db      = $this->barber_repository->getById($id);
+		$barber 	      = TokenHelper::getUser($request);
+		$barbershop_db	= $this->barbershop_repository->getById($barber_db->barbershop_id);
+		
+		if ($barbershop_db->id != $barber->barbershop_id || $barbershop_db->admin_id != $barber->id)
+			return JsonHelper::getResponseErro('Você não tem permissão para realizar essa ação!');
+
+		$schedules = $this->schedule_repository->getFutureAprovedByBarberId($barber_db->id);
+		
+		if (count($schedules) > 0)
+			return JsonHelper::getResponseErro('Não é possível bloquear o barbeiro pois ele tem agendamentos pendentes!');
+
+		$barber = array('barber_status_id' => $this->barber_repository::BLOQUEADO);
+		$this->barber_repository->update($barber, $id); 
+		return JsonHelper::getResponseSucesso('Barbeiro bloqueado!');
+  } // Fim do método blockBarber
 
   public function changePassword (Request $request) 
   {
@@ -273,9 +295,8 @@ class BarberService
 
     $email      = CryptService::encrypt($request->email);
     $barber_db  = $this->barber_repository->getByEmail($email);
-    $barber_db  = $barber_db[0];
-
-    if ($barber_db->barber_status_id != $this->barber_repository::AGUARDANDO)
+    
+    if (count($barber_db) > 0)
       return JsonHelper::getResponseErro('Este barbeiro já está cadastrado!'); 
 
 		$barber					= TokenHelper::getUser($request);
@@ -349,5 +370,19 @@ class BarberService
 		$token			= TokenHelper::gerarTokenBarber ($request, $barber_db);
 		return JsonHelper::getResponseSucesso($token);
   } // Fim do método uploadImage
+
+  public function unlockBarber ($request, $id) 
+	{
+		$barber_db      = $this->barber_repository->getById($id);
+		$barber 		    = TokenHelper::getUser($request);
+		$barbershop_db  = $this->barbershop_repository->getById($barber_db->barbershop_id);
+		
+    if ($barbershop_db->id != $barber->barbershop_id || $barbershop_db->admin_id != $barber->id)
+			return JsonHelper::getResponseErro('Você não tem permissão para realizar essa ação!');
+
+		$barber = array('barber_status_id' => $this->barber_repository::ATIVO);
+		$this->barber_repository->update($barber, $id); 
+		return JsonHelper::getResponseSucesso('Barbeiro desbloqueado!');
+	} // Fim do método unlockBarber
 
 } // Fim da classe

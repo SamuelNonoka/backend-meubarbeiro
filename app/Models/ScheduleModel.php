@@ -337,20 +337,6 @@ class ScheduleModel extends AbstractModel
 		}
 	} // Fim do método getById
 
-	public function getFutureAprovedByBarberId ($barber_id) 
-	{
-		try {
-			$date = date('Y-m-d H:i:s');
-			return DB::table($this->tabela)
-								->where('barber_id', $barber_id)
-								->where('schedule_status_id', '=', self::AGENDADO)
-								->whereRaw("date(start_date) >= '$date'")
-								->get();
-		} catch (DBException $e) {
-			return [];
-		}
-	} // Obtem os agendamentos aprovados do barbeiro
-
 	// Obtem os agendamentos pela data da barbearia
 	public function getByBarbershopDate ($barbershop_id, $date) 
 	{
