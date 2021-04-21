@@ -47,6 +47,16 @@ class BarberService
 		return JsonHelper::getResponseSucesso('Senha alterda com sucesso!');
   } // Fim do método changePassword
 
+  public function confirmRegister ($request) 
+  {
+    if (!$request->token)
+			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :( !');
+
+    $barber_db = $this->barber_repository->getByUuid($request->token);		
+		$this->barber_repository->confirmRegister($barber_db[0]->id);
+		return JsonHelper::getResponseSucesso('Cadastro confirmado :) !');
+  } // Fim do método confirmRegister
+
   public function crypt () 
   {
     $barber_db = $this->barber_repository->getNotEncrypted();

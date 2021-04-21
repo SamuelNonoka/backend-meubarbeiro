@@ -4,15 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Helpers\JsonHelper;
-use App\Helpers\MailHelper;
 use App\Helpers\TokenHelper;
-use App\Helpers\EncriptacaoHelper;
-use App\Helpers\ValidacaoHelper;
-use App\Models\BarberModel;
-use App\Models\BarbershopModel;
-use App\Models\BarbershopRequestBarberModel;
-use App\Models\ScheduleModel;
 use App\Services\BarberService;
 
 class BarberController extends Controller
@@ -26,6 +18,10 @@ class BarberController extends Controller
 	public function changePassword (Request $request) {
 		return $this->barber_service->changePassword($request);
 	} // Fim do método changePassword
+
+	public function confirm (Request $request) {
+		return $this->barber_service->confirmRegister($request);
+	} // Fim do método confirm
 
 	public function crypt () {
 		return $this->barber_service->crypt();
@@ -60,26 +56,6 @@ class BarberController extends Controller
 	public function uploadImage (Request $request) {
 		return $this->barber_service->uploadImage($request);
 	} // Fim do método uploadImage
-
-	// Confirme o cadastro do barbeiro
-	public function confirm (Request $request) 
-	{
-		if (!$request->token)
-			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :( !');
-
-		$barber_model = new BarberModel();
-		$barber_db		= $barber_model->getByUuid($request->token);
-
-		if (count($barber_db) == 0)
-			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :( !');
-		
-		$confirm = $barber_model->confirmRegister($barber_db[0]->id);
-
-		if (!$confirm)
-		return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :( !');
-
-		return JsonHelper::getResponseSucesso('Cadastro confirmado :) !');
-	} // Fim do método confirm
 
 	// Envia convite para barbeiro
 	public function sendInvitation (Request $request) 

@@ -17,6 +17,12 @@ class BarberRepository extends AbstractRepository
     parent::__construct((new BarberModel));
   }
 
+  public function confirmRegister($id) 
+	{
+    $this->model->where('id', $id)
+      ->update(array('enabled' => true));
+	} // Fim do método confirmRegister
+
   public function getByEmail ($email) {
     return $this->model->where('email', $email)->get();
   } // Fim do método getByEmail

@@ -111,16 +111,4 @@ class BarberModel extends AbstractModel
 		return $barbers;
 	}
 
-	public function confirmRegister($id) 
-	{
-		try {
-			DB::table($this->tabela)
-				->where('id', $id)
-				->update(array('enabled' => true));
-			return true;
-		} catch (Exception $e) {
-			return false;
-		}
-	} // Fim do método confirmRegister
-
 }  // Fim da classe
