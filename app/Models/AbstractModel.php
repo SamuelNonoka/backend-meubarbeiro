@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\QueryException as DBException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
 // Classe padrão de database
 class AbstractModel extends Model
 {
+	use SoftDeletes;
+
 	protected $tabela = "";
 
 	// Busca todos os barbeiros pelo Id
@@ -59,17 +62,8 @@ class AbstractModel extends Model
 	} // Fim do método updateRange
 
 	// Remove um registro do banco de dados
-	public function remove ($id) 
-	{
-		try {
-			DB::table($this->tabela)
-				->where('id', $id)
-				->delete();
-
-			return true;
-		} catch (Exception $e) {
-			return false;
-		}
+	public function remove ($id) {
+		return self::where('id', $id)->delete();
 	} // Fim do método remove
 
 } // Fim da classe

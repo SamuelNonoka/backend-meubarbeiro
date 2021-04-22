@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\BarberModel;
-use App\Models\BarbershopModel;
-use App\Models\BarbershopRequestBarberModel;
-use App\Helpers\JsonHelper;
 use App\Helpers\TokenHelper;
 use App\Services\BarbershopRequestBarberService;
 

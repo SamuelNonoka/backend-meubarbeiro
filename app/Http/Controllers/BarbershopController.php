@@ -3,16 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Helpers\JsonHelper;
 use App\Helpers\TokenHelper;
 use App\Helpers\ValidacaoHelper;
-use App\Models\AddressModel;
-use App\Models\BarberModel;
-use App\Models\BarbershopModel;
-use App\Models\BarbershopScheduleDayModel;
 use App\Services\BarberService;
 use App\Services\BarbershopService;
-use DB;
 
 class BarbershopController extends Controller
 {

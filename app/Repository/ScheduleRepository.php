@@ -133,4 +133,31 @@ class ScheduleRepository extends AbstractRepository
             ->get();
 	} // Obtem os agendamentos aprovados do barbeiro
 
+  public function getTotalDoneByBarbershopId ($barbershop_id) 
+	{
+		$date = date('y-m-d H:i:s');
+    return $this->model->where('barbershop_id', $barbershop_id)
+            ->where('schedule_status_id', self::AGENDADO)
+            ->whereRaw("date(end_date) <= '$date'")
+            ->count();
+	} // Fim do método getTotalDoneByBarbershopId
+
+  public function getTotalOfDayByBarbershopId ($barbershop_id) 
+	{
+		$date = date('y-m-d');
+    return $this->model->where('barbershop_id', $barbershop_id)
+      ->where('schedule_status_id', self::AGENDADO)
+      ->whereRaw("date(end_date) = '$date'")
+      ->count();
+	} // Fim do método getTotalOfDayByBarbershopId
+
+  public function getTotalWaitingByBarbershopId ($barbershop_id) 
+	{
+		$date = date('y-m-d H:i:s');
+    return $this->model->where('barbershop_id', $barbershop_id)
+            ->where('schedule_status_id', self::AGUARDANDO)
+            ->whereRaw("date(end_date) > '$date'")
+            ->count();
+	} // Fim do Método
+
 } // Fim da classe

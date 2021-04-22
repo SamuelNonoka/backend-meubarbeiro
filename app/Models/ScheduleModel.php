@@ -350,40 +350,4 @@ class ScheduleModel extends AbstractModel
 		}
 	} // Fim do método getByBarbershopDate
 
-	public function getTotalDoneByBarbershopId ($barbershop_id) 
-	{
-		$date = date('y-m-d H:i:s');
-		try {
-			return DB::table($this->tabela)
-				->where('barbershop_id', $barbershop_id)
-				->where('schedule_status_id', self::AGENDADO)
-				->whereRaw("date(end_date) <= '$date'")
-				->count();
-		} catch (Exception $e) { return 0; }
-	}
-
-	public function getTotalWaitingByBarbershopId ($barbershop_id) 
-	{
-		$date = date('y-m-d H:i:s');
-		try {
-			return DB::table($this->tabela)
-				->where('barbershop_id', $barbershop_id)
-				->where('schedule_status_id', self::AGUARDANDO)
-				->whereRaw("date(end_date) > '$date'")
-				->count();
-		} catch (Exception $e) { return 0; }
-	}
-
-	public function getTotalOfDayByBarbershopId ($barbershop_id) 
-	{
-		$date = date('y-m-d');
-		try {
-			return DB::table($this->tabela)
-				->where('barbershop_id', $barbershop_id)
-				->where('schedule_status_id', self::AGENDADO)
-				->whereRaw("date(end_date) = '$date'")
-				->count();
-		} catch (Exception $e) { return 0; }
-	}
-
 } // Fim da classe

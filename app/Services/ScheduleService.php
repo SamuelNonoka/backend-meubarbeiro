@@ -5,20 +5,32 @@ namespace App\Services;
 use App\Helpers\JsonHelper;
 use App\Helpers\TokenHelper;
 use App\Repository\ScheduleRepository;
+use App\Repository\ScheduleServiceRepository;
 use App\Repository\BarbershopRepository;
 use App\Services\BarberService;
 
 class ScheduleService
 {
   private $schedule_repository;
+  private $schedule_service_repository;
   private $barber_service;
   private $user_service;
 
+  protected $rules = [
+		'barbershop_id'	=> 'required',
+		'user_id'				=> 'required',
+		'barber_id'			=> 'required',
+		'services'			=> 'required',
+		'start_date'		=> 'required',
+		'end_date'			=> 'required'
+	];
+
   public function __construct () {
-    $this->barbershop_repository  = new BarbershopRepository();
-    $this->schedule_repository    = new ScheduleRepository();
-    $this->barber_service         = new BarberService();
-    $this->user_service           = new UserService();
+    $this->barbershop_repository        = new BarbershopRepository();
+    $this->schedule_repository          = new ScheduleRepository();
+    $this->schedule_service_repository  = new ScheduleServiceRepository();
+    $this->barber_service               = new BarberService();
+    $this->user_service                 = new UserService();
   }
 
   public function approve ($request, $id) 
@@ -41,6 +53,31 @@ class ScheduleService
 
 		return JsonHelper::getResponseSucesso('Agendamento aprovado com sucesso!');
   } // Fim do método approve
+
+  public function cancelByUser ($request, $id) 
+	{
+		if (!$request->user_id)
+			return JsonHelper::getResponseErro('Por favor, informe o seu usuário!'); 
+		
+		$schedule_db = $this->schedule_repository->getById($id);
+
+		if ($schedule_db->user_id != $request->user_id)
+			return JsonHelper::getResponseErro('Seu usuário não tem permissão para editar este agendamento!');
+			
+		if ($schedule_db->schedule_status_id != $this->schedule_repository::AGUARDANDO)
+			return JsonHelper::getResponseErro('Este agendamento não pode ser editado!');
+
+		$schedule_date 	= $schedule_db->start_date;
+		$schedule_date 	= date('Y-m-d H:i', strtotime('+1 hour',strtotime($schedule_date)));
+		$date_now				= date('Y-m-d H:i');
+			
+		if ($schedule_date < $date_now)
+			return JsonHelper::getResponseErro('Este agendamento não pode ser cancelado!');
+
+		$schedule = array('schedule_status_id' => $this->schedule_repository::CANCELADO);
+		$this->schedule_repository->update($schedule, $id);
+		return JsonHelper::getResponseSucesso('Agendamento cancelado com sucesso!');
+	} // Fim do método cancelByUser
 
   public function getByBarberId ($request, $barber_id) 
   {
@@ -131,6 +168,24 @@ class ScheduleService
 		return JsonHelper::getResponseSucesso($schedules);
   } // Fim do método getByUserId
 
+  public function getTotalDoneByBarbershopId ($barbershop_id) 
+  {
+    $data = $this->schedule_repository->getTotalDoneByBarbershopId($barbershop_id);
+    return JsonHelper::getResponseSucesso($data); 
+  } // Fim do método getTotalDoneByBarbershopId
+
+  public function getTotalOfDayByBarbershopId ($barbershop_id) 
+  {
+    $data = $this->schedule_repository->getTotalOfDayByBarbershopId($barbershop_id);
+    return JsonHelper::getResponseSucesso($data); 
+  } // Fim do método getTotalDoneByBarbershopId
+
+  public function getTotalWaitingByBarbershopId ($barbershop_id) 
+  {
+    $data = $this->schedule_repository->getTotalWaitingByBarbershopId($barbershop_id);
+    return JsonHelper::getResponseSucesso($data); 
+  } // Fim do método getTotalWaitingByBarbershopId
+
   public function repprove ($request, $id) 
   {
     $schedule_db = $this->schedule_repository->getById($id);
@@ -150,5 +205,42 @@ class ScheduleService
 		$this->update($schedule, $id);
 		return JsonHelper::getResponseSucesso('Agendamento reprovado com sucesso!');
 	} // Fim do método repprove
+
+  public function store ($request) 
+	{
+		$invalido = ValidacaoHelper::validar($request->all(), $this->rules);
+
+		if ($invalido) 
+			return JsonHelper::getResponseErro($invalido);
+
+		$price = 0;
+		foreach ($request->services as $service) {
+			$price += (float) $service['price'];
+		}
+
+		$schedule = array (
+			'barbershop_id' 			=> $request->barbershop_id,
+			'barber_id'						=> $request->barber_id,
+			'user_id'							=> $request->user_id,
+			'schedule_status_id'	=> $this->schedule_repository::AGUARDANDO,
+			'start_date'					=> $request->start_date,
+			'end_date'						=> $request->end_date,
+			'price'								=> $price
+		);
+
+		$schedule_id    = $this->schedule_repository->store($schedule);
+		$schedule['id'] = $schedule_id;
+
+		foreach ($request->services as $service) 
+    {
+			$schedule_service = array (
+				'schedule_id'	=> $schedule_id,
+				'service_id'	=> $service['id']
+			);
+			$this->schedule_service_repository->store($schedule_service);
+		}
+		
+		return JsonHelper::getResponseSucesso($schedule); 
+	} // Fim da classe
 
 } // Fim da classe
