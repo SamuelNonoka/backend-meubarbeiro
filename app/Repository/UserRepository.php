@@ -10,6 +10,12 @@ class UserRepository extends AbstractRepository
     parent::__construct((new UserModel));
   }
 
+  public function confirmRegister($id) 
+	{
+		$this->model->where('id', $id)
+				->update(array('enabled' => true));
+	} // Fim do método confirmRegister
+
   public function getByUuid ($uuid) {
     return $this->model->where('uuid', $uuid)->first();
   } // Fim do método getById

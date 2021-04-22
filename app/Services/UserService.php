@@ -57,6 +57,20 @@ class UserService
 		return JsonHelper::getResponseSucesso('Senha alterda com sucesso!');
   } // Fim do método changePasswordByCode
 
+  public function confirmRegister ($request) 
+	{
+		if (!$request->token)
+			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :(');
+
+		$user_db = $this->user_repository->getByUuid($request->token);
+
+		if (count($user_db) == 0)
+			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :(');
+		
+		$this->user_repository->confirmRegister($user_db[0]->id);
+		return JsonHelper::getResponseSucesso('Cadastro confirmado :)');
+	} // Fim do método confirm
+
   public function decrypt ($user) 
   {
     if (isset($user['name']))

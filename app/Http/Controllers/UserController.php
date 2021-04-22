@@ -2,15 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Helpers\EncriptacaoHelper;
-use App\Helpers\JsonHelper;
-use App\Helpers\MailHelper;
-use App\Helpers\TokenHelper;
-use App\Helpers\ValidacaoHelper;
-use App\Models\UserModel;
 use App\Services\UserService;
 
 class UserController extends Controller
@@ -49,24 +41,8 @@ class UserController extends Controller
 		return $this->user_service->uploadImage($request);
 	} // Fim do método uploadImage
 
-	// Confirme o cadastro do usuário
-	public function confirm (Request $request) 
-	{
-		if (!$request->token)
-			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :(');
-
-		$user_model = new UserModel();
-		$user_db		= $user_model->getByUuid($request->token);
-
-		if (count($user_db) == 0)
-			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :(');
-		
-		$confirm = $user_model->confirmRegister($user_db[0]->id);
-
-		if (!$confirm)
-			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :(');
-
-		return JsonHelper::getResponseSucesso('Cadastro confirmado :)');
+	public function confirm (Request $request) {
+		return $this->user_service->confirmRegister($request);
 	} // Fim do método confirm
 
 } // Fim da classe
