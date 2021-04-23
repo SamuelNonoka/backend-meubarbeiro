@@ -2,15 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use DB;
-
-use App\Models; 
 
 // Classe responsavel pela entidade usuario
 class UserModel extends AbstractModel
 {
+	use SoftDeletes;
 	protected $table = 'users';
   protected $tabela = "users";
 

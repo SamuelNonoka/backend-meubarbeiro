@@ -4,14 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\QueryException as DBException;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
 // Classe padrão de database
 class AbstractModel extends Model
 {
-	use SoftDeletes;
-
 	protected $tabela = "";
 
 	// Busca todos os barbeiros pelo Id

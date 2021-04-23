@@ -140,7 +140,7 @@ class BarberService
       return JsonHelper::getResponseErro($invalido);
       
     $barbershop_id 		= null;
-    $barber_token			= $request->token ?? null;
+    $barber_token			= $request->barber_token ?? null;
     $barber_status_id	= $this->barber_repository::AGUARDANDO;
 
     if ($barber_token) {
@@ -148,7 +148,7 @@ class BarberService
 				return JsonHelper::getResponseErro('Token Invádido');
 
 			$token 						= TokenHelper::getUser($request);
-			$barbershop_id 		= $token->barbershop_id;
+			$barbershop_id 		= $token['barbershop_id'];
 			$barber_status_id	= $this->barber_repository::ATIVO;
     }
     

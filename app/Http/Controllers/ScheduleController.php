@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\TokenHelper;
+use App\Services\ScheduleService;
 
 class ScheduleController extends Controller
 {
