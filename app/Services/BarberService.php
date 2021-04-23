@@ -142,16 +142,18 @@ class BarberService
     $barbershop_id 		= null;
     $barber_token			= $request->barber_token ?? null;
     $barber_status_id	= $this->barber_repository::AGUARDANDO;
-
+    
     if ($barber_token) {
 			if (!TokenHelper::eValido($barber_token))
 				return JsonHelper::getResponseErro('Token Invádido');
 
-			$token 						= TokenHelper::getUser($request);
-			$barbershop_id 		= $token['barbershop_id'];
+      $part 	          = explode(".",$barber_token);
+      $payload          = $part[1];
+      $payload          = json_decode(base64_decode($payload));
+			$barbershop_id    = $payload->usuario->barbershop_id;
 			$barber_status_id	= $this->barber_repository::ATIVO;
     }
-    
+
     if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
       return JsonHelper::getResponseErro('Por favor, informe um e-mail válido.');
       
