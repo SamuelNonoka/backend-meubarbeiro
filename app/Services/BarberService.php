@@ -109,6 +109,16 @@ class BarberService
     return $barber_db;
   } // Fim do método decrypt
 
+  public function getAll () 
+  {
+    $barbers_db = $this->barber_repository->getAll();
+    foreach ($barbers_db as $key => $barber_db) {
+      $barbers_db[$key] = $this->decrypt($barber_db);
+      unset($barbers_db[$key]['password']);
+    }
+    return JsonHelper::getResponseSucesso($barbers_db);
+  } // Fim do método getAll
+
   public function getByBarbershopId ($barbershop_id) 
   {
     $barbers_db = $this->barber_repository->getByBarbershopId($barbershop_id);

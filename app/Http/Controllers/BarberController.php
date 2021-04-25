@@ -41,6 +41,10 @@ class BarberController extends Controller
 		return $this->barber_service->getTotalBarbersByBarbershopId($barbershop_id);
 	} // Fim do método getTotalBarbersByBarbershopId
 
+	public function index () {
+		return $this->barber_service->getAll();
+	}
+
 	public function store (Request $request) {
 		return $this->barber_service->store($request);
 	} // Fim do método store

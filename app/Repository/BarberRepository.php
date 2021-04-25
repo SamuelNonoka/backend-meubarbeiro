@@ -23,6 +23,14 @@ class BarberRepository extends AbstractRepository
       ->update(array('enabled' => true));
 	} // Fim do método confirmRegister
 
+  public function getAll () {
+    $data = $this->model->paginate(10);
+    foreach ($data as $key => $item) {
+      $data[$key]['status'] = $item->status;
+    }
+    return $data;
+  } // Fim do método getByEmail
+
   public function getByEmail ($email) {
     return $this->model->where('email', $email)->get();
   } // Fim do método getByEmail

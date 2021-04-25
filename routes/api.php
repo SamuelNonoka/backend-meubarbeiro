@@ -101,3 +101,8 @@ Route::middleware('auth:api')->group(function () {
 
   Route::put('schedule/{id}/user/cancel', 'ScheduleController@cancelByUser');
 });
+
+// Rodas dos Moderadores
+Route::prefix('barber')->group(function() {
+  Route::get('/', 'BarberController@index');
+});
