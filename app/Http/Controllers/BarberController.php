@@ -19,6 +19,10 @@ class BarberController extends Controller
 		return $this->barber_service->blockBarber($request, $id);
 	} // Fim do método blockBarber
 
+	public function blockBarberByModerator (Request $request, $id) {
+		return $this->barber_service->blockBarberByModerator($request, $id);
+	} // Fim do método blockBarberByModerator
+
 	public function changePassword (Request $request) {
 		return $this->barber_service->changePassword($request);
 	} // Fim do método changePassword
@@ -69,9 +73,13 @@ class BarberController extends Controller
 		return $this->barber_service->uploadImage($request);
 	} // Fim do método uploadImage
 
-	public function unlockBarber (Request $request, $id) {
+	public function unblockBarber (Request $request, $id) {
 		return $this->barber_service->unlockBarber($request, $id);
 	} // Fim do método unlockBarber
+
+	public function unblockBarberByModerator (Request $request, $id) {
+		return $this->barber_service->unblockBarberByModerator($request, $id);
+	} // Fim do método unblockBarberByModerator
 
 	/*** MÉTODOS NÃO UTILIZADOS */
 

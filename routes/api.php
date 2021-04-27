@@ -105,4 +105,6 @@ Route::middleware('auth:api')->group(function () {
 // Rodas dos Moderadores
 Route::prefix('barber')->group(function() {
   Route::get('/', 'BarberController@index');
+  Route::put('/{id}/block', 'BarberController@blockBarberByModerator');
+  Route::put('/{id}/unblock', 'BarberController@unblockBarberByModerator');
 });

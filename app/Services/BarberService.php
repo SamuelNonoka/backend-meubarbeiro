@@ -45,6 +45,13 @@ class BarberService
 		return JsonHelper::getResponseSucesso('Barbeiro bloqueado!');
   } // Fim do método blockBarber
 
+  public function blockBarberByModerator ($request, $id) 
+  {
+    $barber = array('enabled' => false);
+    $this->barber_repository->update($barber, $id); 
+		return JsonHelper::getResponseSucesso('Barbeiro bloqueado!');
+  } // Fim do método blockBarberByModerator
+
   public function changePassword (Request $request) 
   {
     $rules = [ 
@@ -396,5 +403,12 @@ class BarberService
 		$this->barber_repository->update($barber, $id); 
 		return JsonHelper::getResponseSucesso('Barbeiro desbloqueado!');
 	} // Fim do método unlockBarber
+
+  public function unblockBarberByModerator ($request, $id) 
+  {
+    $barber = array('enabled' => true);
+    $this->barber_repository->update($barber, $id); 
+		return JsonHelper::getResponseSucesso('Barbeiro desbloqueado!');
+  } // Fim do método blockBarberByModerator
 
 } // Fim da classe
