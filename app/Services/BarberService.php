@@ -116,9 +116,12 @@ class BarberService
     return $barber_db;
   } // Fim do método decrypt
 
-  public function getAll () 
+  public function getAll ($request) 
   {
-    $barbers_db = $this->barber_repository->getAll();
+    $search = $request->search ? CryptService::encrypt($request->search) : null;
+    $order  = $request->order ?? null; 
+    $status = $request->status ?? null;
+    $barbers_db = $this->barber_repository->getAll($search, $status, $order);
     foreach ($barbers_db as $key => $barber_db) {
       $barbers_db[$key] = $this->decrypt($barber_db);
       unset($barbers_db[$key]['password']);

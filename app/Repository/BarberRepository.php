@@ -23,8 +23,19 @@ class BarberRepository extends AbstractRepository
       ->update(array('enabled' => true));
 	} // Fim do método confirmRegister
 
-  public function getAll () {
-    $data = $this->model->paginate(10);
+  public function getAll ($search, $status, $order) {
+    $query = $this->model;
+    if ($search) {
+      $query = $query->where("name", "like", "%" . $search . "%")
+        ->orWhere('email', 'like', "{$search}%");
+    }
+    if ($status) {
+      $query = $query->where('enabled', $status);
+    }
+    if ($order) {
+      $query = $query->orderBy($order);
+    }
+    $data = $query->paginate(10);
     foreach ($data as $key => $item) {
       $data[$key]['status'] = $item->status;
     }

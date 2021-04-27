@@ -88,6 +88,19 @@ class UserService
     return $user;
   } // Fim do método decrypt
 
+  public function getAll ($request) 
+  {
+    $search = $request->search ? CryptService::encrypt($request->search) : null;
+    $order  = $request->order ?? null; 
+    $status = $request->status ?? null;
+    $users_db = $this->user_repository->getAll($search, $status, $order);
+    foreach ($users_db as $key => $user_db) {
+      $users_db[$key] = $this->decrypt($user_db);
+      unset($users_db[$key]['password']);
+    }
+    return JsonHelper::getResponseSucesso($users_db);
+  } // Fim do método getAll
+
   public function store (Request $request) 
   {
     $rules = [

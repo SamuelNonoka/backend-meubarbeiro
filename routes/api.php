@@ -108,3 +108,9 @@ Route::prefix('barber')->group(function() {
   Route::put('/{id}/block', 'BarberController@blockBarberByModerator');
   Route::put('/{id}/unblock', 'BarberController@unblockBarberByModerator');
 });
+
+Route::prefix('user')->group(function() {
+  Route::get('/', 'UserController@index');
+  Route::put('/{id}/block', 'UserController@blockUserByModerator');
+  Route::put('/{id}/unblock', 'UserController@unblockUserByModerator');
+});

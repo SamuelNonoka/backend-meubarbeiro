@@ -21,6 +21,10 @@ class UserController extends Controller
 		return $this->user_service->changePasswordByCode($request);
 	} // Fim do método changePassword
 
+	public function index (Request $request) {
+		return $this->user_service->getAll($request);
+	}
+
 	public function recoveryPassword (Request $request)  {
 		return $this->user_service->recoveryPassword($request);
 	} // Fim do método
