@@ -114,3 +114,5 @@ Route::prefix('user')->group(function() {
   Route::put('/{id}/block', 'UserController@blockUserByModerator');
   Route::put('/{id}/unblock', 'UserController@unblockUserByModerator');
 });
+
+Route::get('/moderators/barbershop', 'BarbershopController@getAllPaginated');

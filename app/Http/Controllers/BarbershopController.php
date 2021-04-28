@@ -18,6 +18,10 @@ class BarbershopController extends Controller
     $this->barbershop_service = new BarbershopService();
   } // fim do construtor
 
+  public function getAllPaginated (Request $request) {
+    return $this->barbershop_service->getAllPaginated($request);
+  }
+
   public function getBarbers ($id) {
     return $this->barber_service->getByBarbershopId($id);
   } // Fim do método getBarbers

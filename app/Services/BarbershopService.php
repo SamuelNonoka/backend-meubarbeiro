@@ -32,6 +32,14 @@ class BarbershopService
     return JsonHelper::getResponseSucesso($this->barbershop_repository->getAllEnabled());
   } // Fim do método getAll
 
+  public function getAllPaginated ($request) 
+  {
+    $order  = $request->order ?? null; 
+    $status = $request->status ?? null;
+    $data   = $this->barbershop_repository->getAllPaginated($request->search, $status, $order);
+    return JsonHelper::getResponseSucesso($data);
+  }
+
   public function getAll () {
     return JsonHelper::getResponseSucesso($this->barbershop_repository->getAll());
   } // Fim do método getAll

@@ -23,6 +23,27 @@ class BarbershopRepository extends AbstractRepository
     return $data;
   } // Fim da classe getById
 
+  public function getAllPaginated($search, $status, $order) 
+  {
+    $query = $this->model;
+    if ($search)
+      $query = $query->where("name", "like", "%" . $search . "%");
+    
+    if ($status)
+      $query = $query->where('barbershop_status_id', $status);
+
+    if ($order)
+      $query = $query->orderBy($order);
+
+    $data = $query->paginate(10);
+    
+    foreach ($data as $key => $item) {
+      $data[$key]['address']  = $item->address;
+      $data[$key]['status']   = $item->status;
+    }
+    return $data;
+  } // Fim do método getAllPaginated
+
   public function getAllEnabled () 
   {
     $data = $this->model->where('barbershop_status_id', self::ATIVO)->get();
