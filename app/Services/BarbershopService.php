@@ -28,6 +28,13 @@ class BarbershopService
     $this->barber_service         = new BarberService();
   }
 
+  public function blockBarbershopByModerator ($request, $id) 
+  {
+    $barbershop = array('barbershop_status_id' => $this->barbershop_repository::BLOQUEADO);
+    $this->barbershop_repository->update($barbershop, $id); 
+		return JsonHelper::getResponseSucesso('Barbearia bloqueada!');
+  } // Fim do método blockBarbershopByModerator
+
   public function getAllEnabled () {
     return JsonHelper::getResponseSucesso($this->barbershop_repository->getAllEnabled());
   } // Fim do método getAll
@@ -105,6 +112,13 @@ class BarbershopService
   
     return JsonHelper::getResponseSucesso($payload);
   } // Fim do método store
+
+  public function unblockBarbershopByModerator ($request, $id) 
+  {
+    $barbershop = array('barbershop_status_id' => $this->barbershop_repository::ATIVO);
+    $this->barbershop_repository->update($barbershop, $id); 
+		return JsonHelper::getResponseSucesso('Barbearia desbloqueada!');
+  } // Fim do método blockBarbershopByModerator
 
   public function update ($request, $id) 
   {

@@ -18,6 +18,10 @@ class BarbershopController extends Controller
     $this->barbershop_service = new BarbershopService();
   } // fim do construtor
 
+  public function blockBarbershopByModerator (Request $request, $id) {
+		return $this->barbershop_service->blockBarbershopByModerator($request, $id);
+	} // Fim do método blockBarbershopByModerator
+
   public function getAllPaginated (Request $request) {
     return $this->barbershop_service->getAllPaginated($request);
   }
@@ -40,6 +44,10 @@ class BarbershopController extends Controller
   public function store(Request $request) {
     return $this->barbershop_service->store($request);
   } // Fim do método store
+
+  public function unblockBarbershopByModerator (Request $request, $id) {
+		return $this->barbershop_service->unblockBarbershopByModerator($request, $id);
+	} // Fim do método unblockBarbershopByModerator
 
   public function update (Request $request, $id) {
     return $this->barbershop_service->update($request, $id);

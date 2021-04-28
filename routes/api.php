@@ -103,16 +103,20 @@ Route::middleware('auth:api')->group(function () {
 });
 
 // Rodas dos Moderadores
-Route::prefix('barber')->group(function() {
-  Route::get('/', 'BarberController@index');
-  Route::put('/{id}/block', 'BarberController@blockBarberByModerator');
-  Route::put('/{id}/unblock', 'BarberController@unblockBarberByModerator');
+Route::middleware('moderator:api')->group(function () {
+  Route::prefix('barber')->group(function() {
+    Route::get('/', 'BarberController@index');
+    Route::put('/{id}/block', 'BarberController@blockBarberByModerator');
+    Route::put('/{id}/unblock', 'BarberController@unblockBarberByModerator');
+  });
+  
+  Route::prefix('user')->group(function() {
+    Route::get('/', 'UserController@index');
+    Route::put('/{id}/block', 'UserController@blockUserByModerator');
+    Route::put('/{id}/unblock', 'UserController@unblockUserByModerator');
+  });
+  
+  Route::get('/moderators/barbershop', 'BarbershopController@getAllPaginated');
+  Route::put('/barbershop/{id}/block', 'BarbershopController@blockBarbershopByModerator');
+  Route::put('/barbershop/{id}/unblock', 'BarbershopController@unblockBarbershopByModerator');
 });
-
-Route::prefix('user')->group(function() {
-  Route::get('/', 'UserController@index');
-  Route::put('/{id}/block', 'UserController@blockUserByModerator');
-  Route::put('/{id}/unblock', 'UserController@unblockUserByModerator');
-});
-
-Route::get('/moderators/barbershop', 'BarbershopController@getAllPaginated');
