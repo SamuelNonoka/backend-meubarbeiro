@@ -13,6 +13,10 @@ class UserController extends Controller
 		$this->user_service = new UserService();
 	}
 
+	public function blockUserByModerator (Request $request, $id) {
+		return $this->user_service->blockUserByModerator($request, $id);
+	} // Fim do método blockUserByModerator
+
 	public function changePassword (Request $request) {
 		return $this->user_service->changePassword($request);
 	} // Fim do método changePassword
@@ -36,6 +40,10 @@ class UserController extends Controller
 	public function storeWithGoogle (Request $request) {
 		return $this->user_service->storeWithGoogle($request);
 	} // Fim do método store with google
+
+	public function unblockUserByModerator (Request $request, $id) {
+		return $this->user_service->unblockUserByModerator($request, $id);
+	} // Fim do método unblockBarberByModerator
 
 	public function update (Request $request, $id) {
 		return $this->user_service->update($request, $id);

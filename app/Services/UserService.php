@@ -19,6 +19,13 @@ class UserService
     $this->user_repository = new UserRepository();
   }
 
+  public function blockUserByModerator (Request $request, $id)
+  {
+    $user = array('enabled' => false);
+    $this->user_repository->update($user, $id); 
+		return JsonHelper::getResponseSucesso('Usuário bloqueado!');
+	} // Fim do método blockUserByModerator
+
   public function changePassword ($request)
   {
     if (!$request->password)
@@ -206,6 +213,14 @@ class UserService
     MailHelper::sendRegisterWithGoogle($request->name, $request->email, false);			
     return JsonHelper::getResponseSucesso($token);
   } // Fim do método storeWithGoogle
+
+  
+  public function unblockUserByModerator ($request, $id) 
+  {
+    $user = array('enabled' => true);
+    $this->user_repository->update($user, $id); 
+		return JsonHelper::getResponseSucesso('Usuário desbloqueado!');
+  } // Fim do método blockUserByModerator
 
   public function update (Request $request, $id) 
   {

@@ -28,7 +28,7 @@ class UserRepository extends AbstractRepository
     if ($order) {
       $query = $query->orderBy($order);
     }
-    return $this->model->paginate(10);
+    return $query->paginate(10);
   } // Fim do método getByEmail
 
   public function getByUuid ($uuid) {
