@@ -32,7 +32,7 @@ class Moderator
     }
 
     if ($request->header('moderator_token') == null)
-      return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado!");
+      return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado! 2");
 
     if(!TokenHelper::eValido($request->header('moderator_token')))
       return JsonHelper::getResponseErroAutenticacao("Token inválido!");
