@@ -40,11 +40,6 @@ class Authenticate
 
     if(TokenHelper::dataExpirada($request->header('token')))
       return JsonHelper::getResponseErroAutenticacao("Token expirado!");
-
-    $user = TokenHelper::getUser($request);
-
-    if (!$user->is_moderator)
-      return JsonHelper::getResponseErroAutenticacao("Você não tem permissão para acessar essa API!");
     
     return $next($request);
   }

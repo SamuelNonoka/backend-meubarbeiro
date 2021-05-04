@@ -38,8 +38,13 @@ class Moderator
       return JsonHelper::getResponseErroAutenticacao("Token inválido!");
 
     if(TokenHelper::dataExpirada($request->header('moderator_token')))
-      return JsonHelper::getResponseErroAutenticacao("Token expirado!"); 
-    
+      return JsonHelper::getResponseErroAutenticacao("Token expirado!");
+      
+    $user = TokenHelper::getUser($request);
+
+    if (!$user->is_moderator)
+      return JsonHelper::getResponseErroAutenticacao("Você não tem permissão para acessar essa API!");
+  
     return $next($request);
 	}
 }
