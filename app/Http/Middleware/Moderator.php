@@ -31,16 +31,16 @@ class Moderator
         return JsonHelper::getResponseErroPermissao("A api meu Barbeiro é privada! " . $request->header('origin'));
     }
 
-    if ($request->header('moderator_token') == null)
+    if ($request->header('moderatortoken') == null)
       return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado! 3" . $request->header);
 
-    if(!TokenHelper::eValido($request->header('moderator_token')))
+    if(!TokenHelper::eValido($request->header('moderatortoken')))
       return JsonHelper::getResponseErroAutenticacao("Token inválido!");
 
-    if(TokenHelper::dataExpirada($request->header('moderator_token')))
+    if(TokenHelper::dataExpirada($request->header('moderatortoken')))
       return JsonHelper::getResponseErroAutenticacao("Token expirado!");
       
-    $token	  = $request->header('moderator_token');
+    $token	  = $request->header('moderatortoken');
     $part 	  = explode(".",$token);
     $payload  = $part[1];
     $payload  = json_decode(base64_decode($payload));
