@@ -32,7 +32,7 @@ class Moderator
     }
 
     if ($request->header('moderator_token') == null)
-      return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado! 2" . $request->header('moderator_token'));
+      return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado! 3" . $request->header);
 
     if(!TokenHelper::eValido($request->header('moderator_token')))
       return JsonHelper::getResponseErroAutenticacao("Token inválido!");
@@ -40,8 +40,12 @@ class Moderator
     if(TokenHelper::dataExpirada($request->header('moderator_token')))
       return JsonHelper::getResponseErroAutenticacao("Token expirado!");
       
-    $user = TokenHelper::getUser($request);
-
+    $token	  = $request->header('moderator_token');
+    $part 	  = explode(".",$token);
+    $payload  = $part[1];
+    $payload  = json_decode(base64_decode($payload));
+    $user     = $payload->usuario;
+    
     if (!$user->is_moderator)
       return JsonHelper::getResponseErroAutenticacao("Você não tem permissão para acessar essa API!");
   
