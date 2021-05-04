@@ -31,7 +31,6 @@ class Moderator
         return JsonHelper::getResponseErroPermissao("A api meu Barbeiro é privada! " . $request->header('origin'));
     }
 
-    dd($request->header('moderator_token'));
     if ($request->header('moderator_token') == null)
       return JsonHelper::getResponseErroAutenticacao("Token de acesso à aplicação não informado! 3" . $request->header);
 
