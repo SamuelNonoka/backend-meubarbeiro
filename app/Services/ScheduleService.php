@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\JsonHelper;
 use App\Helpers\TokenHelper;
+use App\Helpers\ValidacaoHelper;
 use App\Repository\ScheduleRepository;
 use App\Repository\ScheduleServiceRepository;
 use App\Repository\BarbershopRepository;

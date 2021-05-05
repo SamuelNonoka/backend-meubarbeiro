@@ -27,9 +27,8 @@ class TimeService
   }
 
   // Recupera os horários disponíves da barbearia para aquele dia
-  public function getAvailableByBarbershopId ($request, $barbershop_id, $date) 
+  public function getAvailableByBarbershopId ($request, $barbershop_id, $date, $barbers_ids) 
   {
-    $barbers_ids  = $request->barbers ? explode(',', $request->barbers) : [];
     $times        = self::TIMES;
     $date_now     = date('Y-m-d');
 
@@ -68,7 +67,7 @@ class TimeService
 		}
 
     // Remover os horários já agendados
-    $barbers		= $this->barber_repository->getByBarbershopId($barbershop_id, $barbers_ids);
+    $barbers		= $this->barber_repository->getByBarbershopIdAndBarbersIds($barbershop_id, $barbers_ids);
     foreach ($barbers as $key => $barber_db) {
       $barbers[$key] = $this->barber_service->decrypt($barber_db);
       unset($barbers[$key]['password']);

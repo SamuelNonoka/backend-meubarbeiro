@@ -15,8 +15,10 @@ class TimeController extends Controller
 		$this->time_service = new TimeService();
 	}
  
-	public function getAvailableByBarbershopId (Request $request, $barbershop_id, $date) {
-		return $this->time_service->getAvailableByBarbershopId($request, $barbershop_id, $date);
+	public function getAvailableByBarbershopId (Request $request, $barbershop_id, $date) 
+	{
+		$barbers_ids  = $request->barbers ? explode(',', $request->barbers) : [];
+		return $this->time_service->getAvailableByBarbershopId($request, $barbershop_id, $date, $barbers_ids);
 	} // Fim do método getAvailableByBarbershopId
 
 } // Fim da classe
