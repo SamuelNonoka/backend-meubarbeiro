@@ -89,9 +89,13 @@ class ScheduleRepository extends AbstractRepository
 
   public function getByBarbershopPending ($barbershop_id, $barber_id) 
   {
+    $date = date('Y-m-d H:m');
     $data = $this->model->where('barbershop_id', $barbershop_id)
             ->where('barber_id', $barber_id)
-            ->get();
+            ->where('schedule_status_id', self::AGUARDANDO)
+            ->whereRaw("DATE(schedules.start_date) > '$date'")
+            ->whereRaw("DATE(schedules.end_date) > '$date'")
+            ->paginate(10);
 
     foreach ($data as $key => $item) 
     {
