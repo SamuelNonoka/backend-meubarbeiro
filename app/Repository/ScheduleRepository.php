@@ -21,18 +21,16 @@ class ScheduleRepository extends AbstractRepository
               ->where('schedules.schedule_status_id', self::AGENDADO)
               ->whereRaw("DATE(schedules.start_date) >= '$start_date'")
               ->whereRaw("DATE(schedules.end_date) <= '$end_date'")
-              ->get();
+              ->paginate(10);
 		
-    $schedules = [];
-    foreach ($data as $schedule)
+    foreach ($data as $key => $schedule)
     {
-      $schedule['user']     = $schedule->user;
-      $schedule['barber']   = $schedule->barber;
-      $schedule['services'] = $schedule->services;
-      array_push($schedules, $schedule);
+      $data[$key]['user']     = $schedule->user;
+      $data[$key]['barber']   = $schedule->barber;
+      $data[$key]['services'] = $schedule->services;
     }
 
-    return $schedules;
+    return $data;
   } // Fim do método getByBarber
 
   public function getByBarbershopDate ($barbershop_id, $date) 
@@ -89,12 +87,11 @@ class ScheduleRepository extends AbstractRepository
 
   public function getByBarbershopPending ($barbershop_id, $barber_id) 
   {
-    $date = date('Y-m-d H:m');
     $data = $this->model->where('barbershop_id', $barbershop_id)
             ->where('barber_id', $barber_id)
             ->where('schedule_status_id', self::AGUARDANDO)
-            ->whereRaw("DATE(schedules.start_date) > '$date'")
-            ->whereRaw("DATE(schedules.end_date) > '$date'")
+            //->whereRaw("DATE(schedules.start_date) > '$date'")
+            //->whereRaw("DATE(schedules.end_date) > '$date'")
             ->paginate(10);
 
     foreach ($data as $key => $item) 
@@ -136,6 +133,18 @@ class ScheduleRepository extends AbstractRepository
             ->whereRaw("date(start_date) >= '$date'")
             ->get();
 	} // Obtem os agendamentos aprovados do barbeiro
+
+  public function getTotalByBarber ($barber_id, $start_date, $end_date) 
+  {
+    $data = $this->model
+            ->where('barber_id', $barber_id)
+            ->where('schedule_status_id', self::AGENDADO);
+    
+    if ($start_date) $data->whereRaw("date(start_date) >= '$start_date'");
+    if ($end_date) $data->whereRaw("date(end_date) <= '$end_date'");
+    
+    return $data->count();
+  } // Fim do método getTotalByBarber
 
   public function getTotalDoneByBarbershopId ($barbershop_id) 
 	{

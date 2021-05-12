@@ -84,12 +84,6 @@ class ScheduleService
   {
     if (!$request->start_date || !$request->end_date)
       return JsonHelper::getResponseErro("Por favor, informe o período!");
-
-    $start_date = date('z', strtotime($request->start_date));
-    $end_date   = date('z', strtotime($request->end_date));
-    
-    if ($end_date - $start_date >= 7)
-      return JsonHelper::getResponseErro("O período máximo de filtro é de uma semana!");
       
     $schedules_db = $this->schedule_repository->getByBarber(
       $barber_id,
@@ -168,6 +162,15 @@ class ScheduleService
     $schedules = $this->schedule_repository->getByUserId($user_id);
 		return JsonHelper::getResponseSucesso($schedules);
   } // Fim do método getByUserId
+
+  public function getTotalByBarber ($request, $barber_id) {
+    $data = $this->schedule_repository->getTotalByBarber(
+      $barber_id,
+      $request->start_date,
+      $request->end_date
+    );
+    return JsonHelper::getResponseSucesso($data);
+  } // Fim do método getTotalByBarber
 
   public function getTotalDoneByBarbershopId ($barbershop_id) 
   {

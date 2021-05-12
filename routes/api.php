@@ -81,6 +81,7 @@ Route::middleware('auth:api')->group(function () {
   Route::resource('help', 'helpController');
 
   Route::prefix('schedule')->group(function() {
+    Route::get('/total/barber/{barber_id}', 'ScheduleController@getTotalByBarber');
     Route::get('/barbershop/{barbershop_id}', 'ScheduleController@getByBarbershopDate');
     Route::get('/barbershop/{barbershop_id}/pending', 'ScheduleController@getByBarbershopPending');
     Route::put('/{id}/approve', 'ScheduleController@approve');

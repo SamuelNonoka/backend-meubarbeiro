@@ -38,6 +38,10 @@ class ScheduleController extends Controller
 		return $this->schedule_service->getByUserId($user_id);
 	} // Fim do método getByUserId
 
+	public function getTotalByBarber (Request $request, $barber_id) {
+		return $this->schedule_service->getTotalByBarber($request, $barber_id);
+	}
+
 	public function getTotalDoneByBarbershopId ($barbershop_id) {
 		return $this->schedule_service->getTotalDoneByBarbershopId($barbershop_id);
 	}
