@@ -80,15 +80,16 @@ class ScheduleService
 		return JsonHelper::getResponseSucesso('Agendamento cancelado com sucesso!');
 	} // Fim do método cancelByUser
 
-  public function getByBarberId ($request, $barber_id) 
+  public function getByBarberId ($request, $barber_id, $barbershop_id) 
   {
     if (!$request->start_date || !$request->end_date)
       return JsonHelper::getResponseErro("Por favor, informe o período!");
       
     $schedules_db = $this->schedule_repository->getByBarber(
       $barber_id,
-      $request->start_date,
-      $request->end_date
+      $barbershop_id,
+      $request->start_date ?? null,
+      $request->end_date ?? null
     );
     
     foreach ($schedules_db as $key => $schedule) 

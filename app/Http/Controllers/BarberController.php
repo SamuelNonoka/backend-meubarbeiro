@@ -35,6 +35,10 @@ class BarberController extends Controller
 		return $this->barber_service->crypt();
 	} // Encripta dados
 
+	public function getRevenuesByBarber ($barber_id, $barbershop_id) {
+		return $this->barber_service->getRevenuesByBarber($barber_id, $barbershop_id);
+	}
+
 	public function getByBarbershop (Request $request) 
 	{
 		$barber	= TokenHelper::getUser($request);

@@ -15,12 +15,28 @@ class ScheduleRepository extends AbstractRepository
     parent::__construct((new ScheduleModel));
   }
 
-  public function getByBarber ($barber_id, $start_date, $end_date) 
+  public function getAmmountByBarber ($barber_id, $barbershop_id) 
   {
-    $data = $this->model->where('schedules.barber_id', $barber_id)
-              ->where('schedules.schedule_status_id', self::AGENDADO)
-              ->whereRaw("DATE(schedules.start_date) >= '$start_date'")
-              ->whereRaw("DATE(schedules.end_date) <= '$end_date'")
+    return $this->model
+      ->where('barber_id', $barber_id)
+      ->where('barbershop_id', $barbershop_id)
+      ->where('schedule_status_id', $this::AGENDADO)
+      ->sum('price');
+  }
+
+  public function getByBarber ($barber_id, $barbershop_id, $start_date, $end_date) 
+  {
+    $query = $this->model
+              ->where('schedules.barber_id', $barber_id)
+              ->where('schedules.barbershop_id', $barbershop_id)
+              ->where('schedules.schedule_status_id', self::AGENDADO);
+    
+    if ($start_date != 'null' && $end_date != 'null') {
+      $query->whereRaw("DATE(schedules.start_date) >= '$start_date'");
+      $query->whereRaw("DATE(schedules.end_date) <= '$end_date'");
+    }
+              
+    $data = $query->orderBy('start_date', 'desc')
               ->paginate(10);
 		
     foreach ($data as $key => $schedule)
@@ -87,11 +103,13 @@ class ScheduleRepository extends AbstractRepository
 
   public function getByBarbershopPending ($barbershop_id, $barber_id) 
   {
+    $date = date('Y-m-d H:m:i');
     $data = $this->model->where('barbershop_id', $barbershop_id)
             ->where('barber_id', $barber_id)
             ->where('schedule_status_id', self::AGUARDANDO)
-            //->whereRaw("DATE(schedules.start_date) > '$date'")
-            //->whereRaw("DATE(schedules.end_date) > '$date'")
+            ->whereRaw("DATE(schedules.start_date) > '$date'")
+            ->whereRaw("DATE(schedules.end_date) > '$date'")
+            ->orderBy('start_date', 'desc')
             ->paginate(10);
 
     foreach ($data as $key => $item) 

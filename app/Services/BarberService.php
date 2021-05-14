@@ -116,6 +116,12 @@ class BarberService
     return $barber_db;
   } // Fim do método decrypt
 
+  public function getRevenuesByBarber ($barber_id, $barbershop_id) 
+  {
+    $data = $this->schedule_repository->getAmmountByBarber($barber_id, $barbershop_id);
+    return JsonHelper::getResponseSucesso($data);
+	}
+
   public function getAll ($request) 
   {
     $search = $request->search ? CryptService::encrypt($request->search) : null;
