@@ -86,4 +86,11 @@ class BarberRepository extends AbstractRepository
             ->count();
 		
   } // Fim do método getTotalBarbersByBarbershopId
+
+  public function getTotalByBarbershopId ($barbershop_id) {
+    return $this->model
+            ->where('barbershop_id', $barbershop_id)
+            ->where('barber_status_id', self::ATIVO)
+            ->count();
+  }
 } 

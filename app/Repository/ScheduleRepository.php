@@ -191,4 +191,18 @@ class ScheduleRepository extends AbstractRepository
             ->count();
 	} // Fim do Método
 
+  public function getTotalByBarbershopId ($barbershop_id) {
+    return $this->model
+              ->where('barbershop_id', $barbershop_id)
+              ->where('schedule_status_id', self::AGENDADO)
+              ->count();
+  }
+
+  public function getTotalRevenuesByBarbershopId ($barbershop_id) {
+    return $this->model
+              ->where('barbershop_id', $barbershop_id)
+              ->where('schedule_status_id', self::AGENDADO)
+              ->sum('price');
+  }
+
 } // Fim da classe

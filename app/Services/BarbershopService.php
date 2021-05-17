@@ -10,6 +10,7 @@ use App\Repository\AddressRepository;
 use App\Repository\BarberRepository;
 use App\Repository\BarbershopRepository;
 use App\Repository\BarbershopScheduleDayRepository;
+use App\Repository\ScheduleRepository;
 use DB;
 
 class BarbershopService 
@@ -26,6 +27,7 @@ class BarbershopService
     $this->barbershop_repository  = new BarbershopRepository();
     $this->barbershop_schedule_day_repository = new BarbershopScheduleDayRepository();
     $this->barber_service         = new BarberService();
+    $this->schedule_repository    = new ScheduleRepository();
   }
 
   public function blockBarbershopByModerator ($request, $id) 
@@ -60,6 +62,16 @@ class BarbershopService
   public function getByName ($name) {
     return JsonHelper::getResponseSucesso($this->barbershop_repository->getByName($name)); 
   } // Fim do método getByName
+
+  public function getTotal ($barbershop_id) 
+  {
+    $total = array(
+      'barbers'   => $this->barber_repository->getTotalByBarbershopId($barbershop_id),
+      'schedules' => $this->schedule_repository->getTotalByBarbershopId($barbershop_id),
+      'revenues'  => $this->schedule_repository->getTotalRevenuesByBarbershopId($barbershop_id)
+    );
+    return JsonHelper::getResponseSucesso($total);
+  }
 
   public function store ($request) {
     $rules = [

@@ -42,6 +42,8 @@ Route::prefix('crypt')->group(function() {
   Route::get('user', 'UserController@crypt');
 });
 
+Route::get('barbershop/{id}/total', 'BarbershopController@total');
+
 // Rotas privadas
 Route::middleware('auth:api')->group(function () {
   Route::resource('profile', 'ProfileController');

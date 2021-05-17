@@ -45,6 +45,10 @@ class BarbershopController extends Controller
     return $this->barbershop_service->store($request);
   } // Fim do método store
 
+  public function total ($id) {
+    return $this->barbershop_service->getTotal($id);
+  } // Fim do método total
+
   public function unblockBarbershopByModerator (Request $request, $id) {
 		return $this->barbershop_service->unblockBarbershopByModerator($request, $id);
 	} // Fim do método unblockBarbershopByModerator
