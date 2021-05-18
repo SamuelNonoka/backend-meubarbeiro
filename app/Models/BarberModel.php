@@ -17,4 +17,8 @@ class BarberModel extends AbstractModel
 		return $this->belongsTo('App\Models\BarbersStatusModel', 'barber_status_id');
 	}
 
+	public function schedules () {
+		return $this->hasMany('App\Models\ScheduleModel', 'barber_id');
+	}
+
 }  // Fim da classe

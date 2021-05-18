@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use Illuminate\Database\QueryException as DBException;
 use App\Models\BarberModel;
+use App\Repository\ScheduleRepository;
 use DB;
 
 class BarberRepository extends AbstractRepository
@@ -92,5 +93,29 @@ class BarberRepository extends AbstractRepository
             ->where('barbershop_id', $barbershop_id)
             ->where('barber_status_id', self::ATIVO)
             ->count();
+  }
+
+  public function ranking ($barbershop_id) 
+  {
+    $data = $this->model
+              ->where('barbershop_id', $barbershop_id)
+              ->get();
+    
+    $barbers = [];
+    
+    foreach ($data as $item) 
+    {
+      $item['qtd_schedules']  = $item->schedules
+                                ->where('schedule_status_id', ScheduleRepository::AGENDADO)
+                                ->where('barbershop_id', $barbershop_id)
+                                ->count();
+      $item['revenues']       = $item->schedules
+                                ->where('schedule_status_id', ScheduleRepository::AGENDADO)
+                                ->where('barbershop_id', $barbershop_id)
+                                ->sum('price');
+      array_push($barbers, $item);
+    }
+
+    return $barbers;
   }
 } 

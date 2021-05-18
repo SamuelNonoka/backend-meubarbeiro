@@ -53,6 +53,14 @@ class BarberController extends Controller
 		return $this->barber_service->getAll($request);
 	}
 
+	public function ranking ($barbershop_id) {
+		return $this->barber_service->ranking($barbershop_id);
+	} // Fim do método recoveryPassword
+
+	public function recoveryPassword (Request $request) {
+		return $this->barber_service->recoveryPassword($request);
+	} // Fim do método recoveryPassword
+
 	public function store (Request $request) {
 		return $this->barber_service->store($request);
 	} // Fim do método store
@@ -60,10 +68,6 @@ class BarberController extends Controller
 	public function storeWithGoogle (Request $request) {
 		return $this->barber_service->storeWithGoogle($request);
 	} // Fim do método storeWithGoogle
-
-	public function recoveryPassword (Request $request) {
-		return $this->barber_service->recoveryPassword($request);
-	} // Fim do método recoveryPassword
 
 	public function sendInvitation (Request $request) {
 		return $this->barber_service->sendInvitation($request);

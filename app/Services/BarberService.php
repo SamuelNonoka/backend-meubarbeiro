@@ -151,6 +151,12 @@ class BarberService
 		return JsonHelper::getResponseSucesso($data);
   } // Fim do método getTotalBarbershopByBarbershopId
 
+  public function ranking ($barbershop_id) 
+  {
+    $data = $this->barber_repository->ranking($barbershop_id);
+		return JsonHelper::getResponseSucesso($data);
+  }
+
   public function store (Request $request) 
   {
     $rules = [

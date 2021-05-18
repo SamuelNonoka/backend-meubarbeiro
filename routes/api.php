@@ -42,7 +42,7 @@ Route::prefix('crypt')->group(function() {
   Route::get('user', 'UserController@crypt');
 });
 
-Route::get('barbershop/{id}/total', 'BarbershopController@total');
+Route::get('barbershop/{id}/barber-ranking', 'BarberController@ranking');
 
 // Rotas privadas
 Route::middleware('auth:api')->group(function () {
@@ -71,6 +71,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/{id}/total-schedules-done', 'ScheduleController@getTotalDoneByBarbershopId');
     Route::get('/{id}/total-schedules-waiting', 'ScheduleController@getTotalWaitingByBarbershopId');
     Route::get('/{id}/total-schedules-of-day', 'ScheduleController@getTotalOfDayByBarbershopId');
+    Route::get('/{id}/total', 'BarbershopController@total');
   });
 
   Route::prefix('barbershop-request')->group(function() {
