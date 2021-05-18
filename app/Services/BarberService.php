@@ -154,6 +154,11 @@ class BarberService
   public function ranking ($barbershop_id) 
   {
     $data = $this->barber_repository->ranking($barbershop_id);
+
+    foreach ($data as $key => $barber) {
+      $data[$key] = self::decrypt($barber);
+    }
+    
 		return JsonHelper::getResponseSucesso($data);
   }
 

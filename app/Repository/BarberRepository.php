@@ -98,11 +98,11 @@ class BarberRepository extends AbstractRepository
   public function ranking ($barbershop_id) 
   {
     $data = $this->model
-              ->where('barbershop_id', $barbershop_id)
+              ->where('barbers.barbershop_id', $barbershop_id)
               ->get();
     
     $barbers = [];
-    
+
     foreach ($data as $item) 
     {
       $item['qtd_schedules']  = $item->schedules
