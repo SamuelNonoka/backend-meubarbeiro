@@ -100,7 +100,10 @@ class BarberRepository extends AbstractRepository
     $data = $this->model
               ->where('barbers.barbershop_id', $barbershop_id)
               ->get();
+
     
+    //$data = $data->sortByDesc('SUM(schedules.price)');
+    //dd($barbers);
     $barbers = [];
 
     foreach ($data as $item) 
@@ -116,6 +119,11 @@ class BarberRepository extends AbstractRepository
       array_push($barbers, $item);
     }
 
-    return $barbers;
+    usort($barbers, function($a, $b) 
+    {
+      return strcmp($a->revenues, $b->revenues);
+    });
+    $b = array_reverse($barbers);
+    return $b;
   }
 } 
