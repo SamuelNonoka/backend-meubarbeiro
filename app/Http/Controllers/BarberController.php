@@ -61,6 +61,10 @@ class BarberController extends Controller
 		return $this->barber_service->recoveryPassword($request);
 	} // Fim do método recoveryPassword
 
+	public function resendRegisterMail (Request $request) {
+		return $this->barber_service->resendRegisterMail($request);
+	}
+
 	public function store (Request $request) {
 		return $this->barber_service->store($request);
 	} // Fim do método store

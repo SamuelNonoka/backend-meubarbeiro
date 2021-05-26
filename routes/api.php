@@ -42,6 +42,7 @@ Route::prefix('crypt')->group(function() {
   Route::get('user', 'UserController@crypt');
 });
 
+Route::post('barber/resend-register-mail', 'BarberControler@resendRegisterMail');
 Route::get('barbershop/{id}/barber-ranking', 'BarberController@ranking');
 
 // Rotas privadas

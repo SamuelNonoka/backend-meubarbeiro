@@ -35,11 +35,11 @@
           <br>
           {{ $email }}
         </p>
-        <p style="margin-top: 16px;">
+        <!--<p style="margin-top: 16px;">
           <strong>Sua senha:</strong>
           <br>
           {{ $password }}
-        </p>
+        </p>-->
       </div>
       <div style="text-align: center; margin-top: 30px;">
         <a  href="{{ $confirm_link }}" style="background-color: #6CD4CA; color: #3B3B3B; font-weight: 600; font-size: 14px; padding: 15px 60px; border-radius: 50px; display: inline-block;">

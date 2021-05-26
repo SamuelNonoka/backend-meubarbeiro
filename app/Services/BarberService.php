@@ -160,7 +160,28 @@ class BarberService
     }
     
 		return JsonHelper::getResponseSucesso($data);
-  }
+  } // Fim do métofo ranking
+
+  public function resendRegisterMail (Request $request) 
+  {
+    if (!$request->email)
+      return JsonHelper::getResponseErro('Por favor, informe o e-mail');
+
+    if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro('Por favor, informe um e-mail válido.');
+
+    $email     = CryptService::encrypt($request->email);
+    $barber_db = $this->barber_repository->getByEmail($email);
+  
+    if (count($barber_db) == 0)
+      return JsonHelper::getResponseErro('O e-mail informado não está sendo utilizado!');
+
+    $barber_db = $this->decrypt($barber_db[0]);
+
+    MailHelper::sendRegister($barber_db->name, $barber_db->email, $barber_db->password, $barber_db->uuid, $is_barber = true);
+
+		return JsonHelper::getResponseSucesso('E-mail enviado com sucesso!');
+	} // Fim do método resendRegisterMail
 
   public function store (Request $request) 
   {
