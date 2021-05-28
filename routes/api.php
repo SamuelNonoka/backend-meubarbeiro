@@ -3,10 +3,10 @@ use App\Models\BarbershopModel;
 
 use App\Helpers\MailHelper;
 
-Route::get('/teste', function () {
+/*Route::get('/teste', function () {
   $d = MailHelper::sendRegister('samuel', 'samuel.pereira95@yahoo.com.br', '123', '123456', true);
   dd('e-mail enviado com sucesso!', $d);
-});
+});*/
 
 // Rotas públicas
 Route::prefix('auth')->group(function () {
@@ -50,6 +50,7 @@ Route::prefix('crypt')->group(function() {
 });
 
 Route::post('barber/resend-register-mail', 'BarberController@resendRegisterMail');
+Route::post('user/resend-register-mail', 'UserController@resendRegisterMail');
 Route::get('barbershop/{id}/barber-ranking', 'BarberController@ranking');
 
 // Rotas privadas

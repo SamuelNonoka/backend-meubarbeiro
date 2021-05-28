@@ -33,6 +33,10 @@ class UserController extends Controller
 		return $this->user_service->recoveryPassword($request);
 	} // Fim do método
 
+	public function resendRegisterMail (Request $request) {
+		return $this->user_service->resendRegisterMail($request);
+	}
+
   public function store (Request $request) {
 		return $this->user_service->store($request);
 	} // Fim do método store

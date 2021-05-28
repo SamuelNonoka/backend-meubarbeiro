@@ -70,11 +70,11 @@ class UserService
 			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :(');
 
 		$user_db = $this->user_repository->getByUuid($request->token);
-
-		if (count($user_db) == 0)
+    
+    if (!$user_db)
 			return JsonHelper::getResponseErro('Não foi possível confirmar o seu cadastro :(');
 		
-		$this->user_repository->confirmRegister($user_db[0]->id);
+		$this->user_repository->confirmRegister($user_db->id);
 		return JsonHelper::getResponseSucesso('Cadastro confirmado :)');
 	} // Fim do método confirm
 
@@ -107,6 +107,27 @@ class UserService
     }
     return JsonHelper::getResponseSucesso($users_db);
   } // Fim do método getAll
+
+  public function resendRegisterMail (Request $request) 
+  {
+    if (!$request->email)
+      return JsonHelper::getResponseErro('Por favor, informe o e-mail');
+
+    if (!filter_var($request->email, FILTER_VALIDATE_EMAIL))
+      return JsonHelper::getResponseErro('Por favor, informe um e-mail válido.');
+
+    $email    = CryptService::encrypt($request->email);
+    $user_db  = $this->user_repository->getByEmail($email);
+  
+    if (count($user_db) == 0)
+      return JsonHelper::getResponseErro('O e-mail informado não está sendo utilizado!');
+
+    $user_db = $this->decrypt($user_db[0]);
+
+    MailHelper::sendRegister($user_db->name, $user_db->email, $user_db->password, $user_db->uuid, false);
+
+		return JsonHelper::getResponseSucesso('E-mail enviado com sucesso!');
+	} // Fim do método resendRegisterMail
 
   public function store (Request $request) 
   {
