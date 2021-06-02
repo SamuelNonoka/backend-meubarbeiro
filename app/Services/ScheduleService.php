@@ -140,7 +140,11 @@ class ScheduleService
 		if ($barber->barbershop_id != $barbershop_id)
 			return JsonHelper::getResponseErro("Seu usuário não tem permissão para recuperar esses dados!");
 
-		$data = $this->schedule_repository->getByBarbershopPending($barbershop_id, $barber->id);
+    $filters = Array(
+      'start_date' => $request->start_date ?? null,
+      'end_date'   => $request->end_date ?? null
+    );
+		$data = $this->schedule_repository->getByBarbershopPending($barbershop_id, $barber->id, $filters);
 
     foreach ($data as $key => $item) {
       $data[$key]->barber = $this->barber_service->decrypt($item->barber);
