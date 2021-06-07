@@ -116,9 +116,13 @@ class BarberService
     return $barber_db;
   } // Fim do método decrypt
 
-  public function getRevenuesByBarber ($barber_id, $barbershop_id) 
+  public function getRevenuesByBarber ($request, $barber_id, $barbershop_id) 
   {
-    $data = $this->schedule_repository->getAmmountByBarber($barber_id, $barbershop_id);
+    $filter = array(
+      'end_date'    => $request->end_date ?? null,
+      'start_date'  => $request->start_date ?? null
+    );
+    $data = $this->schedule_repository->getAmmountByBarber($barber_id, $barbershop_id, $filter);
     return JsonHelper::getResponseSucesso($data);
 	}
 

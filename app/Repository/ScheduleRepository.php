@@ -15,13 +15,22 @@ class ScheduleRepository extends AbstractRepository
     parent::__construct((new ScheduleModel));
   }
 
-  public function getAmmountByBarber ($barber_id, $barbershop_id) 
+  public function getAmmountByBarber ($barber_id, $barbershop_id, $filter) 
   {
-    return $this->model
+    $query = $this->model
       ->where('barber_id', $barber_id)
       ->where('barbershop_id', $barbershop_id)
-      ->where('schedule_status_id', $this::AGENDADO)
-      ->sum('price');
+      ->where('schedule_status_id', $this::AGENDADO);
+    
+    if ($filter['start_date']) {
+      $query->whereRaw("DATE(schedules.start_date) >= '" . $filter['start_date'] . "'");
+    }
+
+    if ($filter['end_date']) {
+      $query->whereRaw("DATE(schedules.end_date) <= '" . $filter['end_date'] . "'");
+    }
+
+    return $query->sum('price');
   }
 
   public function getByBarber ($barber_id, $barbershop_id, $start_date, $end_date) 
