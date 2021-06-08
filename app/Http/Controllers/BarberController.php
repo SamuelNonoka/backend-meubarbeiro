@@ -46,7 +46,7 @@ class BarberController extends Controller
 	public function getByBarbershop (Request $request) 
 	{
 		$barber	= TokenHelper::getUser($request);
-		return $this->barber_service->getByBarbershopId($barber->barbershop_id);
+		return $this->barber_service->getByBarbershopId($request, $barber->barbershop_id);
 	} // Fim do método getByBarbershopId
 
 	public function getTotalBarbersByBarbershopId ($barbershop_id) {

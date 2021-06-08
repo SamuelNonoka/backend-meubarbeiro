@@ -26,8 +26,8 @@ class BarbershopController extends Controller
     return $this->barbershop_service->getAllPaginated($request);
   }
 
-  public function getBarbers ($id) {
-    return $this->barber_service->getByBarbershopId($id);
+  public function getBarbers (Request $request, $id) {
+    return $this->barber_service->getByBarbershopId($request, $id);
   } // Fim do método getBarbers
 
   public function index (Request $request) 

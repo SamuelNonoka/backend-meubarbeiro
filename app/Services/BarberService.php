@@ -139,9 +139,17 @@ class BarberService
     return JsonHelper::getResponseSucesso($barbers_db);
   } // Fim do método getAll
 
-  public function getByBarbershopId ($barbershop_id) 
+  public function getByBarbershopId ($request, $barbershop_id) 
   {
-    $barbers_db = $this->barber_repository->getByBarbershopId($barbershop_id);
+    $status = null; 
+    if ($request->status) {
+      if ($request->status == 'ativo')
+        $status = $this->barber_repository::ATIVO;
+      else if ($request->status == 'bloqueado')
+        $status = $this->barber_repository::BLOQUEADO;
+    }
+    $filters = array ('status' => $status);
+    $barbers_db = $this->barber_repository->getByBarbershopId($barbershop_id, $filters);
     foreach ($barbers_db as $key => $barber_db) {
       $barbers_db[$key] = $this->decrypt($barber_db);
       unset($barbers_db[$key]['password']);

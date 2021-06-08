@@ -47,8 +47,15 @@ class BarberRepository extends AbstractRepository
     return $this->model->where('email', $email)->get();
   } // Fim do método getByEmail
 
-  public function getByBarbershopId ($barbershop_id) {
-    $data = $this->model->where('barbershop_id', $barbershop_id)->get();
+  public function getByBarbershopId ($barbershop_id, $filters) 
+  {
+    $query = $this->model->where('barbershop_id', $barbershop_id);
+    
+    if ($filters['status']) {
+      $query->where('barber_status_id', $filters['status']);
+    }
+    
+    $data = $query->get();
 
     foreach ($data as $key => $item) {
       $data[$key]['status'] = $item->status;
