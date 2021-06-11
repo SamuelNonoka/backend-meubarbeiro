@@ -34,9 +34,12 @@ class ServiceService
 		return JsonHelper::getResponseSucesso('Serviço removido com sucesso!');
 	} // Fim do método destroy
 
-  public function getByBarbershopId ($barbershop_id) 
+  public function getByBarbershopId ($request, $barbershop_id) 
   {
-    $data = $this->service_repository->getByBarbershopId($barbershop_id);
+		$filters = array(
+			'paginate' => $request->paginate ?? false
+		);
+    $data = $this->service_repository->getByBarbershopId($barbershop_id, $filters);
 		return JsonHelper::getResponseSucesso($data); 
 	} // Fim do método getByBarbershopId
 

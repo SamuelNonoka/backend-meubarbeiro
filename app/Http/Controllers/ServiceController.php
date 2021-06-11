@@ -17,8 +17,8 @@ class ServiceController extends Controller
 		return $this->service_service->destroy($request, $id);
 	} // Fim do método destroy
 
-	public function getByBarbershopId ($barbershop_id) {
-		return $this->service_service->getByBarbershopId($barbershop_id);
+	public function getByBarbershopId (Request $request, $barbershop_id) {
+		return $this->service_service->getByBarbershopId($request, $barbershop_id);
 	} // Fim do método getByBarbershopId
 
 	public function store (Request $request) {
