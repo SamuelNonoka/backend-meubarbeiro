@@ -13,8 +13,10 @@ class ServiceRepository extends AbstractRepository
   public function getByBarbershopId($barbershop_id, $filters) 
   {
     $data = $this->model->where('services.barbershop_id', $barbershop_id);
-    if ($filters['paginate'])
+    
+    if ($filters['paginate'] == "true") {
       return $data->paginate(10);
+    }
 
     return $data->get();
 	} // Fim d

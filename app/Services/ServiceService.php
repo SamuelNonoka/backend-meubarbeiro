@@ -37,7 +37,7 @@ class ServiceService
   public function getByBarbershopId ($request, $barbershop_id) 
   {
 		$filters = array(
-			'paginate' => $request->paginate ?? false
+			'paginate' => $request->paginate 
 		);
     $data = $this->service_repository->getByBarbershopId($barbershop_id, $filters);
 		return JsonHelper::getResponseSucesso($data); 
