@@ -141,8 +141,9 @@ class ScheduleService
 			return JsonHelper::getResponseErro("Seu usuário não tem permissão para recuperar esses dados!");
 
     $filters = Array(
-      'start_date' => $request->start_date ?? null,
-      'end_date'   => $request->end_date ?? null
+      'start_date'    => $request->start_date ?? null,
+      'end_date'      => $request->end_date ?? null,
+      'all_requests'  => $request->all_requests ?? null
     );
 		$data = $this->schedule_repository->getByBarbershopPending($barbershop_id, $barber->id, $filters);
 
@@ -167,6 +168,10 @@ class ScheduleService
     $schedules = $this->schedule_repository->getByUserId($user_id);
 		return JsonHelper::getResponseSucesso($schedules);
   } // Fim do método getByUserId
+
+  public function getTotalPendingByBarbershop ($barbershop_id) {
+		return $this->schedule_repository->getTotalPendingByBarbershop($barbershop_id);
+	} // Fim do método getTotalPendingByBarbershop
 
   public function getTotalByBarber ($request, $barber_id) {
     $data = $this->schedule_repository->getTotalByBarber(

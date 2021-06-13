@@ -3,11 +3,6 @@ use App\Models\BarbershopModel;
 
 use App\Helpers\MailHelper;
 
-/*Route::get('/teste', function () {
-  $d = MailHelper::sendRegister('samuel', 'samuel.pereira95@yahoo.com.br', '123', '123456', true);
-  dd('e-mail enviado com sucesso!', $d);
-});*/
-
 // Rotas públicas
 Route::prefix('auth')->group(function () {
   Route::prefix('barber')->group(function() {
@@ -70,7 +65,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('{id}/barbershop/{barbershop_id}/revenues', 'BarberController@getRevenuesByBarber');
   });
   Route::resource('barber', 'BarberController');
-
   Route::prefix('barbershop')->group(function() {
     Route::post('/', 'BarbershopController@store');
     Route::put('/{id}', 'BarbershopController@update');
@@ -82,23 +76,21 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/{id}/total-schedules-of-day', 'ScheduleController@getTotalOfDayByBarbershopId');
     Route::get('/{id}/total', 'BarbershopController@total');
   });
-
   Route::prefix('barbershop-request')->group(function() {
     Route::delete('/{id}/cancel', 'BarbershopRequestBarberController@cancelByBarber');
     Route::get('/barbershop/{id}', 'BarbershopRequestBarberController@barbershopRequestsByBarbershop');
     Route::post('/{id}/approve', 'BarbershopRequestBarberController@approve');
     Route::delete('/{id}/reprove', 'BarbershopRequestBarberController@reprove');
   });
-
   Route::get('cep/{cep}', 'CepController@getCepFromViaCep');
   Route::resource('help', 'helpController');
-
   Route::prefix('schedule')->group(function() {
     Route::get('/total/barber/{barber_id}', 'ScheduleController@getTotalByBarber');
     Route::get('/barbershop/{barbershop_id}', 'ScheduleController@getByBarbershopDate');
     Route::get('/barbershop/{barbershop_id}/pending', 'ScheduleController@getByBarbershopPending');
     Route::put('/{id}/approve', 'ScheduleController@approve');
     Route::put('/{id}/repprove', 'ScheduleController@repprove');
+    Route::get('/barbershop/{barbershop_id}/pending/total', 'ScheduleController@getTotalPendingByBarbershop');
   });
   
   Route::prefix('service')->group(function() {

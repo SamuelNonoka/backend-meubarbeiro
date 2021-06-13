@@ -114,8 +114,11 @@ class ScheduleRepository extends AbstractRepository
   {
     $date = date('Y-m-d H:m:i');
     $query = $this->model->where('barbershop_id', $barbershop_id)
-            ->where('barber_id', $barber_id)
             ->where('schedule_status_id', self::AGUARDANDO);
+
+    if ($filter['all_requests'] != 'true') {
+      $query->where('barber_id', $barber_id); 
+    }
     
     if ($filter['start_date']) {
       $start_date = $filter['start_date'];
@@ -181,6 +184,14 @@ class ScheduleRepository extends AbstractRepository
     
     return $data->count();
   } // Fim do método getTotalByBarber
+
+  public function getTotalPendingByBarbershop ($barbershop_id) 
+  {
+    return $this->model
+            ->where('barbershop_id', $barbershop_id)
+            ->where('schedule_status_id', self::AGUARDANDO)
+            ->count();
+  }
 
   public function getTotalDoneByBarbershopId ($barbershop_id) 
 	{
