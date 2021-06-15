@@ -170,8 +170,9 @@ class ScheduleService
   } // Fim do método getByUserId
 
   public function getTotalPendingByBarbershop ($barbershop_id) {
-		return $this->schedule_repository->getTotalPendingByBarbershop($barbershop_id);
-	} // Fim do método getTotalPendingByBarbershop
+		$data = $this->schedule_repository->getTotalPendingByBarbershop($barbershop_id);
+    return JsonHelper::getResponseSucesso($data);
+  } // Fim do método getTotalPendingByBarbershop
 
   public function getTotalByBarber ($request, $barber_id) {
     $data = $this->schedule_repository->getTotalByBarber(
