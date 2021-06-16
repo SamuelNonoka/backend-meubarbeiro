@@ -12,6 +12,7 @@ class ScheduleModel extends AbstractModel
 {
 	protected $tabela = "schedules";
 	protected $table 	= 'schedules';
+	protected $primaryKey  = "id";
 
 	public const AGUARDANDO = 3;
 	public const AGENDADO = 1;
@@ -26,9 +27,14 @@ class ScheduleModel extends AbstractModel
 		return $this->belongsTo('App\Models\BarbershopModel', 'barbershop_id');
 	}
 
-	public function services () {
+	public function services() {
 		return $this->belongsToMany('App\Models\ServiceModel', 'schedules_services', 'schedule_id', 'service_id');
 	}
+
+	/*public function services () {
+		return $this->belongsToMany('App\Models\ServiceModel', 'App\Models\ScheduleServiceModel', 'schedule_id', 'service_id');
+		//return $this->hasMany('App\Models\ServiceModel', 'schedules_services', 'service_id', 'schedule_id');
+	}*/
 
 	public function status() {
 		return $this->belongsTo('App\Models\ScheduleStatusModel', 'schedule_status_id');
