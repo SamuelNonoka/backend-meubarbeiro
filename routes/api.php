@@ -127,3 +127,7 @@ Route::middleware('moderator:api')->group(function () {
   Route::put('/barbershop/{id}/block', 'BarbershopController@blockBarbershopByModerator');
   Route::put('/barbershop/{id}/unblock', 'BarbershopController@unblockBarbershopByModerator');
 });
+
+Route::get('/teste-cron', function () {
+  \Log::info("Test Cron!");
+});
