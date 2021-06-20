@@ -10,6 +10,8 @@ class ScheduleRepository extends AbstractRepository
 	public const AGENDADO = 1;
 	public const CANCELADO = 2;
 	public const REPROVADO = 4;
+  public const ATENDIDO = 5;
+  public const SEM_RESPOSTA = 6;
 
   public function __construct () {
     parent::__construct((new ScheduleModel));
@@ -172,6 +174,14 @@ class ScheduleRepository extends AbstractRepository
             ->whereRaw("date(start_date) >= '$date'")
             ->get();
 	} // Obtem os agendamentos aprovados do barbeiro
+
+  public function removePendingSchedulesClosed () 
+  {
+    $date = date('Y-m-d H:i:s');
+    $this->model->where('schedule_status_id', '=', self::AGUARDANDO)
+            ->whereRaw("date(start_date) <= '$date'")
+            ->update(['schedule_status_id' => self::SEM_RESPOSTA]);
+  } // fim do método removePendingSchedulesClosed
 
   public function getTotalByBarber ($barber_id, $start_date, $end_date) 
   {

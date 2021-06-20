@@ -128,6 +128,8 @@ Route::middleware('moderator:api')->group(function () {
   Route::put('/barbershop/{id}/unblock', 'BarbershopController@unblockBarbershopByModerator');
 });
 
+Route::get('remove-pending-schedules', 'ScheduleController@removePendingSchedules');
+
 Route::get('/teste-cron', function () {
   \Log::info("Test Cron!");
 });

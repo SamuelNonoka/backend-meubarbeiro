@@ -201,6 +201,11 @@ class ScheduleService
     return JsonHelper::getResponseSucesso($data); 
   } // Fim do método getTotalWaitingByBarbershopId
 
+  public function removePendingSchedules () {
+    $this->schedule_repository->removePendingSchedulesClosed();
+    return JsonHelper::getResponseSucesso('Agendamentos não atendidos removidos!'); 
+  } // Fim do método removerSolicitacoesNaoAtendidas
+
   public function repprove ($request, $id) 
   {
     $schedule_db = $this->schedule_repository->getById($id);

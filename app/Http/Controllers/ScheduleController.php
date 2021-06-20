@@ -58,6 +58,10 @@ class ScheduleController extends Controller
 		return $this->schedule_service->getTotalPendingByBarbershop($barbershop_id);
 	} // Fim do método qtdWaitingToApprove
 
+	public function removePendingSchedules () {
+		return $this->schedule_service->removePendingSchedules();
+	} // Fim do método removerSolicitacoesNaoAtendidas
+
 	public function repprove (Request $request, $id) {
 		return $this->schedule_service->repprove($request, $id);
 	} // Fim do método repprove
