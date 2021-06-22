@@ -221,7 +221,10 @@ class ScheduleService
 		if ($schedule_db['start_date'] < date('Y-m-d H:i:s'))
 			return JsonHelper::getResponseErro('Este agendamento não pode ser reprovado!');
 
-		$schedule = array ('schedule_status_id' => $this->schedule_repository::REPROVADO);
+		$schedule = array (
+      'schedule_status_id'  => $this->schedule_repository::REPROVADO,
+      'cancellation_reason' => $request->message ?? null
+    );
     $this->schedule_repository->update($schedule, $id);
 		return JsonHelper::getResponseSucesso('Agendamento reprovado com sucesso!');
 	} // Fim do método repprove
