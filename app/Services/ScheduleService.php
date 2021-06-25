@@ -248,7 +248,8 @@ class ScheduleService
 			'schedule_status_id'	=> $this->schedule_repository::AGUARDANDO,
 			'start_date'					=> $request->start_date,
 			'end_date'						=> $request->end_date,
-			'price'								=> $price
+			'price'								=> $price,
+      'observation'         => $request->observation ?? null
 		);
 
 		$schedule_id    = $this->schedule_repository->store($schedule);
