@@ -22,6 +22,10 @@ class ScheduleController extends Controller
 		return $this->schedule_service->cancelByUser($request, $id);
 	} // Fim do método cancelByUser
 
+	public function finish ($schedule_id) {
+		return $this->schedule_service->finish($schedule_id);
+	} // fim do método finish
+
 	public function getByBarberId (Request $request, $barber_id, $barbershop_id) {
 		return $this->schedule_service->getByBarberId($request, $barber_id, $barbershop_id);
 	} // Fim do método getByBarberId
@@ -57,6 +61,10 @@ class ScheduleController extends Controller
 	public function getTotalPendingByBarbershop ($barbershop_id) {
 		return $this->schedule_service->getTotalPendingByBarbershop($barbershop_id);
 	} // Fim do método qtdWaitingToApprove
+
+	public function getWaitingToFinishByBarberId ($barber_id) {
+		return $this->schedule_service->getWaitingToFinishByBarberId($barber_id);
+	} // fim do método getWaitingToFinishByBarberId
 
 	public function removePendingSchedules () {
 		return $this->schedule_service->removePendingSchedules();

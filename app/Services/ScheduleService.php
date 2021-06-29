@@ -80,6 +80,19 @@ class ScheduleService
 		return JsonHelper::getResponseSucesso('Agendamento cancelado com sucesso!');
 	} // Fim do método cancelByUser
 
+  public function finish ($schedule_id) 
+  {
+		$schedule_db = $this->schedule_repository->getById($schedule_id);
+
+    if (!$schedule_db)
+      return JsonHelper::getResponseErro('Não foi possível finalizar o agendamento!');
+		
+    $schedule = array ('schedule_status_id' => $this->schedule_repository::FINALIZADO);
+    $this->schedule_repository->update($schedule, $schedule_id);
+
+		return JsonHelper::getResponseSucesso('Agendamento finalizado com sucesso!');
+	} // fim do método finish
+
   public function getByBarberId ($request, $barber_id, $barbershop_id) 
   {
     if (!$request->start_date || !$request->end_date)
@@ -201,6 +214,21 @@ class ScheduleService
     return JsonHelper::getResponseSucesso($data); 
   } // Fim do método getTotalWaitingByBarbershopId
 
+  public function getWaitingToFinishByBarberId ($barber_id) 
+	{
+		$schedules_db = $this->schedule_repository->getWaitingToFinishByBarberId($barber_id);
+
+    foreach ($schedules_db as $key => $schedule) 
+    {
+      $schedules_db[$key]['barber'] = $this->barber_service->decrypt($schedule->barber);
+      $schedules_db[$key]['user']   = $this->user_service->decrypt($schedule->user);
+      unset( $schedules_db[$key]['barber']['password']);
+      unset( $schedules_db[$key]['user']['password']);
+    }
+
+		return JsonHelper::getResponseSucesso($schedules_db); 
+	} // Fim do método getWaitingToFinishByBarberId
+
   public function removePendingSchedules () {
     $this->schedule_repository->removePendingSchedulesClosed();
     return JsonHelper::getResponseSucesso('Agendamentos não atendidos removidos!'); 
@@ -210,16 +238,16 @@ class ScheduleService
   {
     $schedule_db = $this->schedule_repository->getById($id);
 		
-		if (!$schedule_db || $schedule_db['schedule_status_id'] != $this->schedule_repository::AGUARDANDO)
-			return JsonHelper::getResponseErro('Não foi possível reprovar o agendamento!');
+		/*if (!$schedule_db || $schedule_db['schedule_status_id'] != $this->schedule_repository::AGUARDANDO)
+			return JsonHelper::getResponseErro('Não foi possível reprovar o agendamento!');*/
 
 		$barber = TokenHelper::getUser($request);
 
 		if ($schedule_db['barber_id'] != $barber->id)
 			return JsonHelper::getResponseErro('Seu usuário não tem permissão para reprovar o agendamento!');
 		
-		if ($schedule_db['start_date'] < date('Y-m-d H:i:s'))
-			return JsonHelper::getResponseErro('Este agendamento não pode ser reprovado!');
+		/*if ($schedule_db['start_date'] < date('Y-m-d H:i:s'))
+			return JsonHelper::getResponseErro('Este agendamento não pode ser reprovado!');*/
 
 		$schedule = array (
       'schedule_status_id'  => $this->schedule_repository::REPROVADO,

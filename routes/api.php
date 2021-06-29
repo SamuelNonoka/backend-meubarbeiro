@@ -36,6 +36,7 @@ Route::prefix('schedule')->group(function() {
   Route::get('/{id}', 'ScheduleController@show');
   Route::post('/', 'ScheduleController@store');
   Route::get('/user/{id}', 'ScheduleController@getByUserId');
+  Route::get('/barber/{id}/waiting-to-finish', 'ScheduleController@getWaitingToFinishByBarberId');
 });
 
 Route::get('service/barbershop/{id}', 'ServiceController@getByBarbershopId');
@@ -53,7 +54,7 @@ Route::middleware('auth:api')->group(function () {
   Route::resource('profile', 'ProfileController');
   Route::prefix('barber')->group(function() {
     Route::post('block/{id}', 'BarberController@blockBarber');
-    Route::post('unlock/{id}', 'BarberController@unlockBarber');
+    Route::post('unlock/{id}', 'BarberController@unblockBarber');
     Route::post('image', 'BarberController@uploadImage');
     Route::get('by-barbershop', 'BarberController@getByBarbershop');
     Route::post('invitation', 'BarberController@sendInvitation');
@@ -90,6 +91,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/barbershop/{barbershop_id}/pending', 'ScheduleController@getByBarbershopPending');
     Route::put('/{id}/approve', 'ScheduleController@approve');
     Route::put('/{id}/repprove', 'ScheduleController@repprove');
+    Route::put('/{id}/finish', 'ScheduleController@finish');
     Route::get('/barbershop/{barbershop_id}/pending/total', 'ScheduleController@getTotalPendingByBarbershop');
   });
   

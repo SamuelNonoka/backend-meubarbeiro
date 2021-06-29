@@ -10,7 +10,7 @@ class ScheduleRepository extends AbstractRepository
 	public const AGENDADO = 1;
 	public const CANCELADO = 2;
 	public const REPROVADO = 4;
-  public const ATENDIDO = 5;
+  public const FINALIZADO = 5;
   public const SEM_RESPOSTA = 6;
 
   public function __construct () {
@@ -243,5 +243,28 @@ class ScheduleRepository extends AbstractRepository
               ->where('schedule_status_id', self::AGENDADO)
               ->sum('price');
   }
+
+  public function getWaitingToFinishByBarberId ($barber_id) 
+	{
+    $date = date('Y-m-d H:m:i');
+    $data = $this->model->where('barber_id', $barber_id)
+            ->where('schedule_status_id', self::AGENDADO)
+            ->where('barber_id', $barber_id)
+            ->whereRaw("DATE(schedules.end_date) <= '$date'")
+            ->orderBy('start_date', 'desc')
+            ->get();
+
+    foreach ($data as $key => $item) 
+    {
+      $data[$key]->status               = $item->status;
+      $data[$key]->barber               = $item->barber;
+      $data[$key]->user                 = $item->user;
+      $data[$key]->barbershop           = $item->barbershop;
+      $data[$key]->barbershop->address  = $item->barbershop->address;
+      $data[$key]->services             = $item->services;
+    }
+
+    return $data;
+  } // Fim do método getWaitingToFinishByBarberId
 
 } // Fim da classe
