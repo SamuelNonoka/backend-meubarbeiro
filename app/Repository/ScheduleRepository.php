@@ -22,7 +22,7 @@ class ScheduleRepository extends AbstractRepository
     $query = $this->model
       ->where('barber_id', $barber_id)
       ->where('barbershop_id', $barbershop_id)
-      ->where('schedule_status_id', $this::AGENDADO);
+      ->where('schedule_status_id', $this::FINALIZADO);
     
     if ($filter['start_date']) {
       $query->whereRaw("DATE(schedules.start_date) >= '" . $filter['start_date'] . "'");
