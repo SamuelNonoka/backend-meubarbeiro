@@ -230,17 +230,34 @@ class ScheduleRepository extends AbstractRepository
             ->count();
 	} // Fim do Método
 
-  public function getTotalByBarbershopId ($barbershop_id) {
+  public function getTotalByBarbershopId ($filtros, $barbershop_id) 
+  {
+    $startDate = $filtros['startDate'] ?? null;
+    $endDate = $filtros['endDate'] ?? null;
     return $this->model
               ->where('barbershop_id', $barbershop_id)
-              ->where('schedule_status_id', self::AGENDADO)
+              ->where('schedule_status_id', self::FINALIZADO)
+              ->when($startDate, function ($query, $startDate) {
+                return $query->whereRaw("date(start_date) >= '$startDate'");
+              })
+              ->when($endDate, function ($query, $endDate) {
+                return $query->whereRaw("date(start_date) <= '$endDate'");
+              })
               ->count();
   }
 
-  public function getTotalRevenuesByBarbershopId ($barbershop_id) {
+  public function getTotalRevenuesByBarbershopId ($filtros, $barbershop_id) {
+    $startDate = $filtros['startDate'] ?? null;
+    $endDate = $filtros['endDate'] ?? null;
     return $this->model
               ->where('barbershop_id', $barbershop_id)
-              ->where('schedule_status_id', self::AGENDADO)
+              ->where('schedule_status_id', self::FINALIZADO)
+              ->when($startDate, function ($query, $startDate) {
+                return $query->whereRaw("date(start_date) >= '$startDate'");
+              })
+              ->when($endDate, function ($query, $endDate) {
+                return $query->whereRaw("date(start_date) <= '$endDate'");
+              })
               ->sum('price');
   }
 

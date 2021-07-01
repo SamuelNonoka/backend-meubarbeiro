@@ -63,12 +63,12 @@ class BarbershopService
     return JsonHelper::getResponseSucesso($this->barbershop_repository->getByName($name)); 
   } // Fim do método getByName
 
-  public function getTotal ($barbershop_id) 
+  public function getTotal ($request, $barbershop_id) 
   {
     $total = array(
       'barbers'   => $this->barber_repository->getTotalByBarbershopId($barbershop_id),
-      'schedules' => $this->schedule_repository->getTotalByBarbershopId($barbershop_id),
-      'revenues'  => $this->schedule_repository->getTotalRevenuesByBarbershopId($barbershop_id)
+      'schedules' => $this->schedule_repository->getTotalByBarbershopId($request, $barbershop_id),
+      'revenues'  => $this->schedule_repository->getTotalRevenuesByBarbershopId($request, $barbershop_id)
     );
     return JsonHelper::getResponseSucesso($total);
   }

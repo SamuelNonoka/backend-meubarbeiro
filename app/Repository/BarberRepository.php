@@ -102,26 +102,38 @@ class BarberRepository extends AbstractRepository
             ->count();
   }
 
-  public function ranking ($barbershop_id) 
+  public function ranking ($filtros, $barbershop_id) 
   {
+    $startDate = $filtros['startDate'] ?? null;
+    $endDate  = $filtros['endDate'] ?? null;
+
     $data = $this->model
               ->where('barbers.barbershop_id', $barbershop_id)
               ->get();
 
-    
-    //$data = $data->sortByDesc('SUM(schedules.price)');
-    //dd($barbers);
     $barbers = [];
 
     foreach ($data as $item) 
     {
       $item['qtd_schedules']  = $item->schedules
-                                ->where('schedule_status_id', ScheduleRepository::AGENDADO)
+                                ->where('schedule_status_id', ScheduleRepository::FINALIZADO)
                                 ->where('barbershop_id', $barbershop_id)
+                                ->when($startDate, function ($query, $startDate) {
+                                  return $query->whereRaw("date(start_date) >= '$startDate'");
+                                })
+                                ->when($endDate, function ($query, $endDate) {
+                                  return $query->whereRaw("date(start_date) <= '$endDate'");
+                                })
                                 ->count();
       $item['revenues']       = $item->schedules
-                                ->where('schedule_status_id', ScheduleRepository::AGENDADO)
+                                ->where('schedule_status_id', ScheduleRepository::FINALIZADO)
                                 ->where('barbershop_id', $barbershop_id)
+                                ->when($startDate, function ($query, $startDate) {
+                                  return $query->whereRaw("date(start_date) >= '$startDate'");
+                                })
+                                ->when($endDate, function ($query, $endDate) {
+                                  return $query->whereRaw("date(start_date) <= '$endDate'");
+                                })
                                 ->sum('price');
       array_push($barbers, $item);
     }

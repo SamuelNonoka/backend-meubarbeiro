@@ -57,8 +57,8 @@ class BarberController extends Controller
 		return $this->barber_service->getAll($request);
 	}
 
-	public function ranking ($barbershop_id) {
-		return $this->barber_service->ranking($barbershop_id);
+	public function ranking (Request $request, $barbershop_id) {
+		return $this->barber_service->ranking($request, $barbershop_id);
 	} // Fim do método recoveryPassword
 
 	public function recoveryPassword (Request $request) {
