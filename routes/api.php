@@ -64,6 +64,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('plan/{id}', 'BarberController@cancelPlan');
     Route::get('{id}/barbershop/{barbershop_id}/schedules', 'ScheduleController@getByBarberId');
     Route::get('{id}/barbershop/{barbershop_id}/revenues', 'BarberController@getRevenuesByBarber');
+    Route::post('save-device-token', 'BarberDeviceTokenController@storeDeviceToken');
   });
   Route::resource('barber', 'BarberController');
   Route::prefix('barbershop')->group(function() {
