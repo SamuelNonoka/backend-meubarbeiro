@@ -48,6 +48,7 @@ Route::prefix('crypt')->group(function() {
 Route::post('barber/resend-register-mail', 'BarberController@resendRegisterMail');
 Route::post('user/resend-register-mail', 'UserController@resendRegisterMail');
 Route::get('barbershop/{id}/barber-ranking', 'BarberController@ranking');
+Route::post('notification/send-new-schedule-notification', 'NotificationController@sendNewScheduleNotification');
 
 // Rotas privadas
 Route::middleware('auth:api')->group(function () {

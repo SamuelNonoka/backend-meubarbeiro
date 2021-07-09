@@ -17,7 +17,16 @@ class BarberDeviceTokenRepository extends AbstractRepository
                 ->where('device_token', '=', $device_token)
                 ->get();
     } catch (\Illuminate\Database\QueryException $e) {
-      dd($e->getMessage());
+      return [];
+    }
+  }
+
+  public function getDeviceTokensByBarber ($barberId) {
+    try {
+      return $this->model
+                ->where('barber_id', '=', $barberId)
+                ->get();
+    } catch (\Illuminate\Database\QueryException $e) {
       return [];
     }
   }
