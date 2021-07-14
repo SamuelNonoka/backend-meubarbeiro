@@ -40,7 +40,11 @@ class PushNotificationService
       'registration_ids'  => $devicesToken,
       'notification'      => array (
         'title' => 'Nova solicitação de agendamento!',
-        'body'  => 'teste de notificação',
+        'body'  => array(
+          'description' => 'Corte simples',
+          'type'        => 'newSchedule',
+          'link'        => env('APP_SITE_URL') . '/admin/dashboard/solicitacoes'
+        )
       )
     );
 
