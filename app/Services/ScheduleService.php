@@ -5,9 +5,12 @@ namespace App\Services;
 use App\Helpers\JsonHelper;
 use App\Helpers\TokenHelper;
 use App\Helpers\ValidacaoHelper;
+use App\Jobs\NewScheduleJob;
 use App\Repository\ScheduleRepository;
 use App\Repository\ScheduleServiceRepository;
+use App\Repository\BarberDeviceTokenRepository;
 use App\Repository\BarbershopRepository;
+use App\Repository\PushNotificationRepository;
 use App\Services\BarberService;
 
 class ScheduleService
@@ -229,6 +232,50 @@ class ScheduleService
 		return JsonHelper::getResponseSucesso($schedules_db); 
 	} // Fim do método getWaitingToFinishByBarberId
 
+  public function proccessNewScheduleJob ($scheduleJson) 
+  {
+    \Log::info('\n*** PROCESSANDO processNewScheduleJob ***');
+    \Log::info($scheduleJson);
+    $schedule = json_decode($scheduleJson);
+
+    $barberDeviceTokens = (new BarberDeviceTokenRepository)->getDeviceTokensByBarber($schedule->barber_id);
+
+    if (count($barberDeviceTokens) === 0) {
+      \Log::info('barbeiro não possui device token cadastrado');
+      return true;
+    }
+
+    $devicesToken = [];
+    foreach ($barberDeviceTokens as $item) {
+      array_push($devicesToken, $item->device_token);
+    }
+
+    $scheduleDB = $this->schedule_repository->getById($schedule->id);
+
+    if (!$scheduleDB) {
+      \Log::info('Não foi possível recuperar o agendamento no banco');
+      return false;
+    }
+
+    $notificationBody = array (
+      'registration_ids'  => $devicesToken,
+      'notification'      => array (
+        'title' => 'Nova solicitação de agendamento!',
+        'body'  => array(
+          'description'       => 'Corte simples',
+          'userType'          => 'barber',
+          'notificationType'  => 'newSheduele',
+          'data'              => $scheduleDB,
+          'link'              => env('APP_SITE_URL') . '/admin/dashboard/solicitacoes'
+        )
+      )
+    );  
+
+    (new PushNotificationRepository)->sendNotification($notificationBody);
+    \Log::info('Notificação encaminhada para o barbeiro!');
+    return true;
+  }
+
   public function removePendingSchedules () {
     $this->schedule_repository->removePendingSchedulesClosed();
     return JsonHelper::getResponseSucesso('Agendamentos não atendidos removidos!'); 
@@ -274,24 +321,31 @@ class ScheduleService
 			'barber_id'						=> $request->barber_id,
 			'user_id'							=> $request->user_id,
 			'schedule_status_id'	=> $this->schedule_repository::AGUARDANDO,
-			'start_date'					=> $request->start_date,
-			'end_date'						=> $request->end_date,
+			'start_date'					=> "'$request->start_date'",
+			'end_date'						=> "'$request->end_date'",
 			'price'								=> $price,
       'observation'         => $request->observation ?? null
 		);
+    $schedule_id    = $this->schedule_repository->store($schedule);
+    
+    if (!$schedule_id)
+      return JsonHelper::getResponseErro('Não foi possível salvar o agendamento!');
 
-		$schedule_id    = $this->schedule_repository->store($schedule);
-		$schedule['id'] = $schedule_id;
+    $schedule['id'] = $schedule_id;
 
 		foreach ($request->services as $service) 
-    {
-			$schedule_service = array (
+    { 
+      $schedule_service = array (
 				'schedule_id'	=> $schedule_id,
 				'service_id'	=> $service['id']
 			);
 			$this->schedule_service_repository->store($schedule_service);
 		}
-		
+
+    $jsonSchedule = json_encode($schedule);
+    \Log::info('\n*** NOVA SOLICITAÇÃO DE AGENDAMENTO ***');
+    \Log::info($jsonSchedule);
+    NewScheduleJob::dispatch($jsonSchedule)->onQueue('schedule');
 		return JsonHelper::getResponseSucesso($schedule); 
 	} // Fim da classe
 

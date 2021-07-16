@@ -42,11 +42,12 @@ class PushNotificationService
         'title' => 'Nova solicitação de agendamento!',
         'body'  => array(
           'description' => 'Corte simples',
-          'type'        => 'newSchedule',
+          'type'        => 'barber',
+          'identifier'  => '1',
           'link'        => env('APP_SITE_URL') . '/admin/dashboard/solicitacoes'
         )
       )
-    );
+    );  
 
     $this->pushNotificationRepository->sendNotification($notificationBody);
     return JsonHelper::getResponseSucesso('Notificação enviada com sucesso!');

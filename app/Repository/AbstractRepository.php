@@ -17,10 +17,18 @@ class AbstractRepository
 		$this->model->where('id', $id)->delete();
 	} // Fim do método remove
 
-  public function store ($barber) 
+  public function store ($object) 
   {
-    $barber['created_at'] = date('Y-m-d H:i:s');
-   	return $this->model->insertGetId($barber);
+    try {
+      $data = date('Y-m-d H:i:s');
+      $object['created_at'] = "'$data'";
+   	  return $this->model->insertGetId($object);
+    } catch (\Illuminate\Database\QueryException $e) {
+      \Log::error('Não foi possível salvar o registro');
+      \Log::error($e->getMessage());
+      return null;
+    }
+    
   } // Fim do método store
 
   public function getByEmail ($email) {
